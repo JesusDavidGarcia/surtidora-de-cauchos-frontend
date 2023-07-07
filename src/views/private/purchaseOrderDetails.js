@@ -240,10 +240,7 @@ export default function PurchaseOrderDetails(props) {
               <Typography variant="h6" sx={{ fontWeight: 550 }}>
                 Referencias adquiridas
               </Typography>
-              {/* <Divider /> */}
-              {/* {data.references.map((reference, index) => (
-                <PurchaseOrderItem key={index} item={reference} />
-              ))} */}
+
               <Box sx={{ height: "50vh", width: "100%", p: "16px 0" }}>
                 <DataGrid
                   autoPageSize
@@ -258,13 +255,13 @@ export default function PurchaseOrderDetails(props) {
 
               <Grid container sx={{ pt: 2 }}>
                 <Grid container alignItems={"center"}>
-                  <Typography variant="body1">{`Peso total: ${data.shipmentWeight}`}</Typography>
+                  <Typography variant="body1">{`Peso total: ${data.shipmentWeight} Kg`}</Typography>
                 </Grid>
                 <Grid container alignItems={"center"}>
                   <Typography variant="body1">{`Número de cajas: ${data.nuberOfBoxes}`}</Typography>
                 </Grid>
                 <Grid container alignItems={"center"}>
-                  <Typography variant="body1">{`Material faltante: ${data.missingMaterial}`}</Typography>
+                  <Typography variant="body1">{`Material faltante: ${data.missingMaterial} Kg`}</Typography>
                 </Grid>
               </Grid>
             </CardContent>

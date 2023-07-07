@@ -65,6 +65,12 @@ export default function References(props) {
       breakpoints: ["sm", "md", "lg", "xl"],
     },
     {
+      headerName: "Material",
+      field: "rawMaterialName",
+      flex: 1,
+      breakpoints: ["sm", "md", "lg", "xl"],
+    },
+    {
       headerName: "Cantidad actual",
       field: "currentQuantity",
       flex: 1,
