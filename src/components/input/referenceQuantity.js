@@ -79,7 +79,7 @@ export default function ReferenceQuantityInput(props) {
       setModel({
         ...model,
         rubberReferenceId: newReference.id,
-        name: `${newReference.reference} ${newReference.application}`,
+        referenceName: `${newReference.reference} ${newReference.application}`,
         packedWeight: newReference.packedWeight,
       });
     } else {

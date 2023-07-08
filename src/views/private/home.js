@@ -26,6 +26,7 @@ import NotificationCenter from "../../components/notificationCenter";
 
 import mainURL from "../../config/environment";
 import $ from "jquery";
+import UpdatePurchaseOrder from "./updatePurchaseOrder";
 
 export default function Home(props) {
   const [openNC, setOpenNC] = React.useState(false);
@@ -95,6 +96,10 @@ export default function Home(props) {
           <Route
             path="ordenes-compra/crear"
             element={<CreatePurchaseOrder />}
+          />
+          <Route
+            path="ordenes-compra/:orderId/editar"
+            element={<UpdatePurchaseOrder />}
           />
           <Route
             path="ordenes-compra/:orderId"

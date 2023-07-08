@@ -23,7 +23,7 @@ const useClients = (refresh) => {
       const aux = res.sort((a, b) =>
         a.name.toLowerCase().localeCompare(b.name.toLowerCase())
       );
-      console.log(aux);
+
       if (isSubscribed) setClients(aux);
     });
     return () => (isSubscribed = false);

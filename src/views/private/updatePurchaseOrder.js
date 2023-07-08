@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import CircularProgress from "@mui/material/CircularProgress";
 import ListItemIcon from "@mui/material/ListItemIcon";
@@ -23,8 +23,7 @@ import $ from "jquery";
 import mainURL from "../../config/environment";
 
 import ReferenceQuantityInput from "../../components/input/referenceQuantity";
-import SelectClient from "../../components/input/selectClient";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 const emptyModel = {
   clientId: "",
@@ -43,45 +42,22 @@ const emptyResponse = {
   references: [],
 };
 
-export default function CreatePurchaseOrder(props) {
-  //const [isFormComplete, setFormComplete] = useState(false);
-  //const [totalWeight, setTotalWeight] = useState(0);
-
+export default function UpdatePurchaseOrder(props) {
+  const [response, setResponse] = useState(emptyResponse);
+  const [showResponse, setShowResponse] = useState(false);
   const [isLoading, setLoading] = useState(false);
   const [model, setModel] = useState(emptyModel);
-  const [selectedClient, setSelectedClient] = useState(null);
-  const [response, setResponse] = useState(emptyResponse);
 
-  const [showResponse, setShowResponse] = useState(false);
+  const { orderId } = useParams();
 
   //Navigation
   const navigate = useNavigate();
-
-  const handleClientChange = (newClient) => {
-    if (newClient !== null) {
-      setModel({
-        ...model,
-        clientId: newClient.id,
-        clientName: newClient.name,
-      });
-      setSelectedClient(newClient);
-    } else {
-      setModel(emptyModel);
-      setSelectedClient(null);
-    }
-  };
 
   const handleAdd = (item) => {
     const a = [...model.references];
 
     a.push(item);
     setModel({ ...model, references: a });
-
-    /*  setTotalWeight(
-      a
-        .map((x) => x.packedWeight)
-        .reduce((accumulator, currentValue) => accumulator + currentValue)
-    ); */
   };
 
   const handleDelete = (index) => () => {
@@ -89,11 +65,6 @@ export default function CreatePurchaseOrder(props) {
     a.splice(index, 1);
 
     setModel({ ...model, references: a });
-    /*  setTotalWeight(
-      a
-        .map((x) => x.packedWeight)
-        .reduce((accumulator, currentValue) => accumulator + currentValue)
-    ); */
   };
 
   const handleSubmit = (event) => {
@@ -101,8 +72,8 @@ export default function CreatePurchaseOrder(props) {
     setLoading(true);
     const token = JSON.parse(localStorage.getItem("userInfo")).token;
     $.ajax({
-      method: "POST",
-      url: mainURL + "purchase-order",
+      method: "PUT",
+      url: `${mainURL}purchase-order/${orderId}`,
       contentType: "application/json",
       headers: {
         Authorization: "Bearer " + token,
@@ -111,7 +82,10 @@ export default function CreatePurchaseOrder(props) {
     })
       .done((res) => {
         setLoading(false);
-        handleShowNotification("success", "Orden de compra agregada con éxito");
+        handleShowNotification(
+          "success",
+          "Orden de compra actualizada con éxito"
+        );
         navigate(`/ordenes-compra/${res.id}`);
         handleClear();
       })
@@ -173,10 +147,35 @@ export default function CreatePurchaseOrder(props) {
     props.setRefresh(!refresh); */
   };
 
+  useEffect(() => {
+    const token = JSON.parse(localStorage.getItem("userInfo")).token;
+    let isSubscribed = true;
+    //handleShowNotification("info", "Cargando ordenes de compra");
+    $.ajax({
+      method: "GET",
+      url: `${mainURL}purchase-order/${orderId}`,
+      contentType: "application/json",
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+    })
+      .done((res) => {
+        console.log(res);
+        if (isSubscribed) {
+          console.log(res);
+          setModel(res);
+        }
+      })
+      .fail((res) => {
+        //handleShowNotification("error", res.responseText);
+      });
+    return () => (isSubscribed = false);
+  }, [orderId]);
+
   return (
     <Box sx={{ height: "85vh", p: 2 }}>
       <Grid item xs={12} md={8} sx={{ p: "16px 0" }}>
-        <Typography variant="h4">{"Crear order de compra"}</Typography>
+        <Typography variant="h4">{`Orden de compra: ${1}`}</Typography>
       </Grid>
       {showNotification ? (
         <Grid item xs={12} md={4}>
@@ -189,12 +188,6 @@ export default function CreatePurchaseOrder(props) {
         <Grid item container md={6}>
           <Card sx={{ width: "100%" }}>
             <CardContent>
-              <Grid item xs={12} md={12}>
-                <SelectClient
-                  handleChange={handleClientChange}
-                  value={selectedClient}
-                />
-              </Grid>
               <Grid item xs={12} md={12}>
                 <ReferenceQuantityInput
                   handleAdd={handleAdd}
@@ -222,7 +215,7 @@ export default function CreatePurchaseOrder(props) {
                       variant="contained"
                       onClick={handleSubmit}
                     >
-                      Crear
+                      Actualizar
                     </Button>
                   </React.Fragment>
                 ) : (
@@ -259,15 +252,7 @@ export default function CreatePurchaseOrder(props) {
                         primary={reference.referenceName}
                         secondary={
                           <Typography variant="body2">
-                            {`Cantidad recibida: ${
-                              reference.quantity
-                            } - Faltante: ${
-                              response.references.filter(
-                                (m) =>
-                                  m.rubberReferenceId ===
-                                  reference.rubberReferenceId
-                              )[0]?.missingQuantity
-                            }`}
+                            {`Cantidad: ${reference.quantity}`}
                           </Typography>
                         }
                       />
@@ -284,7 +269,7 @@ export default function CreatePurchaseOrder(props) {
                         sx={{ ml: 2 }}
                         color="textSecondary"
                       >
-                        {response.shipmentWeight}
+                        {`${response.shipmentWeight} Kg`}
                       </Typography>
                     </Grid>
                     <Grid container alignItems={"center"}>
@@ -308,7 +293,7 @@ export default function CreatePurchaseOrder(props) {
                         sx={{ ml: 2 }}
                         color="textSecondary"
                       >
-                        {response.missingMaterial}
+                        {`${response.missingMaterial} Kg`}
                       </Typography>
                     </Grid>
                   </Grid>
