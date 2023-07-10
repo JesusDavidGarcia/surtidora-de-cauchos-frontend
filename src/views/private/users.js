@@ -45,16 +45,19 @@ export default function Users(props) {
       headerName: "Nombre",
       field: "fullName",
       flex: 1,
+      breakpoints: ["xs", "sm", "md", "lg", "xl"],
     },
     {
       headerName: "Email",
       field: "email",
       flex: 1,
+      breakpoints: ["xs", "sm", "md", "lg", "xl"],
     },
     {
       headerName: "Teléfono",
       field: "phoneNumber",
       flex: 1,
+      breakpoints: ["md", "lg", "xl"],
     },
     {
       headerName: "Opciones",
@@ -68,6 +71,7 @@ export default function Users(props) {
       headerAlign: "center",
       sortable: false,
       editable: false,
+      breakpoints: ["xs", "sm", "md", "lg", "xl"],
     },
   ];
 
@@ -211,7 +215,7 @@ export default function Users(props) {
         spacing={2}
         container
       >
-        <Grid item md={8}>
+        <Grid item xs={12} md={8}>
           <Typography variant="h4">{"Usuarios"}</Typography>
         </Grid>
 
@@ -231,19 +235,16 @@ export default function Users(props) {
         )}
       </Grid>
 
-      <Grid container height={"70vh"} sx={{ pb: 5 }}>
+      <Box sx={{ height: "70vh", width: "100%", p: "16px 0" }}>
         <DataGrid
           selectionModel={selectedData.id === "" ? [] : selectedData.id}
           onRowClick={handleSelect}
           rows={filteredData}
-          columns={
-            breakpoint === "xs"
-              ? columns.filter((m) => m.field !== "phoneNumber")
-              : columns
-          }
+          columns={columns.filter((m) => m.breakpoints.includes(breakpoint))}
           disableColumnMenu
+          autoPageSize
         />
-      </Grid>
+      </Box>
     </Box>
   );
 }

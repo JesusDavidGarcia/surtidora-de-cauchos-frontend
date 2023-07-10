@@ -125,7 +125,6 @@ export default function PurchaseOrderDetails(props) {
                 <DataGrid
                   autoPageSize
                   rows={rows}
-                  heig
                   columns={columns}
                   disableColumnMenu
                 />

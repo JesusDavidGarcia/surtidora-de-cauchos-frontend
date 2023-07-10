@@ -12,27 +12,16 @@ import Card from "@mui/material/Card";
 import DownloadIcon from "@mui/icons-material/Download";
 import WarningIcon from "@mui/icons-material/Warning";
 
-//Excel export
-import * as FileSaver from "file-saver";
-import * as XLSX from "xlsx";
+import { useNavigate } from "react-router-dom";
 
 export default function NotificationCenter(props) {
   const { handleOnHoverClose, handleClose, open, notifications } = props;
 
-  const handleExport = (event) => {
-    const fileName = `Alertas`;
-    const fileType =
-      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
-    const fileExtension = ".xlsx";
-    const ws = XLSX.utils.json_to_sheet(notifications);
-    const wb = { Sheets: { data: ws }, SheetNames: ["data"] };
-    const excelBuffer = XLSX.write(wb, {
-      bookType: "xlsx",
-      type: "array",
-    });
+  const navigate = useNavigate();
 
-    const data = new Blob([excelBuffer], { type: fileType });
-    FileSaver.saveAs(data, fileName + fileExtension);
+  const handleExport = (event) => {
+    navigate("/alertas");
+    handleClose();
   };
 
   return (

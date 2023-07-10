@@ -251,15 +251,16 @@ export default function Providers(props) {
         )}
       </Grid>
 
-      <Grid container height={"70vh"} sx={{ pb: 5 }}>
+      <Box sx={{ height: "70vh", width: "100%", p: "16px 0" }}>
         <DataGrid
           selectionModel={selectedData.id === "" ? [] : selectedData.id}
           onRowClick={handleSelect}
           rows={filteredData}
           columns={columns.filter((m) => m.breakpoints.includes(breakpoint))}
           disableColumnMenu
+          autoPageSize
         />
-      </Grid>
+      </Box>
     </Box>
   );
 }

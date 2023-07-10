@@ -11,22 +11,23 @@ import BottomNavbar from "../../components/navigation/bottomNavbar";
 import Navbar from "../../components/navigation/navbar";
 
 //Pages
+import NotificationCenter from "../../components/notificationCenter";
+import PurchaseOrderDetails from "./purchaseOrderDetails";
+import CreatePurchaseOrder from "./createPurchaseOrder";
+import UpdatePurchaseOrder from "./updatePurchaseOrder";
 import RawMaterialEntries from "./rawMaterialEntries";
 import ProductionEntries from "./productionEntries";
 import PurchaseOrders from "./purchaseOrders";
 import References from "./references";
+import Operators from "./operators";
 import Providers from "./providers";
 import Clients from "./clients";
 import Users from "./users";
 import Main from "./main";
-import CreatePurchaseOrder from "./createPurchaseOrder";
-import Operators from "./operators";
-import PurchaseOrderDetails from "./purchaseOrderDetails";
-import NotificationCenter from "../../components/notificationCenter";
 
 import mainURL from "../../config/environment";
 import $ from "jquery";
-import UpdatePurchaseOrder from "./updatePurchaseOrder";
+import AlertReport from "./alertReport";
 
 export default function Home(props) {
   const [openNC, setOpenNC] = React.useState(false);
@@ -62,6 +63,7 @@ export default function Home(props) {
       },
     })
       .done((res) => {
+        console.log(res);
         const aux = res.sort((a, b) => a.currentQuantity - b.currentQuantity);
         if (isSubscribed) setNotifications(aux);
       })
@@ -93,6 +95,7 @@ export default function Home(props) {
           <Route path="referencias" element={<References />} />
           <Route path="ordenes-compra" element={<PurchaseOrders />} />
           <Route path="operarios" element={<Operators />} />
+          <Route path="alertas" element={<AlertReport />} />
           <Route
             path="ordenes-compra/crear"
             element={<CreatePurchaseOrder />}

@@ -16,18 +16,6 @@ import Button from "@mui/material/Button";
 import Badge from "@mui/material/Badge";
 import { useWidth } from "../../utils/withSelector";
 
-/* export const useWidth = (): Breakpoint => {
-  const theme = useTheme();
-  const keys = [...theme.breakpoints.keys];
-  return (
-    keys.reduce((output: BreakpointOrNull, key: Breakpoint) => {
-      // eslint-disable-next-line react-hooks/rules-of-hooks
-      const matches = useMediaQuery(theme.breakpoints.up(key));
-      return matches ? key : output;
-    }, null) ?? "xs"
-  );
-}; */
-
 export default function Navbar(props) {
   const navbarName =
     JSON.parse(localStorage.getItem("userInfo")) === null
