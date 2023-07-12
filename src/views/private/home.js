@@ -27,7 +27,6 @@ import Main from "./main";
 
 import mainURL from "../../config/environment";
 import $ from "jquery";
-import AlertReport from "./alertReport";
 
 export default function Home(props) {
   const [openNC, setOpenNC] = React.useState(false);
@@ -63,7 +62,6 @@ export default function Home(props) {
       },
     })
       .done((res) => {
-        console.log(res);
         const aux = res.sort((a, b) => a.currentQuantity - b.currentQuantity);
         if (isSubscribed) setNotifications(aux);
       })
@@ -95,7 +93,7 @@ export default function Home(props) {
           <Route path="referencias" element={<References />} />
           <Route path="ordenes-compra" element={<PurchaseOrders />} />
           <Route path="operarios" element={<Operators />} />
-          <Route path="alertas" element={<AlertReport />} />
+
           <Route
             path="ordenes-compra/crear"
             element={<CreatePurchaseOrder />}

@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import CardHeader from "@mui/material/CardHeader";
-import Button from "@mui/material/Button";
+import IconButton from "@mui/material/IconButton";
 import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
 import Box from "@mui/material/Box";
@@ -14,9 +14,11 @@ import mainURL from "../../config/environment";
 import { useNavigate, useParams } from "react-router-dom";
 
 import { DataGrid } from "@mui/x-data-grid";
-import { Edit } from "@mui/icons-material";
+import { Download, Edit } from "@mui/icons-material";
 
-import PdfReport from "../../components/pdfReport";
+import { PDFDownloadLink } from "@react-pdf/renderer";
+import PurchaseOrderDocument from "../../components/docs/purchaseOrder";
+import { useWidth } from "../../utils/withSelector";
 
 const emptyModel = {
   id: "",
@@ -36,12 +38,14 @@ export default function PurchaseOrderDetails(props) {
   const { orderId } = useParams();
 
   const navigate = useNavigate();
+  const breakpoint = useWidth();
 
   const columns: GridColDef[] = [
     {
       headerName: "Referencia",
       field: "referenceName",
       flex: 1,
+      breakpoints: ["xs", "sm", "md", "lg", "xl"],
     },
     {
       headerName: "Cantidad",
@@ -49,6 +53,7 @@ export default function PurchaseOrderDetails(props) {
       headerAlign: "center",
       align: "center",
       flex: 1,
+      breakpoints: ["xs", "sm", "md", "lg", "xl"],
     },
     {
       headerName: "Cantidad faltante",
@@ -56,6 +61,7 @@ export default function PurchaseOrderDetails(props) {
       headerAlign: "center",
       align: "center",
       flex: 1,
+      breakpoints: ["md", "lg", "xl"],
     },
   ];
 
@@ -76,7 +82,7 @@ export default function PurchaseOrderDetails(props) {
           ...ref,
           id: idx,
         }));
-        console.log(aux);
+
         if (isSubscribed) {
           setData(res);
           setRows(aux);
@@ -96,7 +102,7 @@ export default function PurchaseOrderDetails(props) {
   return (
     <Box sx={{ height: "85vh", p: 2 }}>
       <Grid container spacing={2} height={"100%"}>
-        <Grid item container xs={12} md={6}>
+        <Grid item container xs={12}>
           <Card sx={{ width: "100%" }}>
             <CardHeader
               title={
@@ -110,9 +116,19 @@ export default function PurchaseOrderDetails(props) {
                 </Typography>
               }
               action={
-                <Button onClick={handleToggleView}>
-                  <Edit />
-                </Button>
+                <Grid container>
+                  <IconButton onClick={handleToggleView}>
+                    <Edit color="primary" />
+                  </IconButton>
+                  <PDFDownloadLink
+                    document={<PurchaseOrderDocument data={data} />}
+                    fileName={`Orden de compra ${data.clientName}.pdf`}
+                  >
+                    <IconButton>
+                      <Download color="primary" />
+                    </IconButton>
+                  </PDFDownloadLink>
+                </Grid>
               }
             />
 
@@ -125,7 +141,9 @@ export default function PurchaseOrderDetails(props) {
                 <DataGrid
                   autoPageSize
                   rows={rows}
-                  columns={columns}
+                  columns={columns.filter((m) =>
+                    m.breakpoints.includes(breakpoint)
+                  )}
                   disableColumnMenu
                 />
               </Box>
@@ -146,9 +164,9 @@ export default function PurchaseOrderDetails(props) {
             </CardContent>
           </Card>
         </Grid>
-        <Grid item sx={{ display: { xs: "none", md: "block" } }} sm={6}>
+        {/*  <Grid item sx={{ display: { xs: "none", md: "block" } }} sm={6}>
           <PdfReport data={data} />
-        </Grid>
+        </Grid> */}
       </Grid>
     </Box>
   );

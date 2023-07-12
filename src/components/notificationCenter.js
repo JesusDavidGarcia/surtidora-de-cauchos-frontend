@@ -12,17 +12,12 @@ import Card from "@mui/material/Card";
 import DownloadIcon from "@mui/icons-material/Download";
 import WarningIcon from "@mui/icons-material/Warning";
 
-import { useNavigate } from "react-router-dom";
+import AlertReport from "./docs/alerts";
+
+import { PDFDownloadLink } from "@react-pdf/renderer";
 
 export default function NotificationCenter(props) {
   const { handleOnHoverClose, handleClose, open, notifications } = props;
-
-  const navigate = useNavigate();
-
-  const handleExport = (event) => {
-    navigate("/alertas");
-    handleClose();
-  };
 
   return (
     <Drawer
@@ -37,9 +32,14 @@ export default function NotificationCenter(props) {
       <Toolbar>
         <Grid container justifyContent={"space-between"}>
           <Typography variant="subtitle1">Alertas</Typography>
-          <IconButton onClick={handleExport}>
-            <DownloadIcon />
-          </IconButton>
+          <PDFDownloadLink
+            document={<AlertReport />}
+            fileName="Reporte de alertas.pdf"
+          >
+            <IconButton>
+              <DownloadIcon />
+            </IconButton>
+          </PDFDownloadLink>
         </Grid>
       </Toolbar>
       <Grid container spacing={2} sx={{ maxWidth: "400px", p: 2 }}>

@@ -77,18 +77,29 @@ const styles = StyleSheet.create({
     background: "#f6f6f6",
   },
   tableCol: {
-    width: "25%",
+    width: "15%",
     borderStyle: "solid",
     borderWidth: 1,
     borderLeftWidth: 0,
     borderTopWidth: 0,
   },
   refTableCol: {
-    width: "50%",
+    width: "25%",
     borderStyle: "solid",
     borderWidth: 1,
     borderLeftWidth: 0,
     borderTopWidth: 0,
+  },
+  appTableCol: {
+    width: "45%",
+    borderStyle: "solid",
+    borderWidth: 1,
+    borderLeftWidth: 0,
+    borderTopWidth: 0,
+  },
+  refTableCell: {
+    margin: "2px",
+    fontSize: 14,
   },
   tableCell: {
     margin: "auto",
@@ -115,25 +126,35 @@ export default function PdfReport(props) {
               <View style={styles.table}>
                 <View style={styles.tableRow}>
                   <View style={styles.refTableCol}>
-                    <Text style={styles.tableCell}>Referencia</Text>
+                    <Text style={styles.refTableCell}>{"Referencia"}</Text>
+                  </View>
+                  <View style={styles.appTableCol}>
+                    <Text style={styles.refTableCell}>{"Aplicación"}</Text>
                   </View>
                   <View style={styles.tableCol}>
-                    <Text style={styles.tableCell}>Cantidad</Text>
+                    <Text style={styles.tableCell}>{"Cantidad"}</Text>
                   </View>
                   <View style={styles.tableCol}>
-                    <Text style={styles.tableCell}>Cantidad faltante</Text>
+                    <Text style={styles.tableCell}>{"Faltante"}</Text>
                   </View>
                 </View>
                 {data.references.map((reference, index) => (
-                  <View key={reference.id} style={styles.tableRow}>
+                  <View key={index} style={styles.tableRow}>
                     <View style={styles.refTableCol}>
-                      <Text style={styles.tableCell}>
-                        {reference.referenceName}
+                      <Text style={styles.refTableCell}>
+                        {reference.referenceName.split(" ")[0]}
+                      </Text>
+                    </View>
+                    <View style={styles.appTableCol}>
+                      <Text style={styles.refTableCell}>
+                        {reference.referenceName.substring(
+                          reference.referenceName.indexOf(" ")
+                        )}
                       </Text>
                     </View>
                     <View style={styles.tableCol}>
                       <Text style={styles.tableCell}>{reference.quantity}</Text>
-                    </View>{" "}
+                    </View>
                     <View style={styles.tableCol}>
                       <Text style={styles.tableCell}>
                         {reference.missingQuantity}
@@ -146,13 +167,13 @@ export default function PdfReport(props) {
               {/*  <View style={styles.divider}></View> */}
               <Text
                 style={styles.diagnostic}
-              >{`Peso total: ${data.shipmentWeight}`}</Text>
+              >{`Peso total: ${data.shipmentWeight} Kg`}</Text>
               <Text
                 style={styles.diagnostic}
               >{`Número de cajas: ${data.nuberOfBoxes}`}</Text>
               <Text
                 style={styles.diagnostic}
-              >{`Material faltante: ${data.missingMaterial}`}</Text>
+              >{`Material faltante: ${data.missingMaterial} Kg`}</Text>
             </Page>
           </Document>
         </PDFViewer>
