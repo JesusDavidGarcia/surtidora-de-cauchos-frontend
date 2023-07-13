@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import CircularProgress from "@mui/material/CircularProgress";
 import DialogActions from "@mui/material/DialogActions";
@@ -26,16 +26,16 @@ const emptyModel = {
   rawMaterialId: "",
   weight: "",
   providerId: "",
-  expirationDate: Date.now(),
+  expirationDate: "",
   invoiceNumber: "",
   invoiceValue: "",
 };
 
-export default function CreateRawMaterialEntryDialog(props) {
+export default function UpdateRawMaterialEntryDialog(props) {
   const [isFormComplete, setFormComplete] = useState(false);
   const [isLoading, setLoading] = useState(false);
   const [model, setModel] = useState(emptyModel);
-  const { refresh } = props;
+  const { refresh, entryId } = props;
 
   const handleChange = (event) => {
     const target = event.target;
@@ -63,8 +63,8 @@ export default function CreateRawMaterialEntryDialog(props) {
     };
     console.log(formatted);
     $.ajax({
-      method: "POST",
-      url: mainURL + "raw-material-entry-order",
+      method: "PUT",
+      url: `${mainURL}raw-material-entry-order/${entryId}`,
       contentType: "application/json",
       headers: {
         Authorization: "Bearer " + token,
@@ -109,9 +109,27 @@ export default function CreateRawMaterialEntryDialog(props) {
     return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   };
 
+  useEffect(() => {
+    const token = JSON.parse(localStorage.getItem("userInfo")).token;
+    const host = JSON.parse(localStorage.getItem("userInfo")).hostName;
+    if (entryId !== "") {
+      $.ajax({
+        method: "GET",
+        url: `${mainURL}raw-material-entry-order/${entryId}`,
+        contentType: "application/json",
+        headers: {
+          Authorization: "Bearer " + token,
+          hostname: host,
+        },
+      }).done((res) => {
+        setModel(res);
+      });
+    }
+  }, [entryId, refresh]);
+
   return (
     <Dialog open={props.open} onClose={props.handleClose} maxWidth="md">
-      <DialogTitle>{"Registrar ingreso de materia prima"}</DialogTitle>
+      <DialogTitle>{"Actualizar ingreso de materia prima"}</DialogTitle>
       <DialogContent>
         <Box component="form" onSubmit={handleSubmit}>
           <Grid container spacing={2}>
@@ -150,7 +168,7 @@ export default function CreateRawMaterialEntryDialog(props) {
                 <LocalizationProvider dateAdapter={AdapterDateFns}>
                   <DatePicker
                     label={"Fecha de vencimiento"}
-                    value={model.expirationDate}
+                    value={new Date(model.expirationDate)}
                     onChange={handleDateChange}
                     disablePast
                     format="dd/MM/yyyy"
@@ -216,7 +234,7 @@ export default function CreateRawMaterialEntryDialog(props) {
               disabled={!isFormComplete}
               onClick={handleSubmit}
             >
-              Agregar
+              Actualizar
             </Button>
           </Grid>
         )}

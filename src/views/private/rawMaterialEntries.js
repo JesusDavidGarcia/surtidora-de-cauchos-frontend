@@ -16,10 +16,10 @@ import { DataGrid } from "@mui/x-data-grid";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 
 import CreateEntryDialog from "../../components/dialogs/createRawMaterialEntry";
+import UpdateEntryDialog from "../../components/dialogs/updateRawMaterialEntry";
 import DeleteEntryDialog from "../../components/dialogs/deleteGeneric";
-
 import SearchAndCreate from "../../components/input/searchAndCreate";
-import ClientPopover from "../../components/popovers/generic";
+import GenericPopover from "../../components/popovers/generic";
 
 import mainURL from "../../config/environment";
 import $ from "jquery";
@@ -28,7 +28,7 @@ import { useWidth } from "../../utils/withSelector";
 const emptyData = {
   id: "",
   rawMaterialName: "",
-  weight: 0,
+  weight: "",
   createdOn: "",
   providerId: "",
   providerName: "",
@@ -103,6 +103,11 @@ export default function RawMaterialEntries(props) {
       headerName: "Valor",
       field: "invoiceValue",
       flex: 1,
+      renderCell: (params: GridRenderCellParams) => (
+        <Typography key={params.row.id} variant="body2">
+          {`$${numberWithCommas(params.row.invoiceValue)}`}
+        </Typography>
+      ),
       breakpoints: ["md", "lg", "xl"],
     },
     {
@@ -123,11 +128,11 @@ export default function RawMaterialEntries(props) {
   ];
 
   //Dialog management
-  //const [renameDialog, setRenameDialog] = useState(false);
+  const [updateDialog, setUpdateDialog] = useState(false);
   const [deleteDialog, setDeleteDialog] = useState(false);
   const [createDialog, setCreateDialog] = useState(false);
   const handleCloseDialogs = () => {
-    //setRenameDialog(false);
+    setUpdateDialog(false);
     setDeleteDialog(false);
     setCreateDialog(false);
   };
@@ -142,9 +147,9 @@ export default function RawMaterialEntries(props) {
         setDeleteDialog(true);
         break;
 
-      /* case "rename":
-        setRenameDialog(true);
-        break; */
+      case "update":
+        setUpdateDialog(true);
+        break;
 
       default:
         console.log("None");
@@ -196,6 +201,10 @@ export default function RawMaterialEntries(props) {
     navigate(`/clientes/${selectedData.id}`);
   }; */
 
+  const numberWithCommas = (number) => {
+    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  };
+
   useEffect(() => {
     const token = JSON.parse(localStorage.getItem("userInfo")).token;
     let isSubscribed = true;
@@ -232,11 +241,21 @@ export default function RawMaterialEntries(props) {
 
   return (
     <Box sx={{ height: "85vh", p: 2 }}>
-      <ClientPopover
+      <GenericPopover
         open={anchor}
         showDeleteOption
+        showUpdateOption
         handleClose={handlePopoverClose}
         setDeleteDialog={setDeleteDialog}
+        setUpdateDialog={setUpdateDialog}
+      />
+      <UpdateEntryDialog
+        refresh={refresh}
+        open={updateDialog}
+        setRefresh={setRefresh}
+        entryId={selectedData.id}
+        handleClose={handleCloseDialogs}
+        handleShowNotification={handleShowNotification}
       />
       <DeleteEntryDialog
         refresh={refresh}
@@ -250,7 +269,6 @@ export default function RawMaterialEntries(props) {
         successMessage={"Entrada eliminada con éxito"}
         handleShowNotification={handleShowNotification}
       />
-
       <CreateEntryDialog
         refresh={refresh}
         open={createDialog}

@@ -15,9 +15,12 @@ import WarningIcon from "@mui/icons-material/Warning";
 import AlertReport from "./docs/alerts";
 
 import { PDFDownloadLink } from "@react-pdf/renderer";
+import { useWidth } from "../utils/withSelector";
 
 export default function NotificationCenter(props) {
   const { handleOnHoverClose, handleClose, open, notifications } = props;
+
+  const breakpoint = useWidth();
 
   return (
     <Drawer
@@ -27,13 +30,19 @@ export default function NotificationCenter(props) {
       anchor={"right"}
       open={open}
       onClose={handleClose}
+      sx={{
+        "& .MuiDrawer-paper": {
+          boxSizing: "border-box",
+          width: { xs: `70%`, md: 340 },
+        },
+      }}
     >
       <Toolbar />
       <Toolbar>
         <Grid container justifyContent={"space-between"}>
           <Typography variant="subtitle1">Alertas</Typography>
           <PDFDownloadLink
-            document={<AlertReport />}
+            document={<AlertReport data={notifications} />}
             fileName="Reporte de alertas.pdf"
           >
             <IconButton>
@@ -47,15 +56,33 @@ export default function NotificationCenter(props) {
           <Grid key={noti.id} item sm={12}>
             <Card>
               <CardHeader
-                avatar={<WarningIcon color="warning" fontSize="large" />}
+                avatar={
+                  <WarningIcon
+                    color="warning"
+                    fontSize={
+                      ["xs", "sm"].includes(breakpoint) ? "medium" : "large"
+                    }
+                  />
+                }
                 title={
-                  <Typography variant="h6" sx={{ fontWeight: 600 }}>
+                  <Typography
+                    variant={
+                      ["xs", "sm"].includes(breakpoint) ? "subtitle1" : "h6"
+                    }
+                    sx={{ fontWeight: 600 }}
+                  >
                     {noti.application}
                   </Typography>
                 }
               />
               <CardContent>
-                <Typography variant="subtitle1">{noti.message}</Typography>
+                <Typography
+                  variant={
+                    ["xs", "sm"].includes(breakpoint) ? "body2" : "subtitle1"
+                  }
+                >
+                  {noti.message}
+                </Typography>
               </CardContent>
             </Card>
           </Grid>

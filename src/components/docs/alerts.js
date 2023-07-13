@@ -1,9 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 
 import { Page, Text, View, Document, StyleSheet } from "@react-pdf/renderer";
-
-import mainURL from "../../config/environment";
-import $ from "jquery";
 
 const styles = StyleSheet.create({
   page: {
@@ -105,34 +102,16 @@ const emptyData = {
   references: [],
 };
 
-export default function AlertDocument() {
-  const [data, setData] = useState(emptyData);
-
-  useEffect(() => {
-    const token = JSON.parse(localStorage.getItem("userInfo")).token;
-    let isSubscribed = true;
-    $.ajax({
-      method: "GET",
-      url: `${mainURL}notification/references`,
-      contentType: "application/json",
-      headers: {
-        Authorization: "Bearer " + token,
-      },
-    }).done((res) => {
-      const aux = res.sort((a, b) => a.currentQuantity - b.currentQuantity);
-      if (isSubscribed) setData({ ...emptyData, references: aux });
-    });
-
-    return () => (isSubscribed = false);
-  }, []);
+export default function AlertDocument(props) {
+  const { data } = props;
 
   return (
     <Document>
       <Page size="A4" style={styles.body}>
         <View style={styles.headers}>
-          <Text style={styles.title}>{data.title}</Text>
+          <Text style={styles.title}>{emptyData.title}</Text>
           <Text style={styles.date}>
-            {new Date(data.createdOn).toLocaleDateString()}
+            {new Date(emptyData.createdOn).toLocaleDateString()}
           </Text>
         </View>
 
@@ -154,7 +133,7 @@ export default function AlertDocument() {
               <Text style={styles.tableCell}>Actual</Text>
             </View>
           </View>
-          {data.references.map((reference, index) => (
+          {data.map((reference, index) => (
             <View key={reference.id} style={styles.tableRow}>
               <View style={styles.refTableCol}>
                 <Text style={styles.refTableCell}>{reference.reference}</Text>
