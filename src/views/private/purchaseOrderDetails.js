@@ -107,13 +107,18 @@ export default function PurchaseOrderDetails(props) {
             <CardHeader
               title={
                 <Typography sx={{ fontWeight: 600, fontSize: 25 }}>
-                  {data.clientName}
+                  {`Orden de compra #${data.orderNumber}`}
                 </Typography>
               }
               subheader={
-                <Typography variant="subtitle1">
-                  {new Date(data.createdOn).toLocaleDateString()}
-                </Typography>
+                <React.Fragment>
+                  <Typography variant="subtitle1" sx={{ fontWeight: 500 }}>
+                    {data.clientName}
+                  </Typography>
+                  <Typography variant="body1">
+                    {new Date(data.createdOn).toLocaleDateString()}
+                  </Typography>
+                </React.Fragment>
               }
               action={
                 <Grid container>
@@ -122,7 +127,7 @@ export default function PurchaseOrderDetails(props) {
                   </IconButton>
                   <PDFDownloadLink
                     document={<PurchaseOrderDocument data={data} />}
-                    fileName={`Orden de compra ${data.clientName}.pdf`}
+                    fileName={`Orden de compra ${data.orderNumber}.pdf`}
                   >
                     <IconButton>
                       <Download color="primary" />

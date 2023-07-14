@@ -165,7 +165,9 @@ export default function PurchaseOrders(props) {
       },
     })
       .done((res) => {
-        const aux: GridRowsProp = res;
+        const aux: GridRowsProp = res.sort(
+          (a, b) => b.orderNumber - a.orderNumber
+        );
         if (isSubscribed) {
           setData(aux);
           //handleShowNotification("success", "Ordenes cargadas con éxito");

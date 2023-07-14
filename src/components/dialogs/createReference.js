@@ -150,7 +150,7 @@ export default function CreateProviderDialog(props) {
                 <TextField
                   value={model.packedWeight}
                   onChange={handleChange}
-                  label={"Peso de embalaje (gr)"}
+                  label={"Peso de embalaje (Kg)"}
                   name="packedWeight"
                   variant="standard"
                   margin="dense"

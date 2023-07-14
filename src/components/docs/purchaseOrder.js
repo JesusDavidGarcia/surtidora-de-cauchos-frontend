@@ -17,8 +17,14 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
   },
+  titleContainer: {
+    flexDirection: "column",
+  },
   title: {
     fontSize: 20,
+  },
+  client: {
+    fontSize: 14,
   },
   date: {
     fontSize: 14,
@@ -36,10 +42,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     textAlign: "justify",
     fontFamily: "Times-Roman",
-  },
-  technician: {
-    fontSize: 14,
-    color: "#121212",
   },
   image: {
     width: "200px",
@@ -103,7 +105,13 @@ export default function PurchaseOrderDocument(props) {
     <Document>
       <Page size="A4" style={styles.body}>
         <View style={styles.headers}>
-          <Text style={styles.title}>{data.clientName}</Text>
+          <View style={styles.titleContainer}>
+            <Text style={styles.title}>
+              {`Orden de compra #${data.orderNumber}`}
+            </Text>
+            <Text style={styles.client}>{data.clientName}</Text>
+          </View>
+
           <Text style={styles.date}>
             {new Date(data.createdOn).toLocaleDateString()}
           </Text>

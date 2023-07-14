@@ -83,7 +83,7 @@ export default function References(props) {
       breakpoints: ["md", "lg", "xl"],
     },
     {
-      headerName: "Peso embalaje x10 (gr)",
+      headerName: "Peso embalaje x10 (Kg)",
       field: "packedWeight",
       flex: 1,
       breakpoints: ["md", "lg", "xl"],
@@ -207,7 +207,9 @@ export default function References(props) {
 
   useEffect(() => {
     const myReg = new RegExp("^.*" + searchText.toLowerCase() + ".*");
-    const newArray = data.filter((f) => f.reference.toLowerCase().match(myReg));
+    const newArray = data.filter((f) =>
+      `${f.reference} ${f.application}`.toLowerCase().match(myReg)
+    );
     setFilteredData(newArray);
   }, [data, searchText]);
 
