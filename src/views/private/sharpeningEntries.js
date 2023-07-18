@@ -3,90 +3,76 @@ import React, { useState, useEffect } from "react";
 //MUI
 import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
-
 import Alert from "@mui/material/Alert";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 
 import { DataGrid } from "@mui/x-data-grid";
 
-//import { useNavigate } from "react-router-dom";
-
 //Icons
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 
-import CreateReferenceDialog from "../../components/dialogs/createReference";
-import DeleteClientDialog from "../../components/dialogs/deleteGeneric";
+import UpdateEntryDialog from "../../components/dialogs/updateProductionEntry";
+import CreateEntryDialog from "../../components/dialogs/createSharpeningEntry";
+import DeleteEntryDialog from "../../components/dialogs/deleteGeneric";
 import SearchAndCreate from "../../components/input/searchAndCreate";
-import ClientPopover from "../../components/popovers/generic";
+import ProductionPopover from "../../components/popovers/generic";
 
 import mainURL from "../../config/environment";
 import $ from "jquery";
-import UpdateReferenceDialog from "../../components/dialogs/updateReference";
 import { useWidth } from "../../utils/withSelector";
 
 const emptyData = {
-  id: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-  reference: "",
-  application: "",
-  rawWeight: null,
-  packedWeight: null,
-  currentQuantity: null,
-  minimum: null,
-  maximum: null,
-  rawMaterialId: null,
-  rawMaterialName: "",
+  id: "",
+  rubberReferenceId: "",
+  referenceName: "",
+  operator: "",
+  produced: 0,
+  wasted: 0,
 };
 
 const errorMessage =
-  "No se puede borrar esta referencia porque hay ordenes de compra asociadas a a esta referencia";
+  "No se puede borrar este cliente porque hay obras registradas a su nombre";
 
-export default function References(props) {
+export default function SharpeningEntries(props) {
   //Data management
   const [selectedData, setSelectedData] = useState(emptyData);
   const [filteredData, setFilteredData] = useState([]);
   const [refresh, setRefresh] = useState(false);
 
   const [data, setData] = useState([]);
+  const breakpoint = useWidth();
 
   //const navigate = useNavigate();
-  const breakpoint = useWidth();
   const columns: GridColDef[] = [
     {
       headerName: "Referencia",
-      field: "reference",
+      field: "referenceName",
       flex: 1,
       breakpoints: ["xs", "sm", "md", "lg", "xl"],
     },
     {
-      headerName: "Aplicación",
-      field: "application",
-      flex: 1,
-      breakpoints: ["sm", "md", "lg", "xl"],
-    },
-    {
-      headerName: "Material",
-      field: "rawMaterialName",
-      flex: 1,
-      breakpoints: ["sm", "md", "lg", "xl"],
-    },
-    {
-      headerName: "Cantidad actual",
-      field: "currentQuantity",
+      headerName: "Operario",
+      field: "sharpener",
       flex: 1,
       breakpoints: ["xs", "sm", "md", "lg", "xl"],
     },
     {
-      headerName: "Consumo de materia prima (gr)",
-      field: "rawWeight",
+      headerName: "Cantidad",
+      field: "quantity",
       flex: 1,
-      breakpoints: ["md", "lg", "xl"],
+      breakpoints: ["xs", "sm", "md", "lg", "xl"],
     },
     {
-      headerName: "Peso embalaje x10 (Kg)",
-      field: "packedWeight",
+      headerName: "Fecha de refinado",
+      field: "sharpeningDate",
       flex: 1,
-      breakpoints: ["md", "lg", "xl"],
+      renderCell: (params: GridRenderCellParams) => (
+        <Typography key={params.row.id} variant="body2">
+          {new Date(params.row.sharpeningDate).toLocaleDateString()}
+        </Typography>
+      ),
+      breakpoints: ["sm", "md", "lg", "xl"],
     },
     {
       headerName: "Opciones",
@@ -185,7 +171,7 @@ export default function References(props) {
     //handleShowNotification("info", "Cargando clientes");
     $.ajax({
       method: "GET",
-      url: mainURL + "rubber-reference/get-all",
+      url: mainURL + "sharpening-entry/get-all",
       contentType: "application/json",
       headers: {
         Authorization: "Bearer " + token,
@@ -193,6 +179,7 @@ export default function References(props) {
     })
       .done((res) => {
         const aux: GridRowsProp = res;
+        console.log(res);
         if (isSubscribed) {
           setData(aux);
           setFilteredData(aux);
@@ -208,41 +195,42 @@ export default function References(props) {
   useEffect(() => {
     const myReg = new RegExp("^.*" + searchText.toLowerCase() + ".*");
     const newArray = data.filter((f) =>
-      `${f.reference} ${f.application}`.toLowerCase().match(myReg)
+      f.referenceName.toLowerCase().match(myReg)
     );
     setFilteredData(newArray);
   }, [data, searchText]);
 
   return (
     <Box sx={{ height: "85vh", p: 2 }}>
-      <ClientPopover
+      <ProductionPopover
         open={anchor}
-        showUpdateOption
         showDeleteOption
+        showUpdateOption
         handleClose={handlePopoverClose}
         setDeleteDialog={setDeleteDialog}
         setUpdateDialog={setUpdateDialog}
       />
-      <DeleteClientDialog
+      <DeleteEntryDialog
         refresh={refresh}
         open={deleteDialog}
         setRefresh={setRefresh}
-        title={"Eliminar referencia"}
+        title={"Eliminar registro"}
         errorMessage={errorMessage}
-        name={selectedData.reference}
+        name={`${selectedData.referenceName}`}
         handleClose={handleCloseDialogs}
-        deleteURL={`rubber-reference/${selectedData.id}`}
+        deleteURL={`production-entry/${selectedData.id}`}
+        successMessage={"Registro eliminado con éxito"}
         handleShowNotification={handleShowNotification}
       />
-      <UpdateReferenceDialog
+      <UpdateEntryDialog
         refresh={refresh}
         open={updateDialog}
         setRefresh={setRefresh}
-        referenceId={selectedData.id}
+        entryId={selectedData.id}
         handleClose={handleCloseDialogs}
         handleShowNotification={handleShowNotification}
       />
-      <CreateReferenceDialog
+      <CreateEntryDialog
         refresh={refresh}
         open={createDialog}
         setRefresh={setRefresh}
@@ -256,8 +244,8 @@ export default function References(props) {
         spacing={2}
         container
       >
-        <Grid item md={8}>
-          <Typography variant="h4">{"Referencias"}</Typography>
+        <Grid item xs={12} md={8}>
+          <Typography variant={"h4"}>{"Refinado"}</Typography>
         </Grid>
 
         {showNotification ? (

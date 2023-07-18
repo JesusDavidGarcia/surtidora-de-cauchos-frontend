@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import CircularProgress from "@mui/material/CircularProgress";
 import DialogActions from "@mui/material/DialogActions";
@@ -17,27 +17,18 @@ import $ from "jquery";
 import mainURL from "../../config/environment";
 import SelectOperator from "../input/selectOperator";
 
-//MUI-LAB
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
-import { DatePicker } from "@mui/x-date-pickers";
-import SelectAvailableSharpeners from "../input/selectAvailableSharpeners";
-
 const emptyModel = {
   rubberReferenceId: "",
-  sharpenerId: "",
-  operatorId: "",
-  produced: "",
-  wasted: "",
-  productionDate: Date.now(),
+  operatorId: 0,
+  produced: 0,
+  wasted: 0,
 };
 
-export default function CreateProviderDialog(props) {
-  const [selectedReference, setSelectedReference] = useState(null);
+export default function UpdateSharpeningEntry(props) {
   const [isFormComplete, setFormComplete] = useState(false);
   const [isLoading, setLoading] = useState(false);
   const [model, setModel] = useState(emptyModel);
-  const { refresh } = props;
+  const { refresh, entryId } = props;
 
   const handleChange = (event) => {
     const target = event.target;
@@ -54,45 +45,19 @@ export default function CreateProviderDialog(props) {
     }
   };
 
-  const handleDateChange = (event) => {
-    const date = event;
-    setModel({
-      ...model,
-      productionDate: date,
-    });
-  };
-
-  const handleReferenceChange = (newReference) => {
-    if (newReference !== null) {
-      setModel({
-        ...model,
-        rubberReferenceId: newReference.id,
-      });
-      setSelectedReference(newReference);
-    } else {
-      setModel(emptyModel);
-      setSelectedReference(null);
-    }
-  };
-
   const handleSubmit = (event) => {
     event.preventDefault();
     setLoading(true);
     const token = JSON.parse(localStorage.getItem("userInfo")).token;
 
-    const formatted = {
-      ...model,
-      productionDate: new Date(model.productionDate).toISOString(),
-    };
-
     $.ajax({
-      method: "POST",
-      url: `${mainURL}production-entry`,
+      method: "PUT",
+      url: `${mainURL}production-entry/${entryId}`,
       contentType: "application/json",
       headers: {
         Authorization: "Bearer " + token,
       },
-      data: JSON.stringify(formatted),
+      data: JSON.stringify(model),
     })
       .done((res) => {
         setLoading(false);
@@ -120,52 +85,42 @@ export default function CreateProviderDialog(props) {
     props.setRefresh(!refresh);
   };
 
+  useEffect(() => {
+    const token = JSON.parse(localStorage.getItem("userInfo")).token;
+    const host = JSON.parse(localStorage.getItem("userInfo")).hostName;
+    if (entryId !== "") {
+      $.ajax({
+        method: "GET",
+        url: `${mainURL}production-entry/${entryId}`,
+        contentType: "application/json",
+        headers: {
+          Authorization: "Bearer " + token,
+          hostname: host,
+        },
+      }).done((res) => {
+        setModel(res);
+      });
+    }
+  }, [entryId, refresh]);
+
   return (
     <Dialog open={props.open} onClose={props.handleClose} maxWidth="md">
       <DialogTitle>{"Registrar ingreso"}</DialogTitle>
       <DialogContent>
         <Box component="form" onSubmit={handleSubmit}>
-          <Grid container spacing={2} sx={{ pt: 2 }}>
+          <Grid container spacing={2}>
             <Grid item xs={12} md={12}>
-              <FormControl fullWidth>
-                <LocalizationProvider dateAdapter={AdapterDateFns}>
-                  <DatePicker
-                    label={"Fecha de producción"}
-                    value={model.productionDate}
-                    onChange={handleDateChange}
-                    format="dd/MM/yyyy"
-                    renderInput={(params) => <TextField variant="standard" />}
-                  />
-                </LocalizationProvider>
-              </FormControl>
-            </Grid>
-            <Grid item xs={12} md={6}>
               <SelectReference
-                handleChange={handleReferenceChange}
-                value={selectedReference}
-              />
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <SelectAvailableSharpeners
-                reference={
-                  model.rubberReferenceId === ""
-                    ? null
-                    : model.rubberReferenceId
-                }
                 handleChange={handleChange}
-                value={model.sharpenerId}
-                name="sharpenerId"
-                area="manufactura"
-                title="Refilador"
+                name="rubberReferenceId"
+                value={model.rubberReferenceId}
               />
             </Grid>
-
             <Grid item xs={12} md={6}>
               <SelectOperator
                 handleChange={handleChange}
-                value={model.operatorId}
                 name="operatorId"
-                area="manufactura"
+                value={model.operatorId}
               />
             </Grid>
             <Grid item xs={12} md={3}>
@@ -218,7 +173,7 @@ export default function CreateProviderDialog(props) {
               disabled={!isFormComplete}
               onClick={handleSubmit}
             >
-              Agregar
+              Actualizar
             </Button>
           </Grid>
         )}

@@ -7,34 +7,37 @@ import Select from "@mui/material/Select";
 import $ from "jquery";
 import mainURL from "../../config/environment";
 
-const useBaskets = (refresh) => {
-  const [baskets, setBaskets] = useState([]);
+const useSharpeners = (reference) => {
+  const [sharpeners, setSharpeners] = useState([]);
   useEffect(() => {
     const token = JSON.parse(localStorage.getItem("userInfo")).token;
     let isSubscribed = true;
-    $.ajax({
-      method: "GET",
-      url: mainURL + "basket/get-all",
-      contentType: "application/json",
-      headers: {
-        Authorization: "Bearer " + token,
-      },
-    }).done((res) => {
-      if (isSubscribed) setBaskets(res);
-    });
+    if (reference) {
+      $.ajax({
+        method: "GET",
+        url: `${mainURL}operator-sharpening/get-all?reference=${reference}`,
+        contentType: "application/json",
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      }).done((res) => {
+        if (isSubscribed) setSharpeners(res);
+      });
+    }
     return () => (isSubscribed = false);
-  }, []);
-  return baskets;
+  }, [reference]);
+  return sharpeners;
 };
 
-export default function SelectBasket(props) {
+export default function SelectAvailableSharpeners(props) {
   const { handleChange } = props;
+  const { reference } = props;
   const { required } = props;
-  const { refresh } = props;
+  const { title } = props;
   const { value } = props;
   const { name } = props;
 
-  const baskets = useBaskets(refresh);
+  const operators = useSharpeners(reference);
 
   return (
     <FormControl
@@ -42,7 +45,7 @@ export default function SelectBasket(props) {
       required={required}
       sx={{ height: "56px", justifyContent: "flex-end" }}
     >
-      <InputLabel variant="standard">{"Canasta"}</InputLabel>
+      <InputLabel variant="standard">{title ?? "Operario"}</InputLabel>
       <Select
         value={value}
         onChange={handleChange}
@@ -51,9 +54,9 @@ export default function SelectBasket(props) {
         native
       >
         <option value="" />
-        {baskets.map((basket) => (
-          <option key={basket.id} value={basket.id}>
-            {basket.number}
+        {operators.map((operator) => (
+          <option key={operator.id} value={operator.id}>
+            {operator.sharpener}
           </option>
         ))}
       </Select>

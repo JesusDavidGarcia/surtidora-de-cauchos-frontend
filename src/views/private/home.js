@@ -27,6 +27,7 @@ import Main from "./main";
 
 import mainURL from "../../config/environment";
 import $ from "jquery";
+import SharpeningEntries from "./sharpeningEntries";
 
 export default function Home(props) {
   const [openNC, setOpenNC] = React.useState(false);
@@ -107,6 +108,7 @@ export default function Home(props) {
             element={<PurchaseOrderDetails />}
           />
           <Route path="produccion" element={<ProductionEntries />} />
+          <Route path="refinado" element={<SharpeningEntries />} />
           <Route path="materia-prima" element={<RawMaterialEntries />} />
         </Routes>
       </Box>

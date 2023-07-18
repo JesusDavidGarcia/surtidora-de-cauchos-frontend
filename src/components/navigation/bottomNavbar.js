@@ -12,6 +12,7 @@ import { useNavigate } from "react-router-dom";
 import ShoppingCartCheckoutIcon from "@mui/icons-material/ShoppingCartCheckout";
 import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 import EngineeringIcon from "@mui/icons-material/Engineering";
+import ContentCutIcon from "@mui/icons-material/ContentCut";
 import ViewAgendaIcon from "@mui/icons-material/ViewAgenda";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import InventoryIcon from "@mui/icons-material/Inventory";
@@ -22,51 +23,19 @@ import HailIcon from "@mui/icons-material/Hail";
 import InventoryPopover from "../popovers/inventory";
 import SectionsPopover from "../popovers/sections";
 
-/* 
-import mainURL from "../../config/environment";
-import $ from "jquery"; */
-
-/* const usePermissions = (refresh) => {
-  const navigate = useNavigate();
-  const [permissions, setPermissions] = useState([]);
-  useEffect(() => {
-    const token = JSON.parse(localStorage.getItem("userInfo")).token;
-    const roleId = JSON.parse(localStorage.getItem("userInfo")).roleId;
-    let isSubscribed = true;
-    $.ajax({
-      method: "GET",
-      url: mainURL + `permissions/${roleId}`,
-      contentType: "application/json",
-      headers: {
-        Authorization: "Bearer " + token,
-      },
-    })
-      .done((res) => {
-        console.log(res);
-        const aux = [];
-        res.forEach((element) => {
-          if (element.isAssigned) aux.push(element.permission);
-        });
-        if (isSubscribed) setPermissions(aux);
-      })
-      .fail((res) => {
-        if (res.status === 401) {
-          alert("Session expired");
-          localStorage.removeItem("userInfo");
-          navigate("/login");
-        }
-      });
-    return () => (isSubscribed = false);
-  }, [navigate]);
-  return permissions;
-}; */
-
 const sections = [
   {
     id: "raw-material",
     title: "Materia prima",
     icon: <ViewAgendaIcon />,
     path: "/materia-prima",
+    permission: 9,
+  },
+  {
+    id: "sharpening",
+    title: "Refinado",
+    icon: <ContentCutIcon />,
+    path: "/refinado",
     permission: 9,
   },
   {

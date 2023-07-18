@@ -51,7 +51,7 @@ export default function SelectReference(props) {
           handleChange(newValue);
         }}
         renderInput={(params) => (
-          <TextField {...params} variant="standard" label="Referencias" />
+          <TextField {...params} variant="standard" label="Referencia" />
         )}
       />
     </FormControl>

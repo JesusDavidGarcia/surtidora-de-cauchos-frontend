@@ -21,18 +21,15 @@ import SelectOperator from "../input/selectOperator";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { DatePicker } from "@mui/x-date-pickers";
-import SelectAvailableSharpeners from "../input/selectAvailableSharpeners";
 
 const emptyModel = {
   rubberReferenceId: "",
   sharpenerId: "",
-  operatorId: "",
-  produced: "",
-  wasted: "",
-  productionDate: Date.now(),
+  quantity: "",
+  sharpeningDate: Date.now(),
 };
 
-export default function CreateProviderDialog(props) {
+export default function CreateSharpeningEntry(props) {
   const [selectedReference, setSelectedReference] = useState(null);
   const [isFormComplete, setFormComplete] = useState(false);
   const [isLoading, setLoading] = useState(false);
@@ -49,7 +46,7 @@ export default function CreateProviderDialog(props) {
       [name]: value,
     });
 
-    if (model.produced > 0) {
+    if (model.quantity > 0) {
       setFormComplete(true);
     }
   };
@@ -58,7 +55,7 @@ export default function CreateProviderDialog(props) {
     const date = event;
     setModel({
       ...model,
-      productionDate: date,
+      sharpeningDate: date,
     });
   };
 
@@ -82,12 +79,12 @@ export default function CreateProviderDialog(props) {
 
     const formatted = {
       ...model,
-      productionDate: new Date(model.productionDate).toISOString(),
+      sharpeningDate: new Date(model.sharpeningDate).toISOString(),
     };
 
     $.ajax({
       method: "POST",
-      url: `${mainURL}production-entry`,
+      url: `${mainURL}sharpening-entry`,
       contentType: "application/json",
       headers: {
         Authorization: "Bearer " + token,
@@ -126,12 +123,12 @@ export default function CreateProviderDialog(props) {
       <DialogContent>
         <Box component="form" onSubmit={handleSubmit}>
           <Grid container spacing={2} sx={{ pt: 2 }}>
-            <Grid item xs={12} md={12}>
+            <Grid item xs={12} md={6}>
               <FormControl fullWidth>
                 <LocalizationProvider dateAdapter={AdapterDateFns}>
                   <DatePicker
-                    label={"Fecha de producción"}
-                    value={model.productionDate}
+                    label={"Fecha de refinado"}
+                    value={model.sharpeningDate}
                     onChange={handleDateChange}
                     format="dd/MM/yyyy"
                     renderInput={(params) => <TextField variant="standard" />}
@@ -145,53 +142,22 @@ export default function CreateProviderDialog(props) {
                 value={selectedReference}
               />
             </Grid>
-            <Grid item xs={12} md={6}>
-              <SelectAvailableSharpeners
-                reference={
-                  model.rubberReferenceId === ""
-                    ? null
-                    : model.rubberReferenceId
-                }
+            <Grid item xs={12} md={8}>
+              <SelectOperator
                 handleChange={handleChange}
                 value={model.sharpenerId}
                 name="sharpenerId"
-                area="manufactura"
-                title="Refilador"
+                area="refilado"
               />
             </Grid>
-
-            <Grid item xs={12} md={6}>
-              <SelectOperator
-                handleChange={handleChange}
-                value={model.operatorId}
-                name="operatorId"
-                area="manufactura"
-              />
-            </Grid>
-            <Grid item xs={12} md={3}>
+            <Grid item xs={12} md={4}>
               <FormControl fullWidth required>
                 <TextField
-                  label={"Producido"}
+                  label={"Cantidad"}
                   onChange={handleChange}
-                  value={model.produced}
+                  value={model.quantity}
                   variant="standard"
-                  name="produced"
-                  margin="dense"
-                  type="number"
-                  inputProps={{ step: "0.25" }}
-                  fullWidth
-                  required
-                />
-              </FormControl>
-            </Grid>
-            <Grid item xs={12} md={3}>
-              <FormControl fullWidth required>
-                <TextField
-                  label={"Desechado"}
-                  onChange={handleChange}
-                  value={model.wasted}
-                  variant="standard"
-                  name="wasted"
+                  name="quantity"
                   margin="dense"
                   type="number"
                   inputProps={{ step: "0.25" }}
