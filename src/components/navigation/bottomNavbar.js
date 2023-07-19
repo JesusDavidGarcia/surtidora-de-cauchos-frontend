@@ -22,6 +22,7 @@ import HailIcon from "@mui/icons-material/Hail";
 
 import InventoryPopover from "../popovers/inventory";
 import SectionsPopover from "../popovers/sections";
+import SharpeningPopover from "../popovers/sharpening";
 
 const sections = [
   {
@@ -31,13 +32,7 @@ const sections = [
     path: "/materia-prima",
     permission: 9,
   },
-  {
-    id: "sharpening",
-    title: "Refilado",
-    icon: <ContentCutIcon />,
-    path: "/refilado",
-    permission: 9,
-  },
+
   {
     id: "references",
     title: "Referencias",
@@ -64,13 +59,6 @@ const sections = [
     title: "Operarios",
     icon: <GroupsIcon />,
     path: "/operarios",
-    permission: 9,
-  },
-  {
-    id: "sharpeners",
-    title: "Refiladoras",
-    icon: <GroupsIcon />,
-    path: "/refiladoras",
     permission: 9,
   },
   {
@@ -104,23 +92,32 @@ export default function BottomNavbar() {
   const navigate = useNavigate();
 
   //Profile popover management
+  const [anchorSharpening, setAnchorSharpening] = useState(null);
   const [anchorInventory, setAnchorInventory] = useState(null);
   const [anchorSections, setAnchorSections] = useState(null);
+
   const handleInventoryPopoverOpen = (type) => (event) => {
     event.stopPropagation();
     switch (type) {
       case "inventory":
         setAnchorInventory(event.currentTarget);
         break;
+
       case "sections":
         setAnchorSections(event.currentTarget);
         break;
+
+      case "sharpening":
+        setAnchorSharpening(event.currentTarget);
+        break;
+
       default:
         setAnchorSections(event.currentTarget);
     }
   };
 
   const handleInventoryPopoverClose = () => {
+    setAnchorSharpening(null);
     setAnchorInventory(null);
     setAnchorSections(null);
   };
@@ -149,6 +146,12 @@ export default function BottomNavbar() {
         open={anchorSections}
         handleClose={handleInventoryPopoverClose}
       />
+
+      <SharpeningPopover
+        open={anchorSharpening}
+        handleClose={handleInventoryPopoverClose}
+      />
+
       <BottomNavigation
         showLabels
         sx={{ display: { xs: "none", md: "flex" } }}
@@ -162,6 +165,11 @@ export default function BottomNavbar() {
           value={"/"}
           label="Inicio"
           icon={<DashboardIcon />}
+        />
+        <BottomNavigationAction
+          onClick={handleInventoryPopoverOpen("sharpening")}
+          label="Refilado"
+          icon={<ContentCutIcon />}
         />
 
         {sections.map((section) => {

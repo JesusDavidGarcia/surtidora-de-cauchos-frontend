@@ -31,7 +31,7 @@ const breadcrumbNameMap = {
   "/ordenes-compra": "Órdenes de compra",
   "/ordenes-compra/crear": "Crear",
   "/operarios": "Operarios",
-  "/refilado": "Refilado",
+  "/ingresos-refilado": "Refilado",
 };
 
 const breadcrumbIconMap = {
@@ -46,7 +46,7 @@ const breadcrumbIconMap = {
   "/clientes": <HailIcon sx={{ mr: 1 }} htmlColor="#FFF" />,
   "/usuarios": <GroupIcon sx={{ mr: 1 }} htmlColor="#FFF" />,
   "/operarios": <GroupsIcon sx={{ mr: 1 }} htmlColor="#FFF" />,
-  "/refilado": <ContentCutIcon sx={{ mr: 1 }} htmlColor="#FFF" />,
+  "/ingresos-refilado": <ContentCutIcon sx={{ mr: 1 }} htmlColor="#FFF" />,
 };
 
 const LinkRouter = (props) => <Link {...props} component={RouterLink} />;

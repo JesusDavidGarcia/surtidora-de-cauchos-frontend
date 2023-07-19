@@ -195,7 +195,7 @@ export default function SharpenersMatrix(props) {
         container
       >
         <Grid item xs={12} md={8}>
-          <Typography variant={"h4"}>{"Refiladoras"}</Typography>
+          <Typography variant={"h4"}>{"Estado actual de refilado"}</Typography>
         </Grid>
 
         {showNotification ? (

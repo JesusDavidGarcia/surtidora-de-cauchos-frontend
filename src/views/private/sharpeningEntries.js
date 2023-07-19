@@ -245,7 +245,7 @@ export default function SharpeningEntries(props) {
         container
       >
         <Grid item xs={12} md={8}>
-          <Typography variant={"h4"}>{"Refilado"}</Typography>
+          <Typography variant={"h4"}>{"Ingresos a refilado"}</Typography>
         </Grid>
 
         {showNotification ? (
