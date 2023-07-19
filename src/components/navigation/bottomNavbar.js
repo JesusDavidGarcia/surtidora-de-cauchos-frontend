@@ -33,9 +33,9 @@ const sections = [
   },
   {
     id: "sharpening",
-    title: "Refinado",
+    title: "Refilado",
     icon: <ContentCutIcon />,
-    path: "/refinado",
+    path: "/refilado",
     permission: 9,
   },
   {
@@ -64,6 +64,13 @@ const sections = [
     title: "Operarios",
     icon: <GroupsIcon />,
     path: "/operarios",
+    permission: 9,
+  },
+  {
+    id: "sharpeners",
+    title: "Refiladoras",
+    icon: <GroupsIcon />,
+    path: "/refiladoras",
     permission: 9,
   },
   {

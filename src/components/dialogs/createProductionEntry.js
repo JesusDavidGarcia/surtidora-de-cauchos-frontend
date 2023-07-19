@@ -21,7 +21,7 @@ import SelectOperator from "../input/selectOperator";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { DatePicker } from "@mui/x-date-pickers";
-import SelectAvailableSharpeners from "../input/selectAvailableSharpeners";
+import SelectAvailableSharpeners from "../input/selectSharpener";
 
 const emptyModel = {
   rubberReferenceId: "",
@@ -29,10 +29,12 @@ const emptyModel = {
   operatorId: "",
   produced: "",
   wasted: "",
+  maxQuantity: "",
   productionDate: Date.now(),
 };
 
 export default function CreateProviderDialog(props) {
+  const [selectedSharpener, setSelectedSharpener] = useState(null);
   const [selectedReference, setSelectedReference] = useState(null);
   const [isFormComplete, setFormComplete] = useState(false);
   const [isLoading, setLoading] = useState(false);
@@ -72,6 +74,22 @@ export default function CreateProviderDialog(props) {
     } else {
       setModel(emptyModel);
       setSelectedReference(null);
+      setSelectedSharpener(null);
+    }
+  };
+
+  const handleSharpenerChange = (newReference) => {
+    if (newReference !== null) {
+      setModel({
+        ...model,
+        sharpenerId: newReference.sharpenerId,
+        maxQuantity: newReference.quantity,
+      });
+      console.log(newReference);
+      setSelectedSharpener(newReference);
+    } else {
+      setModel(emptyModel);
+      setSelectedSharpener(null);
     }
   };
 
@@ -152,11 +170,9 @@ export default function CreateProviderDialog(props) {
                     ? null
                     : model.rubberReferenceId
                 }
-                handleChange={handleChange}
-                value={model.sharpenerId}
-                name="sharpenerId"
-                area="manufactura"
-                title="Refilador"
+                handleChange={handleSharpenerChange}
+                value={selectedSharpener}
+                required
               />
             </Grid>
 
@@ -178,7 +194,7 @@ export default function CreateProviderDialog(props) {
                   name="produced"
                   margin="dense"
                   type="number"
-                  inputProps={{ step: "0.25" }}
+                  inputProps={{ step: "0.25", max: model.maxQuantity }}
                   fullWidth
                   required
                 />
@@ -194,7 +210,10 @@ export default function CreateProviderDialog(props) {
                   name="wasted"
                   margin="dense"
                   type="number"
-                  inputProps={{ step: "0.25" }}
+                  inputProps={{
+                    step: "0.25",
+                    max: model.maxQuantity - model.produced,
+                  }}
                   fullWidth
                   required
                 />

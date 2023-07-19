@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 
 import FormControl from "@mui/material/FormControl";
-import InputLabel from "@mui/material/InputLabel";
-import Select from "@mui/material/Select";
+import Autocomplete from "@mui/material/Autocomplete";
+import TextField from "@mui/material/TextField";
 
 import $ from "jquery";
 import mainURL from "../../config/environment";
@@ -21,45 +21,43 @@ const useSharpeners = (reference) => {
           Authorization: "Bearer " + token,
         },
       }).done((res) => {
-        if (isSubscribed) setSharpeners(res);
+        const aux = res.sort((a, b) =>
+          `${a.reference} ${a.application}`.localeCompare(
+            `${b.reference} ${b.application}`
+          )
+        );
+        if (isSubscribed) setSharpeners(aux);
       });
+    } else {
+      setSharpeners([]);
     }
     return () => (isSubscribed = false);
   }, [reference]);
   return sharpeners;
 };
 
-export default function SelectAvailableSharpeners(props) {
+export default function SelectSharpener(props) {
   const { handleChange } = props;
   const { reference } = props;
-  const { required } = props;
-  const { title } = props;
+  //const { required } = props;
   const { value } = props;
-  const { name } = props;
 
-  const operators = useSharpeners(reference);
+  const references = useSharpeners(reference);
 
   return (
-    <FormControl
-      fullWidth
-      required={required}
-      sx={{ height: "56px", justifyContent: "flex-end" }}
-    >
-      <InputLabel variant="standard">{title ?? "Operario"}</InputLabel>
-      <Select
+    <FormControl fullWidth>
+      <Autocomplete
+        id="tags-standard"
+        options={references}
+        getOptionLabel={(opt) => `${opt.sharpener}`}
         value={value}
-        onChange={handleChange}
-        name={name}
-        variant="standard"
-        native
-      >
-        <option value="" />
-        {operators.map((operator) => (
-          <option key={operator.id} value={operator.id}>
-            {operator.sharpener}
-          </option>
-        ))}
-      </Select>
+        onChange={(event, newValue) => {
+          handleChange(newValue);
+        }}
+        renderInput={(params) => (
+          <TextField {...params} variant="standard" label="Refilador" />
+        )}
+      />
     </FormControl>
   );
 }

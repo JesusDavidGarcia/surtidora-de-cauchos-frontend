@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 
 //MUI
 import Typography from "@mui/material/Typography";
-import IconButton from "@mui/material/IconButton";
 import Alert from "@mui/material/Alert";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
@@ -10,13 +9,8 @@ import Box from "@mui/material/Box";
 import { DataGrid } from "@mui/x-data-grid";
 
 //Icons
-import MoreVertIcon from "@mui/icons-material/MoreVert";
 
-import UpdateEntryDialog from "../../components/dialogs/updateProductionEntry";
-import CreateEntryDialog from "../../components/dialogs/createSharpeningEntry";
-import DeleteEntryDialog from "../../components/dialogs/deleteGeneric";
 import SearchAndCreate from "../../components/input/searchAndCreate";
-import ProductionPopover from "../../components/popovers/generic";
 
 import mainURL from "../../config/environment";
 import $ from "jquery";
@@ -31,20 +25,17 @@ const emptyData = {
   wasted: 0,
 };
 
-const errorMessage =
-  "No se puede borrar este cliente porque hay obras registradas a su nombre";
-
-export default function SharpeningEntries(props) {
+export default function SharpenersMatrix(props) {
   //Data management
   const [selectedData, setSelectedData] = useState(emptyData);
   const [filteredData, setFilteredData] = useState([]);
-  const [refresh, setRefresh] = useState(false);
+  const [columns, setColumns] = useState([]);
 
   const [data, setData] = useState([]);
   const breakpoint = useWidth();
 
   //const navigate = useNavigate();
-  const columns: GridColDef[] = [
+  /* const columns: GridColDef[] = [
     {
       headerName: "Referencia",
       field: "referenceName",
@@ -89,37 +80,7 @@ export default function SharpeningEntries(props) {
       editable: false,
       breakpoints: ["xs", "sm", "md", "lg", "xl"],
     },
-  ];
-
-  //Dialog management
-  const [updateDialog, setUpdateDialog] = useState(false);
-  const [deleteDialog, setDeleteDialog] = useState(false);
-  const [createDialog, setCreateDialog] = useState(false);
-  const handleCloseDialogs = () => {
-    setUpdateDialog(false);
-    setDeleteDialog(false);
-    setCreateDialog(false);
-  };
-
-  const handleOpenDialog = (dialog) => (event) => {
-    switch (dialog) {
-      case "create":
-        setCreateDialog(true);
-        break;
-
-      case "delete":
-        setDeleteDialog(true);
-        break;
-
-      case "update":
-        setUpdateDialog(true);
-        break;
-
-      default:
-        console.log("None");
-        break;
-    }
-  };
+  ]; */
 
   //Notification management
   const [showNotification, setShowNotification] = useState(false);
@@ -137,12 +98,12 @@ export default function SharpeningEntries(props) {
   };
 
   //Popover management
-  const [anchor, setAnchor] = useState(null);
-  const handlePopoverOpen = (selected) => (event) => {
+  //const [anchor, setAnchor] = useState(null);
+  /*  const handlePopoverOpen = (selected) => (event) => {
     event.stopPropagation();
     setAnchor(event.currentTarget);
     setSelectedData(selected);
-  };
+  }; */
 
   //Search management
   const [searchText, setSearchText] = useState("");
@@ -152,9 +113,9 @@ export default function SharpeningEntries(props) {
     setSearchText(value);
   };
 
-  const handlePopoverClose = () => {
+  /*  const handlePopoverClose = () => {
     setAnchor(null);
-  };
+  }; */
 
   const handleSelect = (data) => {
     if (data.row !== selectedData) setSelectedData(data.row);
@@ -171,18 +132,42 @@ export default function SharpeningEntries(props) {
     //handleShowNotification("info", "Cargando clientes");
     $.ajax({
       method: "GET",
-      url: mainURL + "sharpening-entry/get-all",
+      url: mainURL + "operator-sharpening/get-all",
       contentType: "application/json",
       headers: {
         Authorization: "Bearer " + token,
       },
     })
       .done((res) => {
-        const aux: GridRowsProp = res;
-        console.log(res);
+        //const auxRows: GridRowsProp = res;
+        //const auxColumns: Col
+        const categories = [...new Set(res.map((item) => item.sharpener))];
+        const columns = categories.map((item) => ({
+          headerName: item,
+          field: item,
+          flex: 1,
+          breakpoints: ["xs", "sm", "md", "lg", "xl"],
+        }));
+
+        columns.unshift({
+          headerName: "Referencia",
+          field: "Referencia",
+          flex: 1,
+          breakpoints: ["xs", "sm", "md", "lg", "xl"],
+        });
+
+        const rows = res.map((m) => ({
+          id: m.id,
+          Referencia: m.referenceName,
+          [m.sharpener]: m.quantity,
+        }));
+        console.log(columns, rows);
         if (isSubscribed) {
-          setData(aux);
-          setFilteredData(aux);
+          setColumns(columns);
+          setData(rows);
+          setFilteredData(rows);
+          //setData(aux);
+          //setFilteredData(aux);
           //handleShowNotification("success", "Referencias cargados con éxito");
         }
       })
@@ -190,53 +175,18 @@ export default function SharpeningEntries(props) {
         handleShowNotification("error", res.responseText);
       });
     return () => (isSubscribed = false);
-  }, [refresh]);
+  }, []);
 
   useEffect(() => {
     const myReg = new RegExp("^.*" + searchText.toLowerCase() + ".*");
     const newArray = data.filter((f) =>
-      f.referenceName.toLowerCase().match(myReg)
+      f.Referencia.toLowerCase().match(myReg)
     );
     setFilteredData(newArray);
   }, [data, searchText]);
 
   return (
     <Box sx={{ height: "85vh", p: 2 }}>
-      <ProductionPopover
-        open={anchor}
-        showDeleteOption
-        showUpdateOption
-        handleClose={handlePopoverClose}
-        setDeleteDialog={setDeleteDialog}
-        setUpdateDialog={setUpdateDialog}
-      />
-      <DeleteEntryDialog
-        refresh={refresh}
-        open={deleteDialog}
-        setRefresh={setRefresh}
-        title={"Eliminar registro"}
-        errorMessage={errorMessage}
-        name={`${selectedData.referenceName}`}
-        handleClose={handleCloseDialogs}
-        deleteURL={`production-entry/${selectedData.id}`}
-        successMessage={"Registro eliminado con éxito"}
-        handleShowNotification={handleShowNotification}
-      />
-      <UpdateEntryDialog
-        refresh={refresh}
-        open={updateDialog}
-        setRefresh={setRefresh}
-        entryId={selectedData.id}
-        handleClose={handleCloseDialogs}
-        handleShowNotification={handleShowNotification}
-      />
-      <CreateEntryDialog
-        refresh={refresh}
-        open={createDialog}
-        setRefresh={setRefresh}
-        handleClose={handleCloseDialogs}
-        handleShowNotification={handleShowNotification}
-      />
       <Grid
         justifyContent={"space-between"}
         alignItems={"center"}
@@ -245,7 +195,7 @@ export default function SharpeningEntries(props) {
         container
       >
         <Grid item xs={12} md={8}>
-          <Typography variant={"h4"}>{"Refilado"}</Typography>
+          <Typography variant={"h4"}>{"Refiladoras"}</Typography>
         </Grid>
 
         {showNotification ? (
@@ -257,7 +207,7 @@ export default function SharpeningEntries(props) {
         ) : (
           <SearchAndCreate
             title="Buscar por referencia"
-            handleOpenDialog={handleOpenDialog}
+            handleOpenDialog={() => null}
             handleSearch={handleSearch}
             searchText={searchText}
             permission={10}

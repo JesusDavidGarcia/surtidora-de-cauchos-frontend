@@ -123,11 +123,11 @@ export default function CreateSharpeningEntry(props) {
       <DialogContent>
         <Box component="form" onSubmit={handleSubmit}>
           <Grid container spacing={2} sx={{ pt: 2 }}>
-            <Grid item xs={12} md={6}>
+            <Grid item xs={12} md={12}>
               <FormControl fullWidth>
                 <LocalizationProvider dateAdapter={AdapterDateFns}>
                   <DatePicker
-                    label={"Fecha de refinado"}
+                    label={"Fecha de refilado"}
                     value={model.sharpeningDate}
                     onChange={handleDateChange}
                     format="dd/MM/yyyy"
@@ -136,7 +136,7 @@ export default function CreateSharpeningEntry(props) {
                 </LocalizationProvider>
               </FormControl>
             </Grid>
-            <Grid item xs={12} md={6}>
+            <Grid item xs={12} md={12}>
               <SelectReference
                 handleChange={handleReferenceChange}
                 value={selectedReference}
