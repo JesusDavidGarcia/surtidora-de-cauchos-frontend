@@ -15,6 +15,10 @@ import SearchAndCreate from "../../components/input/searchAndCreate";
 import mainURL from "../../config/environment";
 import $ from "jquery";
 import { useWidth } from "../../utils/withSelector";
+/* import { PDFDownloadLink } from "@react-pdf/renderer";
+import SharpeningStateDocument from "../../components/docs/sharpeningState";
+import { IconButton } from "@mui/material";
+import { Download } from "@mui/icons-material"; */
 
 const emptyData = {
   id: "",
@@ -30,6 +34,7 @@ export default function SharpenersMatrix(props) {
   const [selectedData, setSelectedData] = useState(emptyData);
   const [filteredData, setFilteredData] = useState([]);
   const [columns, setColumns] = useState([]);
+  //const [isLoading, setLoading] = useState(true);
 
   const [data, setData] = useState([]);
   const breakpoint = useWidth();
@@ -130,6 +135,7 @@ export default function SharpenersMatrix(props) {
     const token = JSON.parse(localStorage.getItem("userInfo")).token;
     let isSubscribed = true;
     //handleShowNotification("info", "Cargando clientes");
+    //setLoading(true);
     $.ajax({
       method: "GET",
       url: mainURL + "operator-sharpening/get-all",
@@ -139,10 +145,19 @@ export default function SharpenersMatrix(props) {
       },
     })
       .done((res) => {
-        //const auxRows: GridRowsProp = res;
-        //const auxColumns: Col
-        const categories = [...new Set(res.map((item) => item.sharpener))];
-        const columns = categories.map((item) => ({
+        const sharpeners = [...new Set(res.map((item) => item.sharpener))];
+        const references = [...new Set(res.map((item) => item.referenceName))];
+        const combination = [
+          ...new Set(
+            res.map((item, idx) => ({
+              id: idx,
+              [item.sharpener]: item.quantity,
+              Referencia: item.referenceName,
+            }))
+          ),
+        ];
+
+        const columns = sharpeners.map((item) => ({
           headerName: item,
           field: item,
           flex: 1,
@@ -156,19 +171,21 @@ export default function SharpenersMatrix(props) {
           breakpoints: ["xs", "sm", "md", "lg", "xl"],
         });
 
-        const rows = res.map((m) => ({
-          id: m.id,
-          Referencia: m.referenceName,
-          [m.sharpener]: m.quantity,
-        }));
-        console.log(columns, rows);
+        const rows = [];
+
+        references.forEach((ref) => {
+          rows.push(
+            combination
+              .filter((m) => m.Referencia === ref)
+              .reduce((r, c) => Object.assign(r, c), {})
+          );
+        });
+
         if (isSubscribed) {
           setColumns(columns);
           setData(rows);
           setFilteredData(rows);
-          //setData(aux);
-          //setFilteredData(aux);
-          //handleShowNotification("success", "Referencias cargados con éxito");
+          //setLoading(false);
         }
       })
       .fail((res) => {
@@ -196,6 +213,20 @@ export default function SharpenersMatrix(props) {
       >
         <Grid item xs={12} md={8}>
           <Typography variant={"h4"}>{"Estado actual de refilado"}</Typography>
+          {/* {isLoading ? null : (
+            <PDFDownloadLink
+              document={
+                <SharpeningStateDocument data={data} columns={columns} />
+              }
+              fileName={`Informe de refilado ${
+                new Date().toISOString().split("T")[0]
+              }.pdf`}
+            >
+              <IconButton>
+                <Download color="primary" />
+              </IconButton>
+            </PDFDownloadLink>
+          )} */}
         </Grid>
 
         {showNotification ? (

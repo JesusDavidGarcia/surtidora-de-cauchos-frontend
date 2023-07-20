@@ -114,6 +114,7 @@ export default function CreateSharpeningEntry(props) {
     props.handleClose();
     setModel(emptyModel);
     setFormComplete(false);
+    setSelectedReference(null);
     props.setRefresh(!refresh);
   };
 
