@@ -27,9 +27,9 @@ const emptyModel = {
   rubberReferenceId: "",
   sharpenerId: "",
   operatorId: "",
-  produced: "",
-  wasted: "",
-  maxQuantity: "",
+  produced: 0,
+  wasted: 0,
+  maxQuantity: 0,
   productionDate: Date.now(),
 };
 
@@ -46,10 +46,32 @@ export default function CreateProviderDialog(props) {
     const name = target.name;
     let value = target.value;
 
-    setModel({
-      ...model,
-      [name]: value,
-    });
+    switch (name) {
+      case "produced":
+        if (value <= model.maxQuantity) {
+          setModel({
+            ...model,
+            [name]: value,
+          });
+        }
+        break;
+
+      case "wasted":
+        if (value <= model.maxQuantity - model.produced) {
+          setModel({
+            ...model,
+            [name]: value,
+          });
+        }
+        break;
+
+      default:
+        setModel({
+          ...model,
+          [name]: value,
+        });
+        break;
+    }
 
     if (model.produced > 0) {
       setFormComplete(true);

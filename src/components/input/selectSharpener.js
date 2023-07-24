@@ -21,6 +21,7 @@ const useSharpeners = (reference) => {
           Authorization: "Bearer " + token,
         },
       }).done((res) => {
+        console.log(res);
         const aux = res.sort((a, b) =>
           `${a.reference} ${a.application}`.localeCompare(
             `${b.reference} ${b.application}`
@@ -49,7 +50,7 @@ export default function SelectSharpener(props) {
       <Autocomplete
         id="tags-standard"
         options={references}
-        getOptionLabel={(opt) => `${opt.sharpener}`}
+        getOptionLabel={(opt) => `${opt.sharpener} - Cantidad: ${opt.quantity}`}
         value={value}
         onChange={(event, newValue) => {
           handleChange(newValue);

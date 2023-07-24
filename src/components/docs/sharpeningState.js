@@ -65,7 +65,7 @@ const styles = StyleSheet.create({
 
 export default function SharpeningStateDocument(props) {
   const { data, columns } = props;
-  console.log(columns.length.toString());
+
   return (
     <Document>
       <Page size="A4" style={styles.body}>
@@ -81,7 +81,7 @@ export default function SharpeningStateDocument(props) {
                 key={idx}
                 style={{
                   ...styles.tableCol,
-                  width: `calc(100%/${columns.length})`,
+                  width: `${(100 / columns.length).toFixed(0)}%`,
                 }}
               >
                 <Text style={styles.tableCell}>{col.field}</Text>
@@ -94,8 +94,8 @@ export default function SharpeningStateDocument(props) {
                 <View
                   key={colIdx}
                   style={{
-                    ...styles.tableç,
-                    width: `calc(100%/${columns.length})`,
+                    ...styles.tableCol,
+                    width: `${(100 / columns.length).toFixed(0)}%`,
                   }}
                 >
                   <Text style={styles.refTableCell}>

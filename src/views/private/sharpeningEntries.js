@@ -12,7 +12,7 @@ import { DataGrid } from "@mui/x-data-grid";
 //Icons
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 
-import UpdateEntryDialog from "../../components/dialogs/updateProductionEntry";
+import UpdateEntryDialog from "../../components/dialogs/updateSharpeningEntry";
 import CreateEntryDialog from "../../components/dialogs/createSharpeningEntry";
 import DeleteEntryDialog from "../../components/dialogs/deleteGeneric";
 import SearchAndCreate from "../../components/input/searchAndCreate";
@@ -21,6 +21,10 @@ import ProductionPopover from "../../components/popovers/generic";
 import mainURL from "../../config/environment";
 import $ from "jquery";
 import { useWidth } from "../../utils/withSelector";
+import { PDFDownloadLink } from "@react-pdf/renderer";
+import SharpeningEntriesDocument from "../../components/docs/sharpeningEntries";
+import { Button, Tooltip } from "@mui/material";
+import { Download } from "@mui/icons-material";
 
 const emptyData = {
   id: "",
@@ -178,8 +182,10 @@ export default function SharpeningEntries(props) {
       },
     })
       .done((res) => {
-        const aux: GridRowsProp = res;
-        console.log(res);
+        const aux: GridRowsProp = res.sort(
+          (a, b) => new Date(b.sharpeningDate) - new Date(a.sharpeningDate)
+        );
+
         if (isSubscribed) {
           setData(aux);
           setFilteredData(aux);
@@ -218,7 +224,7 @@ export default function SharpeningEntries(props) {
         errorMessage={errorMessage}
         name={`${selectedData.referenceName}`}
         handleClose={handleCloseDialogs}
-        deleteURL={`production-entry/${selectedData.id}`}
+        deleteURL={`sharpening-entry/${selectedData.id}`}
         successMessage={"Registro eliminado con éxito"}
         handleShowNotification={handleShowNotification}
       />
@@ -256,12 +262,26 @@ export default function SharpeningEntries(props) {
           </Grid>
         ) : (
           <SearchAndCreate
-            title="Buscar por referencia"
             handleOpenDialog={handleOpenDialog}
+            title="Buscar por referencia"
             handleSearch={handleSearch}
+            showDownloadReportOption
             searchText={searchText}
             permission={10}
-          />
+          >
+            <PDFDownloadLink
+              document={<SharpeningEntriesDocument data={data} />}
+              fileName={`Informe de refilado ${
+                new Date().toISOString().split("T")[0]
+              }.pdf`}
+            >
+              <Tooltip title="Descargar reporte">
+                <Button variant="outlined">
+                  <Download color="primary" />
+                </Button>
+              </Tooltip>
+            </PDFDownloadLink>
+          </SearchAndCreate>
         )}
       </Grid>
 

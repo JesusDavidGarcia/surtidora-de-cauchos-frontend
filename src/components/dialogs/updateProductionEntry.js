@@ -11,13 +11,13 @@ import Dialog from "@mui/material/Dialog";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 
-import SelectReference from "../input/selectReference";
-
 import $ from "jquery";
 import mainURL from "../../config/environment";
 import SelectOperator from "../input/selectOperator";
+import { Typography } from "@mui/material";
 
 const emptyModel = {
+  referenceName: "",
   rubberReferenceId: "",
   operatorId: 0,
   produced: 0,
@@ -35,10 +35,32 @@ export default function UpdateroviderDialog(props) {
     const name = target.name;
     let value = target.value;
 
-    setModel({
-      ...model,
-      [name]: value,
-    });
+    switch (name) {
+      case "produced":
+        if (value <= model.maxQuantity) {
+          setModel({
+            ...model,
+            [name]: value,
+          });
+        }
+        break;
+
+      case "wasted":
+        if (value <= model.maxQuantity - model.produced) {
+          setModel({
+            ...model,
+            [name]: value,
+          });
+        }
+        break;
+
+      default:
+        setModel({
+          ...model,
+          [name]: value,
+        });
+        break;
+    }
 
     if (model.produced > 0) {
       setFormComplete(true);
@@ -98,6 +120,7 @@ export default function UpdateroviderDialog(props) {
           hostname: host,
         },
       }).done((res) => {
+        console.log(res);
         setModel(res);
       });
     }
@@ -110,17 +133,14 @@ export default function UpdateroviderDialog(props) {
         <Box component="form" onSubmit={handleSubmit}>
           <Grid container spacing={2}>
             <Grid item xs={12} md={12}>
-              <SelectReference
-                handleChange={handleChange}
-                name="rubberReferenceId"
-                value={model.rubberReferenceId}
-              />
+              <Typography variant="subtitle1">{model.referenceName}</Typography>
             </Grid>
             <Grid item xs={12} md={6}>
               <SelectOperator
                 handleChange={handleChange}
-                name="operatorId"
                 value={model.operatorId}
+                name="operatorId"
+                area="Manufactura"
               />
             </Grid>
             <Grid item xs={12} md={3}>

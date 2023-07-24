@@ -44,6 +44,7 @@ import $ from "jquery"; */
 export default function SearchAndCreate(props) {
   //const permissions = useContext(PermissionContext);
   //Data management
+  const { showDownloadReportOption } = props;
   const { showAdvanceSearchIcon } = props;
   const { handleOpenDialog } = props;
   const { showRefreshIcon } = props;
@@ -90,11 +91,21 @@ export default function SearchAndCreate(props) {
         </FormControl>
       </Grid>
       {permission ? (
-        <Grid item xs={6} md={4} sx={{ textAlign: "end", alignSelf: "center" }}>
+        <Grid
+          item
+          xs={showDownloadReportOption ? 3 : 6}
+          md={showDownloadReportOption ? 2 : 4}
+          sx={{ textAlign: "end", alignSelf: "center" }}
+        >
           <Button variant="contained" onClick={handleOpenDialog("create")}>
-            <PlaylistAddIcon sx={{ mr: 1 }} />
-            {buttonLabel ?? "Crear"}
+            <PlaylistAddIcon /* sx={{ mr: 1 }} */ />
+            {showDownloadReportOption ? null : buttonLabel ?? "Crear"}
           </Button>
+        </Grid>
+      ) : null}
+      {showDownloadReportOption ? (
+        <Grid item xs={3} md={2} sx={{ textAlign: "end", alignSelf: "center" }}>
+          {props.children}
         </Grid>
       ) : null}
     </Grid>

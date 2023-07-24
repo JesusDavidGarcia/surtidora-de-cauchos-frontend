@@ -15,10 +15,10 @@ import SearchAndCreate from "../../components/input/searchAndCreate";
 import mainURL from "../../config/environment";
 import $ from "jquery";
 import { useWidth } from "../../utils/withSelector";
-/* import { PDFDownloadLink } from "@react-pdf/renderer";
+import { PDFDownloadLink } from "@react-pdf/renderer";
 import SharpeningStateDocument from "../../components/docs/sharpeningState";
-import { IconButton } from "@mui/material";
-import { Download } from "@mui/icons-material"; */
+import { Button, Tooltip } from "@mui/material";
+import { Download } from "@mui/icons-material";
 
 const emptyData = {
   id: "",
@@ -34,58 +34,9 @@ export default function SharpenersMatrix(props) {
   const [selectedData, setSelectedData] = useState(emptyData);
   const [filteredData, setFilteredData] = useState([]);
   const [columns, setColumns] = useState([]);
-  //const [isLoading, setLoading] = useState(true);
 
   const [data, setData] = useState([]);
   const breakpoint = useWidth();
-
-  //const navigate = useNavigate();
-  /* const columns: GridColDef[] = [
-    {
-      headerName: "Referencia",
-      field: "referenceName",
-      flex: 1,
-      breakpoints: ["xs", "sm", "md", "lg", "xl"],
-    },
-    {
-      headerName: "Operario",
-      field: "sharpener",
-      flex: 1,
-      breakpoints: ["xs", "sm", "md", "lg", "xl"],
-    },
-    {
-      headerName: "Cantidad",
-      field: "quantity",
-      flex: 1,
-      breakpoints: ["xs", "sm", "md", "lg", "xl"],
-    },
-    {
-      headerName: "Fecha de refilado",
-      field: "sharpeningDate",
-      flex: 1,
-      renderCell: (params: GridRenderCellParams) => (
-        <Typography key={params.row.id} variant="body2">
-          {new Date(params.row.sharpeningDate).toLocaleDateString()}
-        </Typography>
-      ),
-      breakpoints: ["sm", "md", "lg", "xl"],
-    },
-    {
-      headerName: "Opciones",
-      field: "id",
-      renderCell: (params: GridRenderCellParams) => (
-        <IconButton onClick={handlePopoverOpen(params.row)}>
-          <MoreVertIcon />
-        </IconButton>
-      ),
-      //flex: 1,
-      align: "center",
-      headerAlign: "center",
-      sortable: false,
-      editable: false,
-      breakpoints: ["xs", "sm", "md", "lg", "xl"],
-    },
-  ]; */
 
   //Notification management
   const [showNotification, setShowNotification] = useState(false);
@@ -102,14 +53,6 @@ export default function SharpenersMatrix(props) {
     }, 3000);
   };
 
-  //Popover management
-  //const [anchor, setAnchor] = useState(null);
-  /*  const handlePopoverOpen = (selected) => (event) => {
-    event.stopPropagation();
-    setAnchor(event.currentTarget);
-    setSelectedData(selected);
-  }; */
-
   //Search management
   const [searchText, setSearchText] = useState("");
   const handleSearch = (event) => {
@@ -118,18 +61,10 @@ export default function SharpenersMatrix(props) {
     setSearchText(value);
   };
 
-  /*  const handlePopoverClose = () => {
-    setAnchor(null);
-  }; */
-
   const handleSelect = (data) => {
     if (data.row !== selectedData) setSelectedData(data.row);
     else setSelectedData(emptyData);
   };
-
-  /* const showDetails = () => {
-    navigate(`/clientes/${selectedData.id}`);
-  }; */
 
   useEffect(() => {
     const token = JSON.parse(localStorage.getItem("userInfo")).token;
@@ -151,7 +86,7 @@ export default function SharpenersMatrix(props) {
           ...new Set(
             res.map((item, idx) => ({
               id: idx,
-              [item.sharpener]: item.quantity,
+              [item.sharpener]: item.quantity.toFixed(2),
               Referencia: item.referenceName,
             }))
           ),
@@ -213,20 +148,6 @@ export default function SharpenersMatrix(props) {
       >
         <Grid item xs={12} md={8}>
           <Typography variant={"h4"}>{"Estado actual de refilado"}</Typography>
-          {/* {isLoading ? null : (
-            <PDFDownloadLink
-              document={
-                <SharpeningStateDocument data={data} columns={columns} />
-              }
-              fileName={`Informe de refilado ${
-                new Date().toISOString().split("T")[0]
-              }.pdf`}
-            >
-              <IconButton>
-                <Download color="primary" />
-              </IconButton>
-            </PDFDownloadLink>
-          )} */}
         </Grid>
 
         {showNotification ? (
@@ -240,9 +161,25 @@ export default function SharpenersMatrix(props) {
             title="Buscar por referencia"
             handleOpenDialog={() => null}
             handleSearch={handleSearch}
+            showDownloadReportOption
             searchText={searchText}
             permission={10}
-          />
+          >
+            <PDFDownloadLink
+              document={
+                <SharpeningStateDocument data={data} columns={columns} />
+              }
+              fileName={`Informe de refilado ${
+                new Date().toISOString().split("T")[0]
+              }.pdf`}
+            >
+              <Tooltip title="Descargar reporte">
+                <Button variant="outlined">
+                  <Download color="primary" />
+                </Button>
+              </Tooltip>
+            </PDFDownloadLink>
+          </SearchAndCreate>
         )}
       </Grid>
 
