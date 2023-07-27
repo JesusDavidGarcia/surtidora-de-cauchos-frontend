@@ -1,13 +1,19 @@
 import React, { useState, useEffect } from "react";
 
 //MUI
+import FormControl from "@mui/material/FormControl";
 import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
+import TextField from "@mui/material/TextField";
 import Alert from "@mui/material/Alert";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 
 import { DataGrid } from "@mui/x-data-grid";
+
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { DatePicker } from "@mui/x-date-pickers";
 
 //Icons
 import MoreVertIcon from "@mui/icons-material/MoreVert";
@@ -23,7 +29,7 @@ import $ from "jquery";
 import { useWidth } from "../../utils/withSelector";
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import SharpeningEntriesDocument from "../../components/docs/sharpeningEntries";
-import { Button, Tooltip } from "@mui/material";
+import { Button, CircularProgress, Tooltip } from "@mui/material";
 import { Download } from "@mui/icons-material";
 
 const emptyData = {
@@ -38,11 +44,19 @@ const emptyData = {
 const errorMessage =
   "No se puede borrar este cliente porque hay obras registradas a su nombre";
 
+const emptyRange = {
+  start: new Date(Date.now()).setDate(1),
+  end: Date.now(),
+};
+
 export default function SharpeningEntries(props) {
   //Data management
   const [selectedData, setSelectedData] = useState(emptyData);
   const [filteredData, setFilteredData] = useState([]);
+  const [exportData, setExportData] = useState([]);
   const [refresh, setRefresh] = useState(false);
+  const [dateRange, setDateRange] = useState(emptyRange);
+  const [loading, setLoading] = useState(false);
 
   const [data, setData] = useState([]);
   const breakpoint = useWidth();
@@ -165,10 +179,6 @@ export default function SharpeningEntries(props) {
     else setSelectedData(emptyData);
   };
 
-  /* const showDetails = () => {
-    navigate(`/clientes/${selectedData.id}`);
-  }; */
-
   useEffect(() => {
     const token = JSON.parse(localStorage.getItem("userInfo")).token;
     let isSubscribed = true;
@@ -197,6 +207,32 @@ export default function SharpeningEntries(props) {
       });
     return () => (isSubscribed = false);
   }, [refresh]);
+
+  useEffect(() => {
+    const token = JSON.parse(localStorage.getItem("userInfo")).token;
+    let isSubscribed = true;
+    const start = new Date(dateRange.start).toISOString().split("T")[0];
+    const end = new Date(dateRange.end).toISOString().split("T")[0];
+    setLoading(true);
+    $.ajax({
+      method: "GET",
+      url: `${mainURL}report/sharpening?start=${start}&end=${end}`,
+      contentType: "application/json",
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+    })
+      .done((res) => {
+        if (isSubscribed) {
+          setExportData(res);
+          setLoading(false);
+        }
+      })
+      .fail((res) => {
+        handleShowNotification("error", res.responseText);
+      });
+    return () => (isSubscribed = false);
+  }, [refresh, dateRange]);
 
   useEffect(() => {
     const myReg = new RegExp("^.*" + searchText.toLowerCase() + ".*");
@@ -250,8 +286,45 @@ export default function SharpeningEntries(props) {
         spacing={2}
         container
       >
-        <Grid item xs={12} md={8}>
+        <Grid item xs={12} md={12} lg={4}>
           <Typography variant={"h4"}>{"Ingresos a refilado"}</Typography>
+        </Grid>
+
+        <Grid item xs={6} md={4} lg={2}>
+          <FormControl fullWidth>
+            <LocalizationProvider dateAdapter={AdapterDateFns}>
+              <DatePicker
+                label={"Fecha de inicio"}
+                value={dateRange.start}
+                onChange={(e) =>
+                  setDateRange({
+                    ...dateRange,
+                    start: e,
+                  })
+                }
+                format="dd/MM/yyyy"
+                renderInput={(params) => <TextField variant="standard" />}
+              />
+            </LocalizationProvider>
+          </FormControl>
+        </Grid>
+        <Grid item xs={6} md={4} lg={2}>
+          <FormControl fullWidth>
+            <LocalizationProvider dateAdapter={AdapterDateFns}>
+              <DatePicker
+                label={"Fecha de finalización"}
+                value={dateRange.end}
+                onChange={(e) =>
+                  setDateRange({
+                    ...dateRange,
+                    end: e,
+                  })
+                }
+                format="dd/MM/yyyy"
+                renderInput={(params) => <TextField variant="standard" />}
+              />
+            </LocalizationProvider>
+          </FormControl>
         </Grid>
 
         {showNotification ? (
@@ -269,18 +342,22 @@ export default function SharpeningEntries(props) {
             searchText={searchText}
             permission={10}
           >
-            <PDFDownloadLink
-              document={<SharpeningEntriesDocument data={data} />}
-              fileName={`Informe de refilado ${
-                new Date().toISOString().split("T")[0]
-              }.pdf`}
-            >
-              <Tooltip title="Descargar reporte">
-                <Button variant="outlined">
-                  <Download color="primary" />
-                </Button>
-              </Tooltip>
-            </PDFDownloadLink>
+            {loading ? (
+              <CircularProgress />
+            ) : (
+              <PDFDownloadLink
+                document={<SharpeningEntriesDocument data={exportData} />}
+                fileName={`Informe de refilado ${
+                  new Date().toISOString().split("T")[0]
+                }.pdf`}
+              >
+                <Tooltip title="Descargar reporte">
+                  <Button variant="outlined" disabled={exportData.length === 0}>
+                    <Download color="primary" />
+                  </Button>
+                </Tooltip>
+              </PDFDownloadLink>
+            )}
           </SearchAndCreate>
         )}
       </Grid>

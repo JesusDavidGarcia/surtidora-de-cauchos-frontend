@@ -157,6 +157,8 @@ export default function CreateProviderDialog(props) {
     props.handleClose();
     setModel(emptyModel);
     setFormComplete(false);
+    setSelectedReference(null);
+    setSelectedSharpener(null);
     props.setRefresh(!refresh);
   };
 

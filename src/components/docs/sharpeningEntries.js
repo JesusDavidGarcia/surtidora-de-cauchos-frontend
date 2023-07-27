@@ -3,10 +3,6 @@ import React from "react";
 import { Page, Text, View, Document, StyleSheet } from "@react-pdf/renderer";
 
 const styles = StyleSheet.create({
-  page: {
-    flexDirection: "column",
-    justifyContent: "flex-start",
-  },
   body: {
     paddingTop: 35,
     paddingBottom: 65,
@@ -22,33 +18,6 @@ const styles = StyleSheet.create({
   },
   date: {
     fontSize: 14,
-  },
-  section: {
-    paddingVertical: 10,
-    flexDirection: "column",
-  },
-  divider: {
-    width: "100%",
-    padding: "16px 0",
-    borderTop: "1px solid #505050",
-  },
-  diagnostic: {
-    fontSize: 14,
-    textAlign: "justify",
-    fontFamily: "Times-Roman",
-  },
-  technician: {
-    fontSize: 14,
-    color: "#121212",
-  },
-  image: {
-    width: "200px",
-    maxHeight: "400px",
-  },
-  images: {
-    display: "flex",
-    flexDirection: "row",
-    flexWrap: "wrap",
   },
   table: {
     display: "table",
@@ -66,27 +35,13 @@ const styles = StyleSheet.create({
     background: "#f6f6f6",
   },
   tableCol: {
-    width: "10%",
+    width: "15%",
     borderStyle: "solid",
     borderWidth: 1,
     borderLeftWidth: 0,
     borderTopWidth: 0,
   },
-  refTableCol: {
-    width: "20%",
-    borderStyle: "solid",
-    borderWidth: 1,
-    borderLeftWidth: 0,
-    borderTopWidth: 0,
-  },
-  appTableCol: {
-    width: "35%",
-    borderStyle: "solid",
-    borderWidth: 1,
-    borderLeftWidth: 0,
-    borderTopWidth: 0,
-  },
-  refTableCell: {
+  leftTableCell: {
     margin: "2px",
     fontSize: 14,
   },
@@ -97,13 +52,18 @@ const styles = StyleSheet.create({
 });
 
 const emptyData = {
-  title: "Informe de alertas Surtidora de Cauchos",
+  title: "Informe de refilado Surtidora de Cauchos",
   createdOn: Date.now(),
   references: [],
 };
 
 export default function SharpeningEntriesDocument(props) {
   const { data } = props;
+  const sharpeners = [...new Set(data.map((m) => m.refilador))];
+
+  const numberWithCommas = (number) => {
+    return `$ ${number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")}`;
+  };
 
   return (
     <Document>
@@ -117,56 +77,74 @@ export default function SharpeningEntriesDocument(props) {
 
         <View style={styles.table}>
           <View style={styles.tableRow}>
-            <View style={styles.refTableCol}>
-              <Text style={styles.refTableCell}>Referencia</Text>
+            <View style={{ ...styles.tableCol, width: "15%" }}>
+              <Text style={styles.leftTableCell}>Fecha</Text>
             </View>
-            <View style={styles.refTableCol}>
-              <Text style={styles.refTableCell}>Aplicación</Text>
+            <View style={{ ...styles.tableCol, width: "15%" }}>
+              <Text style={styles.leftTableCell}>Referencia</Text>
             </View>
-            <View style={styles.refTableCol}>
-              <Text style={styles.refTableCell}>Operario</Text>
-            </View>
-            <View style={styles.tableCol}>
-              <Text style={styles.tableCell}>Cantidad</Text>
-            </View>
-            <View style={styles.tableCol}>
-              <Text style={styles.tableCell}>Precio</Text>
+            <View style={{ ...styles.tableCol, width: "25%" }}>
+              <Text style={styles.leftTableCell}>Aplicación</Text>
             </View>
             <View style={{ ...styles.tableCol, width: "20%" }}>
-              <Text style={styles.tableCell}>Fecha</Text>
+              <Text style={styles.leftTableCell}>Refilador</Text>
+            </View>
+            <View style={{ ...styles.tableCol, width: "10%" }}>
+              <Text style={styles.tableCell}>Cantidad</Text>
+            </View>
+            <View style={{ ...styles.tableCol, width: "15%" }}>
+              <Text style={styles.tableCell}>Precio</Text>
             </View>
           </View>
           {data.map((reference, index) => (
-            <View key={reference.id} style={styles.tableRow}>
-              <View style={styles.refTableCol}>
-                <Text style={styles.refTableCell}>
-                  {reference.referenceName.split(" ")[0]}
+            <View key={index} style={styles.tableRow}>
+              <View style={{ ...styles.tableCol, width: "15%" }}>
+                <Text style={styles.tableCell}>{reference.fecha}</Text>
+              </View>
+              <View style={{ ...styles.tableCol, width: "15%" }}>
+                <Text style={styles.leftTableCell}>
+                  {reference.referencia.split(" ")[0]}
                 </Text>
               </View>
-              <View style={styles.refTableCol}>
-                <Text style={styles.refTableCell}>
-                  {reference.referenceName.substring(
-                    reference.referenceName.indexOf(" ")
+              <View style={{ ...styles.tableCol, width: "25%" }}>
+                <Text style={styles.leftTableCell}>
+                  {reference.referencia.substring(
+                    reference.referencia.indexOf(" ")
                   )}
                 </Text>
               </View>
-              <View style={styles.refTableCol}>
-                <Text style={styles.refTableCell}>{reference.sharpener}</Text>
-              </View>
-              <View style={styles.tableCol}>
-                <Text style={styles.tableCell}>{reference.quantity}</Text>
-              </View>
-              <View style={styles.tableCol}>
-                <Text style={styles.tableCell}>{reference.price}</Text>
-              </View>
               <View style={{ ...styles.tableCol, width: "20%" }}>
+                <Text style={styles.leftTableCell}>{reference.refilador}</Text>
+              </View>
+              <View style={{ ...styles.tableCol, width: "10%" }}>
+                <Text style={styles.tableCell}>{reference.refilado}</Text>
+              </View>
+              <View style={{ ...styles.tableCol, width: "15%" }}>
                 <Text style={styles.tableCell}>
-                  {reference.sharpeningDate.split("T")[0]}
+                  {numberWithCommas(reference.precio)}
                 </Text>
               </View>
             </View>
           ))}
         </View>
+      </Page>
+      <Page size="A4" style={styles.body}>
+        <View style={styles.headers}>
+          <Text style={styles.title}>{"Resumen por refilador"}</Text>
+        </View>
+        {sharpeners.map((sh, key) => (
+          <Text key={key} style={styles.date}>
+            {`${sh}: ${numberWithCommas(
+              data
+                .filter((m) => m.refilador === sh)
+                .map((m) => m.precio)
+                .reduce(
+                  (accumulator, currentValue) => accumulator + currentValue
+                )
+                .toFixed(0)
+            )}`}
+          </Text>
+        ))}
       </Page>
     </Document>
   );
