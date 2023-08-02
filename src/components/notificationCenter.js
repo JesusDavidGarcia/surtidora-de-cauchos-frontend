@@ -18,7 +18,14 @@ import { PDFDownloadLink } from "@react-pdf/renderer";
 import { useWidth } from "../utils/withSelector";
 
 export default function NotificationCenter(props) {
-  const { handleOnHoverClose, handleClose, open, notifications } = props;
+  const {
+    handleOnHoverClose,
+    handleClose,
+    open,
+    notifications,
+    sharpening,
+    columns,
+  } = props;
 
   const breakpoint = useWidth();
 
@@ -42,10 +49,18 @@ export default function NotificationCenter(props) {
         <Grid container justifyContent={"space-between"}>
           <Typography variant="subtitle1">Alertas</Typography>
           <PDFDownloadLink
-            document={<AlertReport data={notifications} />}
+            document={
+              <AlertReport
+                data={notifications}
+                sharpening={sharpening}
+                columns={columns}
+              />
+            }
             fileName="Reporte de alertas.pdf"
           >
-            <IconButton>
+            <IconButton
+              disabled={notifications.length + sharpening.length <= 0}
+            >
               <DownloadIcon />
             </IconButton>
           </PDFDownloadLink>

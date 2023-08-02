@@ -30,7 +30,8 @@ import { useWidth } from "../../utils/withSelector";
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import SharpeningEntriesDocument from "../../components/docs/sharpeningEntries";
 import { Button, CircularProgress, Tooltip } from "@mui/material";
-import { Download } from "@mui/icons-material";
+import { Download, ImportExport } from "@mui/icons-material";
+import SelectOperator from "../../components/input/selectOperator";
 
 const emptyData = {
   id: "",
@@ -51,12 +52,15 @@ const emptyRange = {
 
 export default function SharpeningEntries(props) {
   //Data management
+
   const [selectedData, setSelectedData] = useState(emptyData);
+  const [dateRange, setDateRange] = useState(emptyRange);
+  const [showFilters, setShowFilters] = useState(false);
   const [filteredData, setFilteredData] = useState([]);
   const [exportData, setExportData] = useState([]);
   const [refresh, setRefresh] = useState(false);
-  const [dateRange, setDateRange] = useState(emptyRange);
   const [loading, setLoading] = useState(false);
+  const [sharpener, setSharpener] = useState(0);
 
   const [data, setData] = useState([]);
   const breakpoint = useWidth();
@@ -216,7 +220,9 @@ export default function SharpeningEntries(props) {
     setLoading(true);
     $.ajax({
       method: "GET",
-      url: `${mainURL}report/sharpening?start=${start}&end=${end}`,
+      url: `${mainURL}report/sharpening?start=${start}&end=${end}${
+        sharpener !== 0 ? `&sharpenerId=${sharpener}` : ""
+      }`,
       contentType: "application/json",
       headers: {
         Authorization: "Bearer " + token,
@@ -232,7 +238,7 @@ export default function SharpeningEntries(props) {
         handleShowNotification("error", res.responseText);
       });
     return () => (isSubscribed = false);
-  }, [refresh, dateRange]);
+  }, [refresh, dateRange, sharpener]);
 
   useEffect(() => {
     const myReg = new RegExp("^.*" + searchText.toLowerCase() + ".*");
@@ -286,65 +292,97 @@ export default function SharpeningEntries(props) {
         spacing={2}
         container
       >
-        <Grid item xs={12} md={12} lg={4}>
-          <Typography variant={"h4"}>{"Ingresos a refilado"}</Typography>
-        </Grid>
-
-        <Grid item xs={6} md={4} lg={2}>
-          <FormControl fullWidth>
-            <LocalizationProvider dateAdapter={AdapterDateFns}>
-              <DatePicker
-                label={"Fecha de inicio"}
-                value={dateRange.start}
-                onChange={(e) =>
-                  setDateRange({
-                    ...dateRange,
-                    start: e,
-                  })
-                }
-                format="dd/MM/yyyy"
-                renderInput={(params) => <TextField variant="standard" />}
-              />
-            </LocalizationProvider>
-          </FormControl>
-        </Grid>
-        <Grid item xs={6} md={4} lg={2}>
-          <FormControl fullWidth>
-            <LocalizationProvider dateAdapter={AdapterDateFns}>
-              <DatePicker
-                label={"Fecha de finalización"}
-                value={dateRange.end}
-                onChange={(e) =>
-                  setDateRange({
-                    ...dateRange,
-                    end: e,
-                  })
-                }
-                format="dd/MM/yyyy"
-                renderInput={(params) => <TextField variant="standard" />}
-              />
-            </LocalizationProvider>
-          </FormControl>
-        </Grid>
-
-        {showNotification ? (
-          <Grid item xs={12} md={4}>
-            <Alert variant="outlined" severity={notificationMessage.severity}>
-              {notificationMessage.message}
-            </Alert>
+        <Grid item xs={12} container>
+          <Grid item xs={12} md={8}>
+            <Typography variant={"h4"}>{"Ingresos a refilado"}</Typography>
           </Grid>
-        ) : (
-          <SearchAndCreate
-            handleOpenDialog={handleOpenDialog}
-            title="Buscar por referencia"
-            handleSearch={handleSearch}
-            showDownloadReportOption
-            searchText={searchText}
-            permission={10}
-          >
-            {loading ? (
-              <CircularProgress />
-            ) : (
+
+          {showNotification ? (
+            <Grid item xs={12} md={4}>
+              <Alert variant="outlined" severity={notificationMessage.severity}>
+                {notificationMessage.message}
+              </Alert>
+            </Grid>
+          ) : (
+            <SearchAndCreate
+              handleOpenDialog={handleOpenDialog}
+              title="Buscar por referencia"
+              handleSearch={handleSearch}
+              showDownloadReportOption
+              searchText={searchText}
+              permission={10}
+            >
+              {loading ? (
+                <CircularProgress />
+              ) : (
+                <Tooltip title="Mostrar filtros">
+                  <Button
+                    variant="outlined"
+                    onClick={() => {
+                      setShowFilters(!showFilters);
+                    }}
+                  >
+                    <ImportExport color="primary" />
+                  </Button>
+                </Tooltip>
+              )}
+            </SearchAndCreate>
+          )}
+        </Grid>
+        {showFilters ? (
+          <Grid item xs={12} container columnSpacing={2}>
+            <Grid item xs={6} md={3}>
+              <FormControl fullWidth>
+                <LocalizationProvider dateAdapter={AdapterDateFns}>
+                  <DatePicker
+                    label={"Fecha de inicio"}
+                    value={dateRange.start}
+                    onChange={(e) =>
+                      setDateRange({
+                        ...dateRange,
+                        start: e,
+                      })
+                    }
+                    format="dd/MM/yyyy"
+                    renderInput={(params) => <TextField variant="standard" />}
+                  />
+                </LocalizationProvider>
+              </FormControl>
+            </Grid>
+            <Grid item xs={6} md={3}>
+              <FormControl fullWidth>
+                <LocalizationProvider dateAdapter={AdapterDateFns}>
+                  <DatePicker
+                    label={"Fecha de finalización"}
+                    value={dateRange.end}
+                    onChange={(e) =>
+                      setDateRange({
+                        ...dateRange,
+                        end: e,
+                      })
+                    }
+                    format="dd/MM/yyyy"
+                    renderInput={(params) => <TextField variant="standard" />}
+                  />
+                </LocalizationProvider>
+              </FormControl>
+            </Grid>
+            <Grid item xs={6} md={4}>
+              <SelectOperator
+                handleChange={(e) => setSharpener(e.target.value)}
+                value={sharpener}
+                name="sharpener"
+                area="Refilado"
+              />
+            </Grid>
+            <Grid
+              item
+              xs={6}
+              md={2}
+              container
+              justifyContent={"center"}
+              alignItems={"center"}
+            >
               <PDFDownloadLink
                 document={<SharpeningEntriesDocument data={exportData} />}
                 fileName={`Informe de refilado ${
@@ -352,14 +390,21 @@ export default function SharpeningEntries(props) {
                 }.pdf`}
               >
                 <Tooltip title="Descargar reporte">
-                  <Button variant="outlined" disabled={exportData.length === 0}>
+                  <Button
+                    variant="outlined"
+                    disabled={exportData.length === 0}
+                    onClick={() => {
+                      setSharpener(0);
+                      setDateRange(emptyRange);
+                    }}
+                  >
                     <Download color="primary" />
                   </Button>
                 </Tooltip>
               </PDFDownloadLink>
-            )}
-          </SearchAndCreate>
-        )}
+            </Grid>
+          </Grid>
+        ) : null}
       </Grid>
 
       <Box sx={{ height: "70vh", width: "100%", p: "16px 0" }}>

@@ -25,7 +25,6 @@ const emptyModel = {
 };
 
 export default function UpdateroviderDialog(props) {
-  const [isFormComplete, setFormComplete] = useState(false);
   const [isLoading, setLoading] = useState(false);
   const [model, setModel] = useState(emptyModel);
   const { refresh, entryId } = props;
@@ -35,36 +34,10 @@ export default function UpdateroviderDialog(props) {
     const name = target.name;
     let value = target.value;
 
-    switch (name) {
-      case "produced":
-        if (value <= model.maxQuantity) {
-          setModel({
-            ...model,
-            [name]: value,
-          });
-        }
-        break;
-
-      case "wasted":
-        if (value <= model.maxQuantity - model.produced) {
-          setModel({
-            ...model,
-            [name]: value,
-          });
-        }
-        break;
-
-      default:
-        setModel({
-          ...model,
-          [name]: value,
-        });
-        break;
-    }
-
-    if (model.produced > 0) {
-      setFormComplete(true);
-    }
+    setModel({
+      ...model,
+      [name]: value,
+    });
   };
 
   const handleSubmit = (event) => {
@@ -103,7 +76,6 @@ export default function UpdateroviderDialog(props) {
   const handleClear = () => {
     props.handleClose();
     setModel(emptyModel);
-    setFormComplete(false);
     props.setRefresh(!refresh);
   };
 
@@ -188,11 +160,7 @@ export default function UpdateroviderDialog(props) {
             <Button type="submit" onClick={handleClear}>
               Cerrar
             </Button>
-            <Button
-              type="submit"
-              disabled={!isFormComplete}
-              onClick={handleSubmit}
-            >
+            <Button type="submit" onClick={handleSubmit}>
               Actualizar
             </Button>
           </Grid>

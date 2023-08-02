@@ -62,7 +62,7 @@ export default function SharpeningEntriesDocument(props) {
   const sharpeners = [...new Set(data.map((m) => m.refilador))];
 
   const numberWithCommas = (number) => {
-    return `$ ${number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")}`;
+    return `$ ${number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`;
   };
 
   return (
@@ -80,10 +80,10 @@ export default function SharpeningEntriesDocument(props) {
             <View style={{ ...styles.tableCol, width: "15%" }}>
               <Text style={styles.leftTableCell}>Fecha</Text>
             </View>
-            <View style={{ ...styles.tableCol, width: "15%" }}>
+            {/* <View style={{ ...styles.tableCol, width: "15%" }}>
               <Text style={styles.leftTableCell}>Referencia</Text>
-            </View>
-            <View style={{ ...styles.tableCol, width: "25%" }}>
+            </View> */}
+            <View style={{ ...styles.tableCol, width: "40%" }}>
               <Text style={styles.leftTableCell}>Aplicación</Text>
             </View>
             <View style={{ ...styles.tableCol, width: "20%" }}>
@@ -101,12 +101,12 @@ export default function SharpeningEntriesDocument(props) {
               <View style={{ ...styles.tableCol, width: "15%" }}>
                 <Text style={styles.tableCell}>{reference.fecha}</Text>
               </View>
-              <View style={{ ...styles.tableCol, width: "15%" }}>
+              {/* <View style={{ ...styles.tableCol, width: "15%" }}>
                 <Text style={styles.leftTableCell}>
                   {reference.referencia.split(" ")[0]}
                 </Text>
-              </View>
-              <View style={{ ...styles.tableCol, width: "25%" }}>
+              </View> */}
+              <View style={{ ...styles.tableCol, width: "40%" }}>
                 <Text style={styles.leftTableCell}>
                   {reference.referencia.substring(
                     reference.referencia.indexOf(" ")
@@ -117,7 +117,9 @@ export default function SharpeningEntriesDocument(props) {
                 <Text style={styles.leftTableCell}>{reference.refilador}</Text>
               </View>
               <View style={{ ...styles.tableCol, width: "10%" }}>
-                <Text style={styles.tableCell}>{reference.refilado}</Text>
+                <Text style={styles.tableCell}>
+                  {reference.refilado.toFixed(2)}
+                </Text>
               </View>
               <View style={{ ...styles.tableCol, width: "15%" }}>
                 <Text style={styles.tableCell}>
@@ -127,8 +129,7 @@ export default function SharpeningEntriesDocument(props) {
             </View>
           ))}
         </View>
-      </Page>
-      <Page size="A4" style={styles.body}>
+
         <View style={styles.headers}>
           <Text style={styles.title}>{"Resumen por refilador"}</Text>
         </View>
