@@ -27,7 +27,7 @@ const emptyModel = {
   createdOn: "",
   shipmentWeight: 0,
   invoicePrice: 0,
-  nuberOfBoxes: 0,
+  numberOfBoxes: 0,
   missingMaterial: 0,
   references: [],
 };
@@ -160,7 +160,7 @@ export default function PurchaseOrderDetails(props) {
                   <Typography variant="body1">{`Peso total: ${data.shipmentWeight} Kg`}</Typography>
                 </Grid>
                 <Grid container alignItems={"center"}>
-                  <Typography variant="body1">{`Número de cajas: ${data.nuberOfBoxes}`}</Typography>
+                  <Typography variant="body1">{`Número de cajas: ${data.numberOfBoxes}`}</Typography>
                 </Grid>
                 <Grid container alignItems={"center"}>
                   <Typography variant="body1">{`Material faltante: ${data.missingMaterial} Kg`}</Typography>

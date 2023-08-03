@@ -164,7 +164,7 @@ export default function PurchaseOrderDocument(props) {
         >{`Peso total: ${data.shipmentWeight} Kg`}</Text>
         <Text
           style={styles.diagnostic}
-        >{`Número de cajas: ${data.nuberOfBoxes}`}</Text>
+        >{`Número de cajas: ${data.numberOfBoxes}`}</Text>
         <Text
           style={styles.diagnostic}
         >{`Material faltante: ${data.missingMaterial} Kg`}</Text>

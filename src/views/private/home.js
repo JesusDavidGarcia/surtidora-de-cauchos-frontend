@@ -93,11 +93,15 @@ export default function Home(props) {
       },
     })
       .done((res) => {
-        const sharpeners = [...new Set(res.map((item) => item.sharpener))];
-        const references = [...new Set(res.map((item) => item.referenceName))];
+        const filtered = res.filter((m) => m.quantity > 0);
+        console.log(filtered);
+        const sharpeners = [...new Set(filtered.map((item) => item.sharpener))];
+        const references = [
+          ...new Set(filtered.map((item) => item.referenceName)),
+        ];
         const combination = [
           ...new Set(
-            res.map((item, idx) => ({
+            filtered.map((item, idx) => ({
               id: idx,
               [item.sharpener]: item.quantity.toFixed(2),
               Referencia: item.referenceName,
