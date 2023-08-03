@@ -12,12 +12,26 @@ import List from "@mui/material/List";
 import ShoppingCartCheckoutIcon from "@mui/icons-material/ShoppingCartCheckout";
 import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 import EngineeringIcon from "@mui/icons-material/Engineering";
-
+import ContentCutIcon from "@mui/icons-material/ContentCut";
 import GroupsIcon from "@mui/icons-material/Groups";
 import GroupIcon from "@mui/icons-material/Group";
 import HailIcon from "@mui/icons-material/Hail";
 
 const sections = [
+  {
+    id: "sharpening",
+    title: "Ingresos refilado",
+    icon: <ContentCutIcon />,
+    path: "/ingresos-refilado",
+    permission: 9,
+  },
+  {
+    id: "sharpeners",
+    title: "Actualidad refilado",
+    icon: <GroupIcon />,
+    path: "/actualidad-refilado",
+    permission: 9,
+  },
   {
     id: "production",
     title: "Producción",

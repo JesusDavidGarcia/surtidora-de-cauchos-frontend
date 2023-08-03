@@ -21,16 +21,20 @@ import SelectOperator from "../input/selectOperator";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { DatePicker } from "@mui/x-date-pickers";
+import SelectAvailableSharpeners from "../input/selectSharpener";
 
 const emptyModel = {
   rubberReferenceId: "",
-  operatorId: 0,
+  sharpenerId: "",
+  operatorId: "",
   produced: 0,
   wasted: 0,
+  maxQuantity: 0,
   productionDate: Date.now(),
 };
 
 export default function CreateProviderDialog(props) {
+  const [selectedSharpener, setSelectedSharpener] = useState(null);
   const [selectedReference, setSelectedReference] = useState(null);
   const [isFormComplete, setFormComplete] = useState(false);
   const [isLoading, setLoading] = useState(false);
@@ -42,10 +46,32 @@ export default function CreateProviderDialog(props) {
     const name = target.name;
     let value = target.value;
 
-    setModel({
-      ...model,
-      [name]: value,
-    });
+    switch (name) {
+      case "produced":
+        if (value <= model.maxQuantity) {
+          setModel({
+            ...model,
+            [name]: value,
+          });
+        }
+        break;
+
+      case "wasted":
+        if (value <= model.maxQuantity - model.produced) {
+          setModel({
+            ...model,
+            [name]: value,
+          });
+        }
+        break;
+
+      default:
+        setModel({
+          ...model,
+          [name]: value,
+        });
+        break;
+    }
 
     if (model.produced > 0) {
       setFormComplete(true);
@@ -70,6 +96,22 @@ export default function CreateProviderDialog(props) {
     } else {
       setModel(emptyModel);
       setSelectedReference(null);
+      setSelectedSharpener(null);
+    }
+  };
+
+  const handleSharpenerChange = (newReference) => {
+    if (newReference !== null) {
+      setModel({
+        ...model,
+        sharpenerId: newReference.sharpenerId,
+        maxQuantity: newReference.quantity,
+      });
+      console.log(newReference);
+      setSelectedSharpener(newReference);
+    } else {
+      setModel(emptyModel);
+      setSelectedSharpener(null);
     }
   };
 
@@ -115,6 +157,8 @@ export default function CreateProviderDialog(props) {
     props.handleClose();
     setModel(emptyModel);
     setFormComplete(false);
+    setSelectedReference(null);
+    setSelectedSharpener(null);
     props.setRefresh(!refresh);
   };
 
@@ -137,17 +181,31 @@ export default function CreateProviderDialog(props) {
                 </LocalizationProvider>
               </FormControl>
             </Grid>
-            <Grid item xs={12} md={12}>
+            <Grid item xs={12} md={6}>
               <SelectReference
                 handleChange={handleReferenceChange}
                 value={selectedReference}
               />
             </Grid>
             <Grid item xs={12} md={6}>
+              <SelectAvailableSharpeners
+                reference={
+                  model.rubberReferenceId === ""
+                    ? null
+                    : model.rubberReferenceId
+                }
+                handleChange={handleSharpenerChange}
+                value={selectedSharpener}
+                required
+              />
+            </Grid>
+
+            <Grid item xs={12} md={6}>
               <SelectOperator
                 handleChange={handleChange}
-                name="operatorId"
                 value={model.operatorId}
+                name="operatorId"
+                area="manufactura"
               />
             </Grid>
             <Grid item xs={12} md={3}>
@@ -160,7 +218,7 @@ export default function CreateProviderDialog(props) {
                   name="produced"
                   margin="dense"
                   type="number"
-                  inputProps={{ step: "0.25" }}
+                  inputProps={{ step: "0.25", max: model.maxQuantity }}
                   fullWidth
                   required
                 />
@@ -176,7 +234,10 @@ export default function CreateProviderDialog(props) {
                   name="wasted"
                   margin="dense"
                   type="number"
-                  inputProps={{ step: "0.25" }}
+                  inputProps={{
+                    step: "0.25",
+                    max: model.maxQuantity - model.produced,
+                  }}
                   fullWidth
                   required
                 />

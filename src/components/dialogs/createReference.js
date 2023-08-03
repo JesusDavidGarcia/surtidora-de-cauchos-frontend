@@ -18,12 +18,14 @@ import SelectRawMaterial from "../input/selectRawMaterial";
 const emptyModel = {
   reference: "",
   application: "",
-  rawWeight: "",
-  packedWeight: "",
-  currentQuantity: "",
-  rawMaterialId: "",
-  minimum: "",
-  maximum: "",
+  rawWeight: 0,
+  packedWeight: 0,
+  currentQuantity: 0,
+  sharpeningQuantity: 0,
+  sharpeningPrice: 0,
+  minimum: 0,
+  maximum: 0,
+  rawMaterialId: 0,
 };
 
 export default function CreateProviderDialog(props) {
@@ -129,7 +131,6 @@ export default function CreateProviderDialog(props) {
                 required
               />
             </Grid>
-
             <Grid item xs={12} md={4}>
               <FormControl fullWidth required>
                 <TextField
@@ -144,7 +145,6 @@ export default function CreateProviderDialog(props) {
                 />
               </FormControl>
             </Grid>
-
             <Grid item xs={12} md={4}>
               <FormControl fullWidth required>
                 <TextField
@@ -200,6 +200,35 @@ export default function CreateProviderDialog(props) {
                   margin="dense"
                   type="number"
                   inputProps={{ step: "0.25" }}
+                  fullWidth
+                />
+              </FormControl>
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <FormControl fullWidth required>
+                <TextField
+                  value={model.sharpeningQuantity}
+                  onChange={handleChange}
+                  label={"Cantidad en refilado"}
+                  name="sharpeningQuantity"
+                  variant="standard"
+                  margin="dense"
+                  type="number"
+                  inputProps={{ step: "0.25" }}
+                  fullWidth
+                />
+              </FormControl>
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <FormControl fullWidth required>
+                <TextField
+                  value={model.sharpeningPrice}
+                  onChange={handleChange}
+                  label={"Precio de refilado"}
+                  name="sharpeningPrice"
+                  variant="standard"
+                  margin="dense"
+                  type="number"
                   fullWidth
                 />
               </FormControl>

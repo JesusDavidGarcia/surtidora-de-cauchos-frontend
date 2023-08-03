@@ -12,6 +12,7 @@ import { useNavigate } from "react-router-dom";
 import ShoppingCartCheckoutIcon from "@mui/icons-material/ShoppingCartCheckout";
 import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 import EngineeringIcon from "@mui/icons-material/Engineering";
+import ContentCutIcon from "@mui/icons-material/ContentCut";
 import ViewAgendaIcon from "@mui/icons-material/ViewAgenda";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import InventoryIcon from "@mui/icons-material/Inventory";
@@ -21,45 +22,7 @@ import HailIcon from "@mui/icons-material/Hail";
 
 import InventoryPopover from "../popovers/inventory";
 import SectionsPopover from "../popovers/sections";
-
-/* 
-import mainURL from "../../config/environment";
-import $ from "jquery"; */
-
-/* const usePermissions = (refresh) => {
-  const navigate = useNavigate();
-  const [permissions, setPermissions] = useState([]);
-  useEffect(() => {
-    const token = JSON.parse(localStorage.getItem("userInfo")).token;
-    const roleId = JSON.parse(localStorage.getItem("userInfo")).roleId;
-    let isSubscribed = true;
-    $.ajax({
-      method: "GET",
-      url: mainURL + `permissions/${roleId}`,
-      contentType: "application/json",
-      headers: {
-        Authorization: "Bearer " + token,
-      },
-    })
-      .done((res) => {
-        console.log(res);
-        const aux = [];
-        res.forEach((element) => {
-          if (element.isAssigned) aux.push(element.permission);
-        });
-        if (isSubscribed) setPermissions(aux);
-      })
-      .fail((res) => {
-        if (res.status === 401) {
-          alert("Session expired");
-          localStorage.removeItem("userInfo");
-          navigate("/login");
-        }
-      });
-    return () => (isSubscribed = false);
-  }, [navigate]);
-  return permissions;
-}; */
+import SharpeningPopover from "../popovers/sharpening";
 
 const sections = [
   {
@@ -69,6 +32,7 @@ const sections = [
     path: "/materia-prima",
     permission: 9,
   },
+
   {
     id: "references",
     title: "Referencias",
@@ -128,23 +92,32 @@ export default function BottomNavbar() {
   const navigate = useNavigate();
 
   //Profile popover management
+  const [anchorSharpening, setAnchorSharpening] = useState(null);
   const [anchorInventory, setAnchorInventory] = useState(null);
   const [anchorSections, setAnchorSections] = useState(null);
+
   const handleInventoryPopoverOpen = (type) => (event) => {
     event.stopPropagation();
     switch (type) {
       case "inventory":
         setAnchorInventory(event.currentTarget);
         break;
+
       case "sections":
         setAnchorSections(event.currentTarget);
         break;
+
+      case "sharpening":
+        setAnchorSharpening(event.currentTarget);
+        break;
+
       default:
         setAnchorSections(event.currentTarget);
     }
   };
 
   const handleInventoryPopoverClose = () => {
+    setAnchorSharpening(null);
     setAnchorInventory(null);
     setAnchorSections(null);
   };
@@ -173,6 +146,12 @@ export default function BottomNavbar() {
         open={anchorSections}
         handleClose={handleInventoryPopoverClose}
       />
+
+      <SharpeningPopover
+        open={anchorSharpening}
+        handleClose={handleInventoryPopoverClose}
+      />
+
       <BottomNavigation
         showLabels
         sx={{ display: { xs: "none", md: "flex" } }}
@@ -186,6 +165,11 @@ export default function BottomNavbar() {
           value={"/"}
           label="Inicio"
           icon={<DashboardIcon />}
+        />
+        <BottomNavigationAction
+          onClick={handleInventoryPopoverOpen("sharpening")}
+          label="Refilado"
+          icon={<ContentCutIcon />}
         />
 
         {sections.map((section) => {

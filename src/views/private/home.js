@@ -27,6 +27,8 @@ import Main from "./main";
 
 import mainURL from "../../config/environment";
 import $ from "jquery";
+import SharpeningEntries from "./sharpeningEntries";
+import SharpenersMatrix from "./sharpeningCurrentState";
 
 export default function Home(props) {
   const [openNC, setOpenNC] = React.useState(false);
@@ -34,6 +36,8 @@ export default function Home(props) {
   const navigate = useNavigate();
 
   const [notifications, setNotifications] = React.useState([]);
+  const [sharpening, setSharpening] = React.useState([]);
+  const [columns, setColumns] = React.useState([]);
 
   const handleCloseDialogs = () => {
     setOpenNC(false);
@@ -75,6 +79,69 @@ export default function Home(props) {
     return () => (isSubscribed = false);
   }, [navigate]);
 
+  React.useEffect(() => {
+    const token = JSON.parse(localStorage.getItem("userInfo")).token;
+    let isSubscribed = true;
+    //handleShowNotification("info", "Cargando clientes");
+    //setLoading(true);
+    $.ajax({
+      method: "GET",
+      url: mainURL + "operator-sharpening/get-all",
+      contentType: "application/json",
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+    })
+      .done((res) => {
+        const filtered = res.filter((m) => m.quantity > 0);
+        console.log(filtered);
+        const sharpeners = [...new Set(filtered.map((item) => item.sharpener))];
+        const references = [
+          ...new Set(filtered.map((item) => item.referenceName)),
+        ];
+        const combination = [
+          ...new Set(
+            filtered.map((item, idx) => ({
+              id: idx,
+              [item.sharpener]: item.quantity.toFixed(2),
+              Referencia: item.referenceName,
+            }))
+          ),
+        ];
+
+        const columns = sharpeners.map((item) => ({
+          headerName: item,
+          field: item,
+          flex: 1,
+          breakpoints: ["xs", "sm", "md", "lg", "xl"],
+        }));
+
+        columns.unshift({
+          headerName: "Referencia",
+          field: "Referencia",
+          flex: 1,
+          breakpoints: ["xs", "sm", "md", "lg", "xl"],
+        });
+
+        const rows = [];
+
+        references.forEach((ref) => {
+          rows.push(
+            combination
+              .filter((m) => m.Referencia === ref)
+              .reduce((r, c) => Object.assign(r, c), {})
+          );
+        });
+
+        if (isSubscribed) {
+          setColumns(columns);
+          setSharpening(rows);
+        }
+      })
+      .fail((res) => {});
+    return () => (isSubscribed = false);
+  }, []);
+
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
@@ -107,11 +174,15 @@ export default function Home(props) {
             element={<PurchaseOrderDetails />}
           />
           <Route path="produccion" element={<ProductionEntries />} />
+          <Route path="ingresos-refilado" element={<SharpeningEntries />} />
+          <Route path="actualidad-refilado" element={<SharpenersMatrix />} />
           <Route path="materia-prima" element={<RawMaterialEntries />} />
         </Routes>
       </Box>
       <NotificationCenter
         open={openNC}
+        columns={columns}
+        sharpening={sharpening}
         notifications={notifications}
         handleClose={handleCloseDialogs}
         handleOnHoverClose={OnHoverClose}

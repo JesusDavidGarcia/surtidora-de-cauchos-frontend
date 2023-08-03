@@ -38,7 +38,7 @@ const emptyResponse = {
   createdOn: "2023-05-08T22:19:35.235Z",
   shipmentWeight: 0,
   invoicePrice: 0,
-  nuberOfBoxes: 0,
+  numberOfBoxes: 0,
   missingMaterial: 0,
   references: [],
 };
@@ -296,7 +296,7 @@ export default function CreatePurchaseOrder(props) {
                         sx={{ ml: 2 }}
                         color="textSecondary"
                       >
-                        {response.nuberOfBoxes}
+                        {response.numberOfBoxes}
                       </Typography>
                     </Grid>
                     <Grid container alignItems={"center"}>

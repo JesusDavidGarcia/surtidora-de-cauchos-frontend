@@ -39,7 +39,7 @@ const emptyData = {
 };
 
 const errorMessage =
-  "No se puede borrar este cliente porque hay obras registradas a su nombre";
+  "No se puede borrar esta referencia porque hay ordenes de compra asociadas a a esta referencia";
 
 export default function References(props) {
   //Data management
@@ -231,7 +231,7 @@ export default function References(props) {
         errorMessage={errorMessage}
         name={selectedData.reference}
         handleClose={handleCloseDialogs}
-        deleteURL={`reference/${selectedData.id}`}
+        deleteURL={`rubber-reference/${selectedData.id}`}
         handleShowNotification={handleShowNotification}
       />
       <UpdateReferenceDialog

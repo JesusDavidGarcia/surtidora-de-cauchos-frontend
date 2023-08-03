@@ -27,29 +27,6 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     flexDirection: "column",
   },
-  divider: {
-    width: "100%",
-    padding: "16px 0",
-    borderTop: "1px solid #505050",
-  },
-  diagnostic: {
-    fontSize: 14,
-    textAlign: "justify",
-    fontFamily: "Times-Roman",
-  },
-  technician: {
-    fontSize: 14,
-    color: "#121212",
-  },
-  image: {
-    width: "200px",
-    maxHeight: "400px",
-  },
-  images: {
-    display: "flex",
-    flexDirection: "row",
-    flexWrap: "wrap",
-  },
   table: {
     display: "table",
     width: "auto",
@@ -103,7 +80,7 @@ const emptyData = {
 };
 
 export default function AlertDocument(props) {
-  const { data } = props;
+  const { data, columns, sharpening } = props;
 
   return (
     <Document>
@@ -152,6 +129,43 @@ export default function AlertDocument(props) {
                   {reference.currentQuantity}
                 </Text>
               </View>
+            </View>
+          ))}
+        </View>
+      </Page>
+      <Page size="A4" style={styles.body}>
+        <View style={styles.headers}>
+          <Text style={styles.title}>{"Reporte de refilado"}</Text>
+          <Text style={styles.date}>{new Date().toLocaleDateString()}</Text>
+        </View>
+
+        <View style={styles.table}>
+          <View style={styles.tableRow}>
+            {columns.map((col, idx) => (
+              <View
+                key={idx}
+                style={{
+                  ...styles.tableCol,
+                  width: `${(100 / columns.length).toFixed(0)}%`,
+                }}
+              >
+                <Text style={styles.tableCell}>{col.field}</Text>
+              </View>
+            ))}
+          </View>
+          {sharpening.map((reference, index) => (
+            <View key={index} style={styles.tableRow}>
+              {columns.map((col, colIdx) => (
+                <View
+                  key={colIdx}
+                  style={{
+                    ...styles.tableCol,
+                    width: `${(100 / columns.length).toFixed(0)}%`,
+                  }}
+                >
+                  <Text style={styles.tableCell}>{reference[col.field]}</Text>
+                </View>
+              ))}
             </View>
           ))}
         </View>

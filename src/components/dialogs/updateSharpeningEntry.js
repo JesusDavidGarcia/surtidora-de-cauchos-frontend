@@ -11,20 +11,23 @@ import Dialog from "@mui/material/Dialog";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 
+//MUI-LAB
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { DatePicker } from "@mui/x-date-pickers";
+
 import $ from "jquery";
 import mainURL from "../../config/environment";
 import SelectOperator from "../input/selectOperator";
-import { Typography } from "@mui/material";
 
 const emptyModel = {
-  referenceName: "",
   rubberReferenceId: "",
-  operatorId: 0,
-  produced: 0,
-  wasted: 0,
+  sharpenerId: 0,
+  quantity: 0,
+  sharpeningDate: Date.now(),
 };
 
-export default function UpdateroviderDialog(props) {
+export default function UpdateSharpeningEntry(props) {
   const [isLoading, setLoading] = useState(false);
   const [model, setModel] = useState(emptyModel);
   const { refresh, entryId } = props;
@@ -40,6 +43,14 @@ export default function UpdateroviderDialog(props) {
     });
   };
 
+  const handleDateChange = (event) => {
+    const date = event;
+    setModel({
+      ...model,
+      sharpeningDate: date,
+    });
+  };
+
   const handleSubmit = (event) => {
     event.preventDefault();
     setLoading(true);
@@ -47,7 +58,7 @@ export default function UpdateroviderDialog(props) {
 
     $.ajax({
       method: "PUT",
-      url: `${mainURL}production-entry/${entryId}`,
+      url: `${mainURL}sharpening-entry/${entryId}`,
       contentType: "application/json",
       headers: {
         Authorization: "Bearer " + token,
@@ -58,7 +69,7 @@ export default function UpdateroviderDialog(props) {
         setLoading(false);
         props.handleShowNotification(
           "success",
-          "Inventario actualizado con éxito"
+          "Refilado actualizado con éxito"
         );
         handleClear();
       })
@@ -76,6 +87,7 @@ export default function UpdateroviderDialog(props) {
   const handleClear = () => {
     props.handleClose();
     setModel(emptyModel);
+
     props.setRefresh(!refresh);
   };
 
@@ -85,7 +97,7 @@ export default function UpdateroviderDialog(props) {
     if (entryId !== "") {
       $.ajax({
         method: "GET",
-        url: `${mainURL}production-entry/${entryId}`,
+        url: `${mainURL}sharpening-entry/${entryId}`,
         contentType: "application/json",
         headers: {
           Authorization: "Bearer " + token,
@@ -93,7 +105,7 @@ export default function UpdateroviderDialog(props) {
         },
       }).done((res) => {
         console.log(res);
-        setModel(res);
+        setModel({ ...res, sharpeningDate: new Date(res.sharpeningDate) });
       });
     }
   }, [entryId, refresh]);
@@ -103,42 +115,42 @@ export default function UpdateroviderDialog(props) {
       <DialogTitle>{"Registrar ingreso"}</DialogTitle>
       <DialogContent>
         <Box component="form" onSubmit={handleSubmit}>
-          <Grid container spacing={2}>
+          <Grid container spacing={2} sx={{ pt: 2 }}>
             <Grid item xs={12} md={12}>
-              <Typography variant="subtitle1">{model.referenceName}</Typography>
-            </Grid>
-            <Grid item xs={12} md={6}>
-              <SelectOperator
-                handleChange={handleChange}
-                value={model.operatorId}
-                name="operatorId"
-                area="Manufactura"
-              />
-            </Grid>
-            <Grid item xs={12} md={3}>
-              <FormControl fullWidth required>
-                <TextField
-                  label={"Producido"}
-                  onChange={handleChange}
-                  value={model.produced}
-                  variant="standard"
-                  name="produced"
-                  margin="dense"
-                  type="number"
-                  inputProps={{ step: "0.25" }}
-                  fullWidth
-                  required
-                />
+              <FormControl fullWidth>
+                <LocalizationProvider dateAdapter={AdapterDateFns}>
+                  <DatePicker
+                    label={"Fecha de refilado"}
+                    value={model.sharpeningDate}
+                    onChange={handleDateChange}
+                    format="dd/MM/yyyy"
+                    renderInput={(params) => <TextField variant="standard" />}
+                  />
+                </LocalizationProvider>
               </FormControl>
             </Grid>
-            <Grid item xs={12} md={3}>
+            {/*  <Grid item xs={12} md={12}>
+              <SelectReference
+                handleChange={handleReferenceChange}
+                value={selectedReference}
+              />
+            </Grid> */}
+            <Grid item xs={12} md={8}>
+              <SelectOperator
+                handleChange={handleChange}
+                value={model.sharpenerId}
+                name="sharpenerId"
+                area="refilado"
+              />
+            </Grid>
+            <Grid item xs={12} md={4}>
               <FormControl fullWidth required>
                 <TextField
-                  label={"Desechado"}
+                  label={"Cantidad"}
                   onChange={handleChange}
-                  value={model.wasted}
+                  value={model.quantity}
                   variant="standard"
-                  name="wasted"
+                  name="quantity"
                   margin="dense"
                   type="number"
                   inputProps={{ step: "0.25" }}

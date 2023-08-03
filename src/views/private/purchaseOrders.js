@@ -29,7 +29,7 @@ const emptyData = {
   createdOn: "",
   shipmentWeight: 0,
   invoicePrice: 0,
-  nuberOfBoxes: 0,
+  numberOfBoxes: 0,
   references: [],
 };
 

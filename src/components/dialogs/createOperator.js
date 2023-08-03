@@ -13,14 +13,15 @@ import Box from "@mui/material/Box";
 
 import $ from "jquery";
 import mainURL from "../../config/environment";
+import SelectArea from "../input/selectArea";
 
 const emptyModel = {
   fullName: "",
+  area: "",
 };
 
 export default function CreateOperatorDialog(props) {
   const [isFormComplete, setFormComplete] = useState(false);
-  const [isEmailValid, setEmailValid] = useState(true);
   const [isLoading, setLoading] = useState(false);
   const [model, setModel] = useState(emptyModel);
   const { refresh } = props;
@@ -30,32 +31,12 @@ export default function CreateOperatorDialog(props) {
     const name = target.name;
     let value = target.value;
 
-    switch (name) {
-      case "email":
-        value = value.toLowerCase();
-        const isEmailValid = Boolean(
-          value.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i)
-        );
-        if (isEmailValid) {
-          setEmailValid(true);
-        } else {
-          setEmailValid(false);
-        }
-        setModel({
-          ...model,
-          [name]: value,
-        });
-        break;
+    setModel({
+      ...model,
+      [name]: value,
+    });
 
-      default:
-        setModel({
-          ...model,
-          [name]: value,
-        });
-        break;
-    }
-
-    if (model.name !== "" && isEmailValid !== "" && isEmailValid) {
+    if (model.fullName !== "") {
       setFormComplete(true);
     }
   };
@@ -114,6 +95,13 @@ export default function CreateOperatorDialog(props) {
                   required
                 />
               </FormControl>
+            </Grid>
+            <Grid item xs={12}>
+              <SelectArea
+                name="area"
+                value={model.area}
+                handleChange={handleChange}
+              />
             </Grid>
           </Grid>
         </Box>

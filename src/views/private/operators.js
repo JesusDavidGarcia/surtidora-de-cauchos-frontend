@@ -49,6 +49,11 @@ export default function Operators(props) {
       flex: 1,
     },
     {
+      headerName: "Area",
+      field: "area",
+      flex: 1,
+    },
+    {
       headerName: "Opciones",
       field: "id",
       renderCell: (params: GridRenderCellParams) => (

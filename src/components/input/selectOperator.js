@@ -7,14 +7,14 @@ import Select from "@mui/material/Select";
 import $ from "jquery";
 import mainURL from "../../config/environment";
 
-const useOperators = (refresh) => {
+const useOperators = (area) => {
   const [operators, setOperators] = useState([]);
   useEffect(() => {
     const token = JSON.parse(localStorage.getItem("userInfo")).token;
     let isSubscribed = true;
     $.ajax({
       method: "GET",
-      url: mainURL + "operator/get-all",
+      url: `${mainURL}operator/get-all?area=${area}`,
       contentType: "application/json",
       headers: {
         Authorization: "Bearer " + token,
@@ -23,18 +23,19 @@ const useOperators = (refresh) => {
       if (isSubscribed) setOperators(res);
     });
     return () => (isSubscribed = false);
-  }, []);
+  }, [area]);
   return operators;
 };
 
 export default function SelectOperator(props) {
   const { handleChange } = props;
   const { required } = props;
-  const { refresh } = props;
+  const { title } = props;
   const { value } = props;
   const { name } = props;
+  const { area } = props;
 
-  const operators = useOperators(refresh);
+  const operators = useOperators(area);
 
   return (
     <FormControl
@@ -42,7 +43,7 @@ export default function SelectOperator(props) {
       required={required}
       sx={{ height: "56px", justifyContent: "flex-end" }}
     >
-      <InputLabel variant="standard">{"Operario"}</InputLabel>
+      <InputLabel variant="standard">{title ?? "Operario"}</InputLabel>
       <Select
         value={value}
         onChange={handleChange}

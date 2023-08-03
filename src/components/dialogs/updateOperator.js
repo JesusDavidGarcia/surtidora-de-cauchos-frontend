@@ -13,9 +13,11 @@ import Box from "@mui/material/Box";
 
 import $ from "jquery";
 import mainURL from "../../config/environment";
+import SelectArea from "../input/selectArea";
 
 const emptyModel = {
   fullName: "",
+  area: "",
 };
 
 export default function CreateOperatorDialog(props) {
@@ -135,6 +137,13 @@ export default function CreateOperatorDialog(props) {
                   required
                 />
               </FormControl>
+            </Grid>
+            <Grid item xs={12}>
+              <SelectArea
+                name="area"
+                value={model.area}
+                handleChange={handleChange}
+              />
             </Grid>
           </Grid>
         </Box>

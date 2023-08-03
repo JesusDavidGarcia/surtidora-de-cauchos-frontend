@@ -12,6 +12,7 @@ import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import EngineeringIcon from "@mui/icons-material/Engineering";
 import PlaylistAddIcon from "@mui/icons-material/PlaylistAdd";
 import ViewAgendaIcon from "@mui/icons-material/ViewAgenda";
+import ContentCutIcon from "@mui/icons-material/ContentCut";
 import InventoryIcon from "@mui/icons-material/Inventory";
 import GroupsIcon from "@mui/icons-material/Groups";
 import GroupIcon from "@mui/icons-material/Group";
@@ -30,6 +31,8 @@ const breadcrumbNameMap = {
   "/ordenes-compra": "Órdenes de compra",
   "/ordenes-compra/crear": "Crear",
   "/operarios": "Operarios",
+  "/ingresos-refilado": "Ingresos refilado",
+  "/actualidad-refilado": "Actualidad refilado",
 };
 
 const breadcrumbIconMap = {
@@ -44,6 +47,8 @@ const breadcrumbIconMap = {
   "/clientes": <HailIcon sx={{ mr: 1 }} htmlColor="#FFF" />,
   "/usuarios": <GroupIcon sx={{ mr: 1 }} htmlColor="#FFF" />,
   "/operarios": <GroupsIcon sx={{ mr: 1 }} htmlColor="#FFF" />,
+  "/ingresos-refilado": <ContentCutIcon sx={{ mr: 1 }} htmlColor="#FFF" />,
+  "/actualidad-refilado": <ContentCutIcon sx={{ mr: 1 }} htmlColor="#FFF" />,
 };
 
 const LinkRouter = (props) => <Link {...props} component={RouterLink} />;
