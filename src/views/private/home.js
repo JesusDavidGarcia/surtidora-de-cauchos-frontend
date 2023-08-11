@@ -94,7 +94,7 @@ export default function Home(props) {
     })
       .done((res) => {
         const filtered = res.filter((m) => m.quantity > 0);
-        console.log(filtered);
+
         const sharpeners = [...new Set(filtered.map((item) => item.sharpener))];
         const references = [
           ...new Set(filtered.map((item) => item.referenceName)),
