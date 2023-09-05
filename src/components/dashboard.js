@@ -18,6 +18,7 @@ import LineChart from "./charts/lineChart";
 import mainURL from "../config/environment";
 import $ from "jquery";
 import PurchaseOrderReportDialog from "./dialogs/purchaseOrderReport";
+import MaterialStatusDialog from "./dialogs/materialStatus";
 
 const emptyData = {
   referenceUnits: 0,
@@ -29,9 +30,23 @@ export default function Dashboard() {
 
   //Dialog management
   const [reportDialog, setReportDialog] = useState(false);
+  const [materialDialog, setMaterialDialog] = useState(false);
 
   const handleCloseDialogs = () => {
     setReportDialog(false);
+    setMaterialDialog(false);
+  };
+
+  const handleOpenDialog = (card) => (event) => {
+    console.log(card, event);
+    switch (card) {
+      case "material":
+        setMaterialDialog(true);
+        break;
+
+      default:
+        break;
+    }
   };
 
   const numberWithCommas = (number) => {
@@ -63,6 +78,10 @@ export default function Dashboard() {
     <Box component="main">
       <PurchaseOrderReportDialog
         open={reportDialog}
+        handleClose={handleCloseDialogs}
+      />
+      <MaterialStatusDialog
+        open={materialDialog}
         handleClose={handleCloseDialogs}
       />
       <Grid container sx={{ mt: 2, mb: 2 }}>
@@ -116,7 +135,12 @@ export default function Dashboard() {
           },
         ].map((kpi) => (
           <Grid item key={kpi.id} xs={12} md={6}>
-            <KPICard Icon={kpi.icon} text={kpi.text} value={kpi.value} />
+            <KPICard
+              Icon={kpi.icon}
+              text={kpi.text}
+              value={kpi.value}
+              handleClick={handleOpenDialog(kpi.id)}
+            />
           </Grid>
         ))}
         <Grid item xs={12} md={8}>

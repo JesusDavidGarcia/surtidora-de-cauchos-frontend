@@ -197,7 +197,7 @@ export default function SharpeningEntries(props) {
     })
       .done((res) => {
         const aux: GridRowsProp = res.sort(
-          (a, b) => new Date(b.sharpeningDate) - new Date(a.sharpeningDate)
+          (a, b) => new Date(b.createdOn) - new Date(a.createdOn)
         );
 
         if (isSubscribed) {

@@ -184,7 +184,10 @@ export default function ProductionEntries(props) {
       },
     })
       .done((res) => {
-        const aux: GridRowsProp = res;
+        const aux: GridRowsProp = res.sort(
+          (a, b) => new Date(b.createdOn) - new Date(a.createdOn)
+        );
+        console.log(aux);
         if (isSubscribed) {
           setData(aux);
           setFilteredData(aux);

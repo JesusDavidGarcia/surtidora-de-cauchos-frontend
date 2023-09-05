@@ -5,7 +5,9 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import FormControl from "@mui/material/FormControl";
+import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
+
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
 import Grid from "@mui/material/Grid";
@@ -14,7 +16,6 @@ import Box from "@mui/material/Box";
 import $ from "jquery";
 import mainURL from "../../config/environment";
 import SelectOperator from "../input/selectOperator";
-import { Typography } from "@mui/material";
 
 const emptyModel = {
   referenceName: "",

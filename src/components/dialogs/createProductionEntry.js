@@ -15,13 +15,14 @@ import SelectReference from "../input/selectReference";
 
 import $ from "jquery";
 import mainURL from "../../config/environment";
-import SelectOperator from "../input/selectOperator";
 
 //MUI-LAB
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { DatePicker } from "@mui/x-date-pickers";
-import SelectAvailableSharpeners from "../input/selectSharpener";
+
+//import SelectAvailableSharpeners from "../input/selectSharpener";
+import SelectOperator from "../input/selectOperator";
 
 const emptyModel = {
   rubberReferenceId: "",
@@ -34,7 +35,7 @@ const emptyModel = {
 };
 
 export default function CreateProviderDialog(props) {
-  const [selectedSharpener, setSelectedSharpener] = useState(null);
+  //const [selectedSharpener, setSelectedSharpener] = useState(null);
   const [selectedReference, setSelectedReference] = useState(null);
   const [isFormComplete, setFormComplete] = useState(false);
   const [isLoading, setLoading] = useState(false);
@@ -46,7 +47,7 @@ export default function CreateProviderDialog(props) {
     const name = target.name;
     let value = target.value;
 
-    switch (name) {
+    /*  switch (name) {
       case "produced":
         if (value <= model.maxQuantity) {
           setModel({
@@ -71,7 +72,12 @@ export default function CreateProviderDialog(props) {
           [name]: value,
         });
         break;
-    }
+    } */
+
+    setModel({
+      ...model,
+      [name]: value,
+    });
 
     if (model.produced > 0) {
       setFormComplete(true);
@@ -96,11 +102,11 @@ export default function CreateProviderDialog(props) {
     } else {
       setModel(emptyModel);
       setSelectedReference(null);
-      setSelectedSharpener(null);
+      //setSelectedSharpener(null);
     }
   };
 
-  const handleSharpenerChange = (newReference) => {
+  /*  const handleSharpenerChange = (newReference) => {
     if (newReference !== null) {
       setModel({
         ...model,
@@ -113,7 +119,7 @@ export default function CreateProviderDialog(props) {
       setModel(emptyModel);
       setSelectedSharpener(null);
     }
-  };
+  }; */
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -158,7 +164,7 @@ export default function CreateProviderDialog(props) {
     setModel(emptyModel);
     setFormComplete(false);
     setSelectedReference(null);
-    setSelectedSharpener(null);
+    //setSelectedSharpener(null);
     props.setRefresh(!refresh);
   };
 
@@ -187,7 +193,7 @@ export default function CreateProviderDialog(props) {
                 value={selectedReference}
               />
             </Grid>
-            <Grid item xs={12} md={6}>
+            {/*  <Grid item xs={12} md={6}>
               <SelectAvailableSharpeners
                 reference={
                   model.rubberReferenceId === ""
@@ -197,6 +203,16 @@ export default function CreateProviderDialog(props) {
                 handleChange={handleSharpenerChange}
                 value={selectedSharpener}
                 required
+              />
+            </Grid> */}
+
+            <Grid item xs={12} md={6}>
+              <SelectOperator
+                handleChange={handleChange}
+                value={model.sharpenerId}
+                title="Refilador"
+                name="sharpenerId"
+                area="refilado"
               />
             </Grid>
 
@@ -218,7 +234,7 @@ export default function CreateProviderDialog(props) {
                   name="produced"
                   margin="dense"
                   type="number"
-                  inputProps={{ step: "0.25", max: model.maxQuantity }}
+                  inputProps={{ step: "0.25" /* , max: model.maxQuantity */ }}
                   fullWidth
                   required
                 />
@@ -236,7 +252,7 @@ export default function CreateProviderDialog(props) {
                   type="number"
                   inputProps={{
                     step: "0.25",
-                    max: model.maxQuantity - model.produced,
+                    //max: model.maxQuantity - model.produced,
                   }}
                   fullWidth
                   required

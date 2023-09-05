@@ -41,7 +41,11 @@ export default function SelectReference(props) {
   const references = useReferences(refresh);
 
   return (
-    <FormControl fullWidth required={required}>
+    <FormControl
+      sx={{ height: "56px", justifyContent: "flex-end" }}
+      fullWidth
+      required={required}
+    >
       <Autocomplete
         id="tags-standard"
         options={references}
