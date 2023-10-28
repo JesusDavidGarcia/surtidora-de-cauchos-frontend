@@ -26,6 +26,7 @@ const emptyModel = {
   minimum: 0,
   maximum: 0,
   rawMaterialId: 0,
+  comments: "",
 };
 
 export default function UpdateReferenceDialog(props) {
@@ -244,6 +245,21 @@ export default function UpdateReferenceDialog(props) {
                   label={"Precio de refilado"}
                   name="sharpeningPrice"
                   variant="standard"
+                  margin="dense"
+                  type="number"
+                  fullWidth
+                />
+              </FormControl>
+            </Grid>
+            <Grid item xs={12}>
+              <FormControl fullWidth required>
+                <TextField
+                  value={model.comments}
+                  onChange={handleChange}
+                  label={"Comentarios adicionales"}
+                  name="comments"
+                  multiline
+                  rows={3}
                   margin="dense"
                   type="number"
                   fullWidth

@@ -3,7 +3,11 @@ import React, { useState, useEffect, useRef } from "react";
 //Charts
 import ReactEcharts from "echarts-for-react";
 
+import CircularProgress from "@mui/material/CircularProgress";
 import CardContent from "@mui/material/CardContent";
+import CardHeader from "@mui/material/CardHeader";
+import IconButton from "@mui/material/IconButton";
+import Tooltip from "@mui/material/Tooltip";
 import Card from "@mui/material/Card";
 import Grid from "@mui/material/Grid";
 
@@ -16,12 +20,7 @@ import * as XLSX from "xlsx";
 //Jquery
 import apiURL from "../../config/environment";
 import $ from "jquery";
-import {
-  CardHeader,
-  CircularProgress,
-  IconButton,
-  Tooltip,
-} from "@mui/material";
+
 import { Download } from "@mui/icons-material";
 import FilterPopover from "../popovers/filter";
 

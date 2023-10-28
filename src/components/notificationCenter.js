@@ -1,10 +1,13 @@
 import React from "react";
 
+import FormControlLabel from "@mui/material/FormControlLabel";
 import CardContent from "@mui/material/CardContent";
 import CardHeader from "@mui/material/CardHeader";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
+import FormGroup from "@mui/material/FormGroup";
 import Toolbar from "@mui/material/Toolbar";
+import Switch from "@mui/material/Switch";
 import Drawer from "@mui/material/Drawer";
 import Grid from "@mui/material/Grid";
 import Card from "@mui/material/Card";
@@ -16,6 +19,7 @@ import AlertReport from "./docs/alerts";
 
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import { useWidth } from "../utils/withSelector";
+import { CircularProgress } from "@mui/material";
 
 export default function NotificationCenter(props) {
   const {
@@ -25,6 +29,9 @@ export default function NotificationCenter(props) {
     notifications,
     sharpening,
     columns,
+    onlyBelow,
+    loading,
+    handleToggleOnlyBelow,
   } = props;
 
   const breakpoint = useWidth();
@@ -40,7 +47,7 @@ export default function NotificationCenter(props) {
       sx={{
         "& .MuiDrawer-paper": {
           boxSizing: "border-box",
-          width: { xs: `70%`, md: 340 },
+          width: { xs: `70%`, md: 400 },
         },
       }}
     >
@@ -48,6 +55,15 @@ export default function NotificationCenter(props) {
       <Toolbar>
         <Grid container justifyContent={"space-between"}>
           <Typography variant="subtitle1">Alertas</Typography>
+          <FormGroup>
+            <FormControlLabel
+              control={
+                <Switch checked={onlyBelow} onChange={handleToggleOnlyBelow} />
+              }
+              label="Solo faltantes"
+            />
+          </FormGroup>
+
           <PDFDownloadLink
             document={
               <AlertReport
@@ -61,12 +77,12 @@ export default function NotificationCenter(props) {
             <IconButton
               disabled={notifications.length + sharpening.length <= 0}
             >
-              <DownloadIcon />
+              {loading ? <CircularProgress size={35} /> : <DownloadIcon />}
             </IconButton>
           </PDFDownloadLink>
         </Grid>
       </Toolbar>
-      <Grid container spacing={2} sx={{ maxWidth: "400px", p: 2 }}>
+      <Grid container spacing={2} sx={{ maxWidth: "400px", p: 2, ml: "-8px" }}>
         {notifications.map((noti) => (
           <Grid key={noti.id} item sm={12}>
             <Card>

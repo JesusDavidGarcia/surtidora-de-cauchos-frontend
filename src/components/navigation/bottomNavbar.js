@@ -6,7 +6,7 @@ import BottomNavigation from "@mui/material/BottomNavigation";
 import Paper from "@mui/material/Paper";
 
 //Icons
-import DashboardIcon from "@mui/icons-material/Dashboard";
+
 import { useNavigate } from "react-router-dom";
 
 import ShoppingCartCheckoutIcon from "@mui/icons-material/ShoppingCartCheckout";
@@ -14,6 +14,7 @@ import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 import EngineeringIcon from "@mui/icons-material/Engineering";
 import ContentCutIcon from "@mui/icons-material/ContentCut";
 import ViewAgendaIcon from "@mui/icons-material/ViewAgenda";
+import DashboardIcon from "@mui/icons-material/Dashboard";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import InventoryIcon from "@mui/icons-material/Inventory";
 import GroupsIcon from "@mui/icons-material/Groups";

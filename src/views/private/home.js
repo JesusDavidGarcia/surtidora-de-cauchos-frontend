@@ -36,8 +36,14 @@ export default function Home(props) {
   const navigate = useNavigate();
 
   const [notifications, setNotifications] = React.useState([]);
+  const [onlyBelow, setOnlyBelow] = React.useState(false);
   const [sharpening, setSharpening] = React.useState([]);
+  const [loading, setLoading] = React.useState(false);
   const [columns, setColumns] = React.useState([]);
+
+  const handleToggleOnlyBelow = () => {
+    setOnlyBelow(!onlyBelow);
+  };
 
   const handleCloseDialogs = () => {
     setOpenNC(false);
@@ -57,9 +63,10 @@ export default function Home(props) {
   React.useEffect(() => {
     const token = JSON.parse(localStorage.getItem("userInfo")).token;
     let isSubscribed = true;
+    setLoading(true);
     $.ajax({
       method: "GET",
-      url: `${mainURL}notification/references`,
+      url: `${mainURL}notification/references?onlyBelow=${onlyBelow}`,
       contentType: "application/json",
       headers: {
         Authorization: "Bearer " + token,
@@ -68,6 +75,7 @@ export default function Home(props) {
       .done((res) => {
         const aux = res.sort((a, b) => a.currentQuantity - b.currentQuantity);
         if (isSubscribed) setNotifications(aux);
+        setLoading(false);
       })
       .fail((res) => {
         if (res.status === 401) {
@@ -77,7 +85,7 @@ export default function Home(props) {
         }
       });
     return () => (isSubscribed = false);
-  }, [navigate]);
+  }, [navigate, onlyBelow]);
 
   React.useEffect(() => {
     const token = JSON.parse(localStorage.getItem("userInfo")).token;
@@ -181,11 +189,14 @@ export default function Home(props) {
       </Box>
       <NotificationCenter
         open={openNC}
+        loading={loading}
         columns={columns}
+        onlyBelow={onlyBelow}
         sharpening={sharpening}
         notifications={notifications}
         handleClose={handleCloseDialogs}
         handleOnHoverClose={OnHoverClose}
+        handleToggleOnlyBelow={handleToggleOnlyBelow}
       />
       <BottomNavbar />
     </Box>
