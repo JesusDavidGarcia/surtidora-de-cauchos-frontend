@@ -57,7 +57,7 @@ export default function UserPopover(props) {
         break;
 
       case "details":
-        props.showDetails();
+        props.setDetailsDialog(true);
         break;
 
       default:

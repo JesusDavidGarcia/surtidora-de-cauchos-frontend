@@ -16,9 +16,10 @@ import { DataGrid } from "@mui/x-data-grid";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 
 import CreateReferenceDialog from "../../components/dialogs/createReference";
+import ReferenceDetails from "../../components/dialogs/referenceDetails";
 import DeleteClientDialog from "../../components/dialogs/deleteGeneric";
 import SearchAndCreate from "../../components/input/searchAndCreate";
-import ClientPopover from "../../components/popovers/generic";
+import ReferencePopover from "../../components/popovers/generic";
 
 import mainURL from "../../config/environment";
 import $ from "jquery";
@@ -106,10 +107,12 @@ export default function References(props) {
   ];
 
   //Dialog management
+  const [detailsDialog, setDetailsDialog] = useState(false);
   const [updateDialog, setUpdateDialog] = useState(false);
   const [deleteDialog, setDeleteDialog] = useState(false);
   const [createDialog, setCreateDialog] = useState(false);
   const handleCloseDialogs = () => {
+    setDetailsDialog(false);
     setUpdateDialog(false);
     setDeleteDialog(false);
     setCreateDialog(false);
@@ -127,6 +130,10 @@ export default function References(props) {
 
       case "update":
         setUpdateDialog(true);
+        break;
+
+      case "details":
+        setDetailsDialog(true);
         break;
 
       default:
@@ -215,13 +222,22 @@ export default function References(props) {
 
   return (
     <Box sx={{ height: "85vh", p: 2 }}>
-      <ClientPopover
+      <ReferencePopover
         open={anchor}
         showUpdateOption
         showDeleteOption
+        showDetailsOption
         handleClose={handlePopoverClose}
         setDeleteDialog={setDeleteDialog}
         setUpdateDialog={setUpdateDialog}
+        setDetailsDialog={setDetailsDialog}
+      />
+      <ReferenceDetails
+        refresh={refresh}
+        open={detailsDialog}
+        setRefresh={setRefresh}
+        referenceId={selectedData.id}
+        handleClose={handleCloseDialogs}
       />
       <DeleteClientDialog
         refresh={refresh}
