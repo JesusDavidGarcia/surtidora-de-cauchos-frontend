@@ -47,7 +47,7 @@ export default function CreateRawMaterialEntryDialog(props) {
       [name]: value,
     });
 
-    if (model.weight > 0) {
+    if (model.weight > 0 || name === "weight") {
       setFormComplete(true);
     }
   };

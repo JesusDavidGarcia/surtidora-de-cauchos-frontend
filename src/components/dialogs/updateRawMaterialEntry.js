@@ -32,7 +32,6 @@ const emptyModel = {
 };
 
 export default function UpdateRawMaterialEntryDialog(props) {
-  const [isFormComplete, setFormComplete] = useState(false);
   const [isLoading, setLoading] = useState(false);
   const [model, setModel] = useState(emptyModel);
   const { refresh, entryId } = props;
@@ -46,10 +45,6 @@ export default function UpdateRawMaterialEntryDialog(props) {
       ...model,
       [name]: value,
     });
-
-    if (model.weight > 0) {
-      setFormComplete(true);
-    }
   };
 
   const handleSubmit = (event) => {
@@ -101,7 +96,6 @@ export default function UpdateRawMaterialEntryDialog(props) {
   const handleClear = () => {
     props.handleClose();
     setModel(emptyModel);
-    setFormComplete(false);
     props.setRefresh(!refresh);
   };
 
@@ -229,11 +223,7 @@ export default function UpdateRawMaterialEntryDialog(props) {
             <Button type="submit" onClick={handleClear}>
               Cerrar
             </Button>
-            <Button
-              type="submit"
-              disabled={!isFormComplete}
-              onClick={handleSubmit}
-            >
+            <Button type="submit" onClick={handleSubmit}>
               Actualizar
             </Button>
           </Grid>

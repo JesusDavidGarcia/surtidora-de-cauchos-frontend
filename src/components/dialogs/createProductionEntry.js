@@ -79,7 +79,7 @@ export default function CreateProviderDialog(props) {
       [name]: value,
     });
 
-    if (model.produced > 0) {
+    if (model.produced > 0 || name === "produced") {
       setFormComplete(true);
     }
   };

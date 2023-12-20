@@ -35,8 +35,8 @@ const styles = StyleSheet.create({
   },
   divider: {
     width: "100%",
-    padding: "16px 0",
-    borderTop: "1px solid #505050",
+    padding: "16px",
+    //borderTop: "1px solid #505050",
   },
   diagnostic: {
     fontSize: 14,
@@ -158,7 +158,12 @@ export default function PurchaseOrderDocument(props) {
           ))}
         </View>
 
-        {/*  <View style={styles.divider}></View> */}
+        <Text
+          style={styles.diagnostic}
+        >{`NOTA: LA FACTURA ELECTRÓNICA SE ENVIÓ AL CORREO`}</Text>
+
+        <View style={styles.divider}></View>
+
         <Text
           style={styles.diagnostic}
         >{`Peso total: ${data.shipmentWeight} Kg`}</Text>

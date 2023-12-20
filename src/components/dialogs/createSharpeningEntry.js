@@ -46,7 +46,7 @@ export default function CreateSharpeningEntry(props) {
       [name]: value,
     });
 
-    if (model.quantity > 0) {
+    if (model.quantity > 0 || name === "quantity") {
       setFormComplete(true);
     }
   };

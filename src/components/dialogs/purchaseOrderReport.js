@@ -64,15 +64,43 @@ export default function PurchaseOrderReportDialog(props) {
       },
       data: JSON.stringify(model),
     })
-      .done((res) => {
+      .done((dataRes) => {
         setLoading(false);
-        if (res.length > 0) {
+        //console.log(res);
+        /*  const references = res.map((m) => ({
+          aplicacion: m.aplicacion,
+          cantidad: m.cantidadTotal,
+        }));
+
+        const result = Object.groupBy(
+          references,
+          ({ aplicacion }) => aplicacion
+        ); */
+
+        var result = [];
+        dataRes.reduce(function (res, value) {
+          if (!res[value.aplicacion]) {
+            res[value.aplicacion] = {
+              aplicacion: value.aplicacion,
+              cantidadTotal: 0,
+            };
+            result.push(res[value.aplicacion]);
+          }
+          res[value.aplicacion].cantidadTotal += value.cantidadTotal;
+          return res;
+        }, {});
+
+        if (dataRes.length > 0) {
           const fileName = `Reporte de órdenes de compra`;
           const fileType =
             "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
           const fileExtension = ".xlsx";
-          const ws = XLSX.utils.json_to_sheet(res);
-          const wb = { Sheets: { data: ws }, SheetNames: ["data"] };
+          const ws = XLSX.utils.json_to_sheet(dataRes);
+          const refs = XLSX.utils.json_to_sheet(result);
+          const wb = {
+            Sheets: { "Ordenes de compra": ws, Referencias: refs },
+            SheetNames: ["Ordenes de compra", "Referencias"],
+          };
           const excelBuffer = XLSX.write(wb, {
             bookType: "xlsx",
             type: "array",
