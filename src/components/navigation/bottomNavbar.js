@@ -20,10 +20,11 @@ import InventoryIcon from "@mui/icons-material/Inventory";
 import GroupsIcon from "@mui/icons-material/Groups";
 import GroupIcon from "@mui/icons-material/Group";
 import HailIcon from "@mui/icons-material/Hail";
+import BackpackIcon from "@mui/icons-material/Backpack";
 
 import InventoryPopover from "../popovers/inventory";
 import SectionsPopover from "../popovers/sections";
-import SharpeningPopover from "../popovers/sharpening";
+import DualPopover from "../popovers/dual";
 
 const sections = [
   {
@@ -48,6 +49,7 @@ const sections = [
     path: "/produccion",
     permission: 9,
   },
+
   {
     id: "purchase-orders",
     title: "Órdenes de compra",
@@ -93,7 +95,9 @@ export default function BottomNavbar() {
   const navigate = useNavigate();
 
   //Profile popover management
+
   const [anchorSharpening, setAnchorSharpening] = useState(null);
+  const [anchorPackaging, setAnchorPackaging] = useState(null);
   const [anchorInventory, setAnchorInventory] = useState(null);
   const [anchorSections, setAnchorSections] = useState(null);
 
@@ -112,6 +116,10 @@ export default function BottomNavbar() {
         setAnchorSharpening(event.currentTarget);
         break;
 
+      case "packaging":
+        setAnchorPackaging(event.currentTarget);
+        break;
+
       default:
         setAnchorSections(event.currentTarget);
     }
@@ -119,6 +127,7 @@ export default function BottomNavbar() {
 
   const handleInventoryPopoverClose = () => {
     setAnchorSharpening(null);
+    setAnchorPackaging(null);
     setAnchorInventory(null);
     setAnchorSections(null);
   };
@@ -148,8 +157,14 @@ export default function BottomNavbar() {
         handleClose={handleInventoryPopoverClose}
       />
 
-      <SharpeningPopover
+      <DualPopover
+        type={"sharpening"}
         open={anchorSharpening}
+        handleClose={handleInventoryPopoverClose}
+      />
+      <DualPopover
+        type={"packaging"}
+        open={anchorPackaging}
         handleClose={handleInventoryPopoverClose}
       />
 
@@ -171,6 +186,11 @@ export default function BottomNavbar() {
           onClick={handleInventoryPopoverOpen("sharpening")}
           label="Refilado"
           icon={<ContentCutIcon />}
+        />
+        <BottomNavigationAction
+          onClick={handleInventoryPopoverOpen("packaging")}
+          label="Empacado"
+          icon={<BackpackIcon />}
         />
 
         {sections.map((section) => {

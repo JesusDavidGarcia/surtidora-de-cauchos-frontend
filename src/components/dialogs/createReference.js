@@ -14,6 +14,8 @@ import Box from "@mui/material/Box";
 import $ from "jquery";
 import mainURL from "../../config/environment";
 import SelectRawMaterial from "../input/selectRawMaterial";
+import SelectReference from "../input/selectReference";
+import { Checkbox, FormControlLabel } from "@mui/material";
 
 const emptyModel = {
   reference: "",
@@ -22,11 +24,13 @@ const emptyModel = {
   packedWeight: 0,
   currentQuantity: 0,
   sharpeningQuantity: 0,
+  packagingQuantity: 0,
   sharpeningPrice: 0,
   minimum: 0,
   maximum: 0,
   rawMaterialId: 0,
   comments: "",
+  primaryReferenceId: "",
 };
 
 export default function CreateProviderDialog(props) {
@@ -34,6 +38,23 @@ export default function CreateProviderDialog(props) {
   const [isLoading, setLoading] = useState(false);
   const [model, setModel] = useState(emptyModel);
   const { refresh } = props;
+
+  const [isSecondaryReference, setSecondaryReference] = useState(false);
+  const [selectedReference, setSelectedReference] = useState(null);
+
+  const handleReferenceChange = (newReference) => {
+    if (newReference !== null) {
+      setSelectedReference(newReference);
+      setModel({
+        ...model,
+        id: newReference.id,
+        referenceName: `${newReference.reference} ${newReference.application}`,
+      });
+    } else {
+      setSelectedReference(null);
+      setSecondaryReference(false);
+    }
+  };
 
   const handleChange = (event) => {
     const target = event.target;
@@ -55,6 +76,11 @@ export default function CreateProviderDialog(props) {
     setLoading(true);
     const token = JSON.parse(localStorage.getItem("userInfo")).token;
 
+    const sendModel = {
+      ...model,
+      primaryReferenceId: isSecondaryReference ? selectedReference.id : null,
+    };
+
     $.ajax({
       method: "POST",
       url: mainURL + "rubber-reference",
@@ -62,7 +88,7 @@ export default function CreateProviderDialog(props) {
       headers: {
         Authorization: "Bearer " + token,
       },
-      data: JSON.stringify(model),
+      data: JSON.stringify(sendModel),
     })
       .done((res) => {
         setLoading(false);
@@ -205,7 +231,7 @@ export default function CreateProviderDialog(props) {
                 />
               </FormControl>
             </Grid>
-            <Grid item xs={12} md={6}>
+            <Grid item xs={12} md={4}>
               <FormControl fullWidth required>
                 <TextField
                   value={model.sharpeningQuantity}
@@ -220,7 +246,7 @@ export default function CreateProviderDialog(props) {
                 />
               </FormControl>
             </Grid>
-            <Grid item xs={12} md={6}>
+            <Grid item xs={12} md={4}>
               <FormControl fullWidth required>
                 <TextField
                   value={model.sharpeningPrice}
@@ -234,6 +260,42 @@ export default function CreateProviderDialog(props) {
                 />
               </FormControl>
             </Grid>
+            <Grid item xs={12} md={4}>
+              <FormControl fullWidth required>
+                <TextField
+                  value={model.packagingQuantity}
+                  onChange={handleChange}
+                  label={"Cantidad en empacada"}
+                  name="packagingQuantity"
+                  variant="standard"
+                  margin="dense"
+                  type="number"
+                  inputProps={{ step: "1" }}
+                  fullWidth
+                />
+              </FormControl>
+            </Grid>
+            {!isSecondaryReference ? (
+              <Grid item xs={12}>
+                <FormControlLabel
+                  label="Es una referencia secundaria?"
+                  control={
+                    <Checkbox
+                      checked={isSecondaryReference}
+                      onChange={(e) => setSecondaryReference(e.target.checked)}
+                    />
+                  }
+                />
+              </Grid>
+            ) : (
+              <Grid item xs={12}>
+                <SelectReference
+                  handleChange={handleReferenceChange}
+                  title="Referencia primaria"
+                  value={selectedReference}
+                />
+              </Grid>
+            )}
             <Grid item xs={12}>
               <FormControl fullWidth required>
                 <TextField

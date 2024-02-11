@@ -7,14 +7,16 @@ import TextField from "@mui/material/TextField";
 import $ from "jquery";
 import mainURL from "../../config/environment";
 
-const useReferences = (refresh) => {
+const useReferences = (refresh, includeSecondary) => {
   const [references, setReferences] = useState([]);
   useEffect(() => {
     const token = JSON.parse(localStorage.getItem("userInfo")).token;
     let isSubscribed = true;
+    const include = includeSecondary ?? false;
+    console.log(include);
     $.ajax({
       method: "GET",
-      url: mainURL + "rubber-reference/get-all",
+      url: `${mainURL}rubber-reference/get-all?includeSecondary=${include}`,
       contentType: "application/json",
       headers: {
         Authorization: "Bearer " + token,
@@ -28,17 +30,18 @@ const useReferences = (refresh) => {
       if (isSubscribed) setReferences(aux);
     });
     return () => (isSubscribed = false);
-  }, []);
+  }, [includeSecondary]);
   return references;
 };
 
 export default function SelectReference(props) {
+  const { includeSecondary, title } = props;
   const { handleChange } = props;
   const { required } = props;
   const { refresh } = props;
   const { value } = props;
 
-  const references = useReferences(refresh);
+  const references = useReferences(refresh, includeSecondary);
 
   return (
     <FormControl
@@ -55,7 +58,11 @@ export default function SelectReference(props) {
           handleChange(newValue);
         }}
         renderInput={(params) => (
-          <TextField {...params} variant="standard" label="Referencia" />
+          <TextField
+            {...params}
+            variant="standard"
+            label={title ?? "Referencia"}
+          />
         )}
       />
     </FormControl>

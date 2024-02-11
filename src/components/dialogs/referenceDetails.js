@@ -15,19 +15,22 @@ import $ from "jquery";
 import { List, ListItem, ListItemText } from "@mui/material";
 
 const emptyData = {
-  id: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  id: "",
   reference: "string",
   application: "string",
   rawWeight: 0,
   packedWeight: 0,
   currentQuantity: 0,
   sharpeningQuantity: 0,
+  packagingQuantity: 0,
   sharpeningPrice: 0,
   minimum: 0,
   maximum: 0,
   rawMaterialId: 0,
-  rawMaterialName: "string",
-  comments: "string",
+  rawMaterialName: "",
+  comments: "",
+  primaryReferenceId: "",
+  primaryReferenceName: "",
 };
 
 export default function ReferenceDetails(props) {
@@ -38,7 +41,7 @@ export default function ReferenceDetails(props) {
   useEffect(() => {
     const token = JSON.parse(localStorage.getItem("userInfo")).token;
     let isSubscribed = true;
-    if (referenceId !== undefined) {
+    if (referenceId !== undefined && referenceId !== "") {
       $.ajax({
         method: "GET",
         url: `${mainURL}rubber-reference/${referenceId}`,
@@ -47,7 +50,6 @@ export default function ReferenceDetails(props) {
           Authorization: "Bearer " + token,
         },
       }).done((res) => {
-        console.log(res);
         if (isSubscribed) setData(res);
       });
     }
@@ -74,6 +76,12 @@ export default function ReferenceDetails(props) {
           </ListItem>
           <ListItem>
             <ListItemText
+              primary={"Cantidad empacada"}
+              secondary={data.packagingQuantity}
+            />
+          </ListItem>
+          <ListItem>
+            <ListItemText
               primary={"Cantidad en refilado"}
               secondary={data.sharpeningQuantity}
             />
@@ -90,6 +98,14 @@ export default function ReferenceDetails(props) {
               secondary={`${data.packedWeight} Kg`}
             />
           </ListItem>
+          {data.primaryReferenceId !== null ? (
+            <ListItem>
+              <ListItemText
+                primary={"Referencia primaria"}
+                secondary={data.primaryReferenceName}
+              />
+            </ListItem>
+          ) : null}
           <ListItem>
             <ListItemText primary={"Comentarios"} secondary={data.comments} />
           </ListItem>

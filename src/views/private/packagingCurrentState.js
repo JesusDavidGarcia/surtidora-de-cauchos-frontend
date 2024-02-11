@@ -16,9 +16,10 @@ import mainURL from "../../config/environment";
 import $ from "jquery";
 import { useWidth } from "../../utils/withSelector";
 import { PDFDownloadLink } from "@react-pdf/renderer";
-import SharpeningStateDocument from "../../components/docs/sharpeningState";
+
 import { Button, Tooltip } from "@mui/material";
 import { Download } from "@mui/icons-material";
+import PackagingStateDocument from "../../components/docs/packagingState";
 
 const emptyData = {
   id: "",
@@ -29,7 +30,7 @@ const emptyData = {
   wasted: 0,
 };
 
-export default function SharpenersMatrix(props) {
+export default function PackagingMatrix(props) {
   //Data management
   const [selectedData, setSelectedData] = useState(emptyData);
   const [filteredData, setFilteredData] = useState([]);
@@ -73,15 +74,17 @@ export default function SharpenersMatrix(props) {
     //setLoading(true);
     $.ajax({
       method: "GET",
-      url: mainURL + "operator-sharpening/get-all",
+      url: mainURL + "packaging-reference/get-all",
       contentType: "application/json",
       headers: {
         Authorization: "Bearer " + token,
       },
     })
       .done((res) => {
-        const filtered = res.filter((m) => m.quantity > 0);
-        const sharpeners = [...new Set(filtered.map((item) => item.sharpener))];
+        const filtered = res;
+        const packaging = [
+          ...new Set(filtered.map((item) => item.packagingName)),
+        ];
         const references = [
           ...new Set(filtered.map((item) => item.referenceName)),
         ];
@@ -89,13 +92,13 @@ export default function SharpenersMatrix(props) {
           ...new Set(
             filtered.map((item, idx) => ({
               id: idx,
-              [item.sharpener]: item.quantity.toFixed(2),
+              [item.packagingName]: item.quantity,
               Referencia: item.referenceName,
             }))
           ),
         ];
 
-        const columns = sharpeners.map((item) => ({
+        const columns = packaging.map((item) => ({
           headerName: item,
           field: item,
           flex: 1,
@@ -150,7 +153,7 @@ export default function SharpenersMatrix(props) {
         container
       >
         <Grid item xs={12} md={8}>
-          <Typography variant={"h4"}>{"Estado actual de refilado"}</Typography>
+          <Typography variant={"h4"}>{"Estado actual de empacado"}</Typography>
         </Grid>
 
         {showNotification ? (
@@ -166,17 +169,17 @@ export default function SharpenersMatrix(props) {
             handleSearch={handleSearch}
             showDownloadReportOption
             searchText={searchText}
-            //permission={10}
+            permission={10}
           >
             <PDFDownloadLink
               document={
-                <SharpeningStateDocument
-                  title="Reporte de refilado"
+                <PackagingStateDocument
+                  title="Reporte de empacado"
                   data={data}
                   columns={columns}
                 />
               }
-              fileName={`Reporte de refilado ${
+              fileName={`Reporte de empacado ${
                 new Date().toISOString().split("T")[0]
               }.pdf`}
             >

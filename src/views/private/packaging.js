@@ -10,40 +10,31 @@ import Box from "@mui/material/Box";
 
 import { DataGrid } from "@mui/x-data-grid";
 
-//import { useNavigate } from "react-router-dom";
-
 //Icons
+
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 
-import CreateReferenceDialog from "../../components/dialogs/createReference";
-import ReferenceDetails from "../../components/dialogs/referenceDetails";
-import DeleteClientDialog from "../../components/dialogs/deleteGeneric";
+import UpdatePackagingDialog from "../../components/dialogs/updatePackaging";
+import DeleteOperatorDialog from "../../components/dialogs/deleteGeneric";
+import CreatePackaging from "../../components/dialogs/createPackaging";
 import SearchAndCreate from "../../components/input/searchAndCreate";
-import ReferencePopover from "../../components/popovers/generic";
+import OptionsPopover from "../../components/popovers/generic";
 
 import mainURL from "../../config/environment";
 import $ from "jquery";
-import UpdateReferenceDialog from "../../components/dialogs/updateReference";
-import { useWidth } from "../../utils/withSelector";
-import { Switch, Tooltip } from "@mui/material";
 
 const emptyData = {
   id: "",
-  reference: "",
-  application: "",
-  rawWeight: null,
-  packedWeight: null,
-  currentQuantity: null,
-  minimum: null,
-  maximum: null,
-  rawMaterialId: null,
-  rawMaterialName: "",
+  name: "",
+  email: "",
+  phoneNumber: "",
+  accessToken: "",
 };
 
 const errorMessage =
-  "No se puede borrar esta referencia porque hay ordenes de compra asociadas a a esta referencia";
+  "No se puede borrar este cliente porque existen órdenes de compra asociadas a él";
 
-export default function References(props) {
+export default function Packaging(props) {
   //Data management
   const [selectedData, setSelectedData] = useState(emptyData);
   const [filteredData, setFilteredData] = useState([]);
@@ -51,50 +42,11 @@ export default function References(props) {
 
   const [data, setData] = useState([]);
 
-  //const navigate = useNavigate();
-  const breakpoint = useWidth();
   const columns: GridColDef[] = [
     {
-      headerName: "Referencia",
-      field: "reference",
+      headerName: "Nombre",
+      field: "name",
       flex: 1,
-      breakpoints: ["xs", "sm", "md", "lg", "xl"],
-    },
-    {
-      headerName: "Aplicación",
-      field: "application",
-      flex: 1,
-      breakpoints: ["sm", "md", "lg", "xl"],
-    },
-    {
-      headerName: "Material",
-      field: "rawMaterialName",
-      flex: 1,
-      breakpoints: ["sm", "md", "lg", "xl"],
-    },
-    {
-      headerName: "Cantidad actual",
-      field: "currentQuantity",
-      flex: 1,
-      breakpoints: ["xs", "sm", "md", "lg", "xl"],
-    },
-    {
-      headerName: "Cantidad empacada",
-      field: "packagingQuantity",
-      flex: 1,
-      breakpoints: ["xs", "sm", "md", "lg", "xl"],
-    },
-    {
-      headerName: "Consumo de materia prima (gr)",
-      field: "rawWeight",
-      flex: 1,
-      breakpoints: ["md", "lg", "xl"],
-    },
-    {
-      headerName: "Peso embalaje x10 (Kg)",
-      field: "packedWeight",
-      flex: 1,
-      breakpoints: ["md", "lg", "xl"],
     },
     {
       headerName: "Opciones",
@@ -109,19 +61,14 @@ export default function References(props) {
       headerAlign: "center",
       sortable: false,
       editable: false,
-      breakpoints: ["xs", "sm", "md", "lg", "xl"],
     },
   ];
 
-  const [includeSecondary, setIncludeSecondary] = useState(false);
-
   //Dialog management
-  const [detailsDialog, setDetailsDialog] = useState(false);
   const [updateDialog, setUpdateDialog] = useState(false);
   const [deleteDialog, setDeleteDialog] = useState(false);
   const [createDialog, setCreateDialog] = useState(false);
   const handleCloseDialogs = () => {
-    setDetailsDialog(false);
     setUpdateDialog(false);
     setDeleteDialog(false);
     setCreateDialog(false);
@@ -139,10 +86,6 @@ export default function References(props) {
 
       case "update":
         setUpdateDialog(true);
-        break;
-
-      case "details":
-        setDetailsDialog(true);
         break;
 
       default:
@@ -191,17 +134,13 @@ export default function References(props) {
     else setSelectedData(emptyData);
   };
 
-  /* const showDetails = () => {
-    navigate(`/clientes/${selectedData.id}`);
-  }; */
-
   useEffect(() => {
     const token = JSON.parse(localStorage.getItem("userInfo")).token;
     let isSubscribed = true;
-    //handleShowNotification("info", "Cargando clientes");
+    //handleShowNotification("info", "Cargando operarios");
     $.ajax({
       method: "GET",
-      url: `${mainURL}rubber-reference/get-all?includeSecondary=${includeSecondary}`,
+      url: mainURL + "packaging/get-all",
       contentType: "application/json",
       headers: {
         Authorization: "Bearer " + token,
@@ -212,62 +151,51 @@ export default function References(props) {
         if (isSubscribed) {
           setData(aux);
           setFilteredData(aux);
-          //handleShowNotification("success", "Referencias cargados con éxito");
+          //handleShowNotification("success", "Clientes cargados con éxito");
         }
       })
       .fail((res) => {
         handleShowNotification("error", res.responseText);
       });
     return () => (isSubscribed = false);
-  }, [refresh, includeSecondary]);
+  }, [refresh]);
 
   useEffect(() => {
     const myReg = new RegExp("^.*" + searchText.toLowerCase() + ".*");
-    const newArray = data.filter((f) =>
-      `${f.reference} ${f.application}`.toLowerCase().match(myReg)
-    );
+    const newArray = data.filter((f) => f.name.toLowerCase().match(myReg));
     setFilteredData(newArray);
   }, [data, searchText]);
 
   return (
     <Box sx={{ height: "85vh", p: 2 }}>
-      <ReferencePopover
+      <OptionsPopover
         open={anchor}
-        showUpdateOption
         showDeleteOption
-        showDetailsOption
+        showUpdateOption
         handleClose={handlePopoverClose}
         setDeleteDialog={setDeleteDialog}
         setUpdateDialog={setUpdateDialog}
-        setDetailsDialog={setDetailsDialog}
       />
-      <ReferenceDetails
-        refresh={refresh}
-        open={detailsDialog}
-        setRefresh={setRefresh}
-        referenceId={selectedData.id}
-        handleClose={handleCloseDialogs}
-      />
-      <DeleteClientDialog
+      <DeleteOperatorDialog
         refresh={refresh}
         open={deleteDialog}
         setRefresh={setRefresh}
-        title={"Eliminar referencia"}
+        title={"Eliminar empaque"}
         errorMessage={errorMessage}
-        name={selectedData.reference}
+        name={selectedData.name}
         handleClose={handleCloseDialogs}
-        deleteURL={`rubber-reference/${selectedData.id}`}
+        deleteURL={`packaging/${selectedData.id}`}
         handleShowNotification={handleShowNotification}
       />
-      <UpdateReferenceDialog
+      <UpdatePackagingDialog
         refresh={refresh}
         open={updateDialog}
         setRefresh={setRefresh}
-        referenceId={selectedData.id}
+        packagingId={selectedData.id}
         handleClose={handleCloseDialogs}
         handleShowNotification={handleShowNotification}
       />
-      <CreateReferenceDialog
+      <CreatePackaging
         refresh={refresh}
         open={createDialog}
         setRefresh={setRefresh}
@@ -282,7 +210,7 @@ export default function References(props) {
         container
       >
         <Grid item md={8}>
-          <Typography variant="h4">{"Referencias"}</Typography>
+          <Typography variant="h4">{"Empaques"}</Typography>
         </Grid>
 
         {showNotification ? (
@@ -293,26 +221,11 @@ export default function References(props) {
           </Grid>
         ) : (
           <SearchAndCreate
-            title="Buscar por referencia"
             handleOpenDialog={handleOpenDialog}
             handleSearch={handleSearch}
-            showDownloadReportOption
             searchText={searchText}
             permission={10}
-          >
-            <Tooltip
-              title={
-                includeSecondary
-                  ? "Mostrar solo primarios"
-                  : "Incluir secundarios"
-              }
-            >
-              <Switch
-                checked={includeSecondary}
-                onChange={(e) => setIncludeSecondary(e.target.checked)}
-              />
-            </Tooltip>
-          </SearchAndCreate>
+          />
         )}
       </Grid>
 
@@ -321,7 +234,7 @@ export default function References(props) {
           selectionModel={selectedData.id === "" ? [] : selectedData.id}
           onRowClick={handleSelect}
           rows={filteredData}
-          columns={columns.filter((m) => m.breakpoints.includes(breakpoint))}
+          columns={columns}
           disableColumnMenu
           autoPageSize
         />

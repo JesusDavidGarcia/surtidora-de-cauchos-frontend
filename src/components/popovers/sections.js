@@ -13,11 +13,33 @@ import ShoppingCartCheckoutIcon from "@mui/icons-material/ShoppingCartCheckout";
 import LocalShippingIcon from "@mui/icons-material/LocalShipping";
 import EngineeringIcon from "@mui/icons-material/Engineering";
 import ContentCutIcon from "@mui/icons-material/ContentCut";
+import BackpackIcon from "@mui/icons-material/ContentCut";
 import GroupsIcon from "@mui/icons-material/Groups";
 import GroupIcon from "@mui/icons-material/Group";
 import HailIcon from "@mui/icons-material/Hail";
 
 const sections = [
+  {
+    id: "packaging-entries",
+    title: "Ingresos empacado",
+    icon: <ContentCutIcon />,
+    path: "/ingresos-empacado",
+    permission: 9,
+  },
+  {
+    id: "packaging-matrix",
+    title: "Actualidad empacado",
+    icon: <GroupIcon />,
+    path: "/actualidad-empacado",
+    permission: 9,
+  },
+  {
+    id: "packaging",
+    title: "Empaques",
+    icon: <BackpackIcon />,
+    path: "/empaques",
+    permission: 9,
+  },
   {
     id: "sharpening",
     title: "Ingresos refilado",

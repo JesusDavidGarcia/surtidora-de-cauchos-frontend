@@ -29,6 +29,9 @@ import mainURL from "../../config/environment";
 import $ from "jquery";
 import SharpeningEntries from "./sharpeningEntries";
 import SharpenersMatrix from "./sharpeningCurrentState";
+import PackagingEntries from "./packagingEntries";
+import PackagingMatrix from "./packagingCurrentState";
+import Packaging from "./packaging";
 
 export default function Home(props) {
   const [openNC, setOpenNC] = React.useState(false);
@@ -183,8 +186,11 @@ export default function Home(props) {
           />
           <Route path="produccion" element={<ProductionEntries />} />
           <Route path="ingresos-refilado" element={<SharpeningEntries />} />
+          <Route path="ingresos-empacado" element={<PackagingEntries />} />
           <Route path="actualidad-refilado" element={<SharpenersMatrix />} />
+          <Route path="actualidad-empacado" element={<PackagingMatrix />} />
           <Route path="materia-prima" element={<RawMaterialEntries />} />
+          <Route path="empaques" element={<Packaging />} />
         </Routes>
       </Box>
       <NotificationCenter

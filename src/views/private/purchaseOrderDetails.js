@@ -14,11 +14,13 @@ import mainURL from "../../config/environment";
 import { useNavigate, useParams } from "react-router-dom";
 
 import { DataGrid } from "@mui/x-data-grid";
-import { Download, Edit } from "@mui/icons-material";
+import { Download, Edit, BrowserUpdated } from "@mui/icons-material";
 
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import PurchaseOrderDocument from "../../components/docs/purchaseOrder";
 import { useWidth } from "../../utils/withSelector";
+import ClientPurchaseOrderDocument from "../../components/docs/clientPurchaseOrder";
+import { Tooltip } from "@mui/material";
 
 const emptyModel = {
   id: "",
@@ -29,6 +31,10 @@ const emptyModel = {
   invoicePrice: 0,
   numberOfBoxes: 0,
   missingMaterial: 0,
+  orderNumber: 0,
+  usePackaging: true,
+  packagingId: "",
+  packagingName: "",
   references: [],
 };
 
@@ -56,8 +62,16 @@ export default function PurchaseOrderDetails(props) {
       breakpoints: ["xs", "sm", "md", "lg", "xl"],
     },
     {
-      headerName: "Cantidad faltante",
+      headerName: "Por producir",
       field: "missingQuantity",
+      headerAlign: "center",
+      align: "center",
+      flex: 1,
+      breakpoints: ["md", "lg", "xl"],
+    },
+    {
+      headerName: "Por empacar",
+      field: "missingPackagingQuantity",
       headerAlign: "center",
       align: "center",
       flex: 1,
@@ -127,11 +141,24 @@ export default function PurchaseOrderDetails(props) {
                   </IconButton>
                   <PDFDownloadLink
                     document={<PurchaseOrderDocument data={data} />}
+                    fileName={`Orden de compra interna ${data.orderNumber}.pdf`}
+                  >
+                    <Tooltip title="Descargar orden de compra interna">
+                      <IconButton>
+                        <Download color="primary" />
+                      </IconButton>
+                    </Tooltip>
+                  </PDFDownloadLink>
+
+                  <PDFDownloadLink
+                    document={<ClientPurchaseOrderDocument data={data} />}
                     fileName={`Orden de compra ${data.orderNumber}.pdf`}
                   >
-                    <IconButton>
-                      <Download color="primary" />
-                    </IconButton>
+                    <Tooltip title="Descargar orden de compra para el cliente">
+                      <IconButton>
+                        <BrowserUpdated color="primary" />
+                      </IconButton>
+                    </Tooltip>
                   </PDFDownloadLink>
                 </Grid>
               }

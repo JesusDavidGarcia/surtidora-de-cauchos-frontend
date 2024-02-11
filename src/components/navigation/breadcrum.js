@@ -14,6 +14,7 @@ import PlaylistAddIcon from "@mui/icons-material/PlaylistAdd";
 import ViewAgendaIcon from "@mui/icons-material/ViewAgenda";
 import ContentCutIcon from "@mui/icons-material/ContentCut";
 import InventoryIcon from "@mui/icons-material/Inventory";
+import BackpackIcon from "@mui/icons-material/Backpack";
 import GroupsIcon from "@mui/icons-material/Groups";
 import GroupIcon from "@mui/icons-material/Group";
 import HomeIcon from "@mui/icons-material/Home";
@@ -33,6 +34,9 @@ const breadcrumbNameMap = {
   "/operarios": "Operarios",
   "/ingresos-refilado": "Ingresos refilado",
   "/actualidad-refilado": "Actualidad refilado",
+  "/ingresos-empacado": "Ingresos empacado",
+  "/actualidad-empacado": "Actualidad empacado",
+  "/empaques": "Empaques",
 };
 
 const breadcrumbIconMap = {
@@ -49,6 +53,9 @@ const breadcrumbIconMap = {
   "/operarios": <GroupsIcon sx={{ mr: 1 }} htmlColor="#FFF" />,
   "/ingresos-refilado": <ContentCutIcon sx={{ mr: 1 }} htmlColor="#FFF" />,
   "/actualidad-refilado": <ContentCutIcon sx={{ mr: 1 }} htmlColor="#FFF" />,
+  "/ingresos-empacado": <BackpackIcon sx={{ mr: 1 }} htmlColor="#FFF" />,
+  "/actualidad-empacado": <BackpackIcon sx={{ mr: 1 }} htmlColor="#FFF" />,
+  "/empaques": <BackpackIcon sx={{ mr: 1 }} htmlColor="#FFF" />,
 };
 
 const LinkRouter = (props) => <Link {...props} component={RouterLink} />;

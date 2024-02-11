@@ -68,7 +68,11 @@ export default function SearchAndCreate(props) {
 
   return (
     <Grid item xs={12} md={4} columnSpacing={1} container>
-      <Grid item xs={permission ? 6 : 12} md={permission ? 8 : 12}>
+      <Grid
+        item
+        xs={permission || showDownloadReportOption ? 6 : 12}
+        md={permission || showDownloadReportOption ? 8 : 12}
+      >
         <FormControl fullWidth>
           <TextField
             label={title ?? "Buscar por nombre"}
@@ -104,7 +108,12 @@ export default function SearchAndCreate(props) {
         </Grid>
       ) : null}
       {showDownloadReportOption ? (
-        <Grid item xs={3} md={2} sx={{ textAlign: "end", alignSelf: "center" }}>
+        <Grid
+          item
+          xs={permission ? 3 : 6}
+          md={permission ? 2 : 4}
+          sx={{ textAlign: "end", alignSelf: "center" }}
+        >
           {props.children}
         </Grid>
       ) : null}

@@ -68,35 +68,21 @@ const styles = StyleSheet.create({
     background: "#f6f6f6",
   },
   tableCol: {
-    width: "15%",
+    width: "20%",
     borderStyle: "solid",
     borderWidth: 1,
     borderLeftWidth: 0,
     borderTopWidth: 0,
   },
   refTableCol: {
-    width: "25%",
-    borderStyle: "solid",
-    borderWidth: 1,
-    borderLeftWidth: 0,
-    borderTopWidth: 0,
-  },
-  refTableColWithPackaging: {
-    width: "15%",
+    width: "30%",
     borderStyle: "solid",
     borderWidth: 1,
     borderLeftWidth: 0,
     borderTopWidth: 0,
   },
   appTableCol: {
-    width: "45%",
-    borderStyle: "solid",
-    borderWidth: 1,
-    borderLeftWidth: 0,
-    borderTopWidth: 0,
-  },
-  appTableColWithPackaging: {
-    width: "40%",
+    width: "50%",
     borderStyle: "solid",
     borderWidth: 1,
     borderLeftWidth: 0,
@@ -112,7 +98,7 @@ const styles = StyleSheet.create({
   },
 });
 
-export default function PurchaseOrderDocument(props) {
+export default function ClientPurchaseOrderDocument(props) {
   const { data } = props;
 
   return (
@@ -133,56 +119,24 @@ export default function PurchaseOrderDocument(props) {
 
         <View style={styles.table}>
           <View style={styles.tableRow}>
-            <View
-              style={
-                data.usePackaging
-                  ? styles.refTableColWithPackaging
-                  : styles.refTableCol
-              }
-            >
+            <View style={styles.refTableCol}>
               <Text style={styles.refTableCell}>{"Referencia"}</Text>
             </View>
-            <View
-              style={
-                data.usePackaging
-                  ? styles.appTableColWithPackaging
-                  : styles.appTableCol
-              }
-            >
+            <View style={styles.appTableCol}>
               <Text style={styles.refTableCell}>{"Aplicación"}</Text>
             </View>
             <View style={styles.tableCol}>
-              <Text style={styles.tableCell}>{"Cantidad"}</Text>
+              <Text style={styles.refTableCell}>{"Cantidad"}</Text>
             </View>
-            <View style={styles.tableCol}>
-              <Text style={styles.tableCell}>{"Por producir"}</Text>
-            </View>
-            {data.usePackaging ? (
-              <View style={styles.tableCol}>
-                <Text style={styles.tableCell}>{"Por empacar"}</Text>
-              </View>
-            ) : null}
           </View>
           {data.references.map((reference, index) => (
             <View key={index} style={styles.tableRow}>
-              <View
-                style={
-                  data.usePackaging
-                    ? styles.refTableColWithPackaging
-                    : styles.refTableCol
-                }
-              >
+              <View style={styles.refTableCol}>
                 <Text style={styles.refTableCell}>
                   {reference.referenceName.split(" ")[0]}
                 </Text>
               </View>
-              <View
-                style={
-                  data.usePackaging
-                    ? styles.appTableColWithPackaging
-                    : styles.appTableCol
-                }
-              >
+              <View style={styles.appTableCol}>
                 <Text style={styles.refTableCell}>
                   {reference.referenceName.substring(
                     reference.referenceName.indexOf(" ")
@@ -190,27 +144,15 @@ export default function PurchaseOrderDocument(props) {
                 </Text>
               </View>
               <View style={styles.tableCol}>
-                <Text style={styles.tableCell}>{reference.quantity}</Text>
+                <Text style={styles.refTableCell}>{reference.quantity}</Text>
               </View>
-              <View style={styles.tableCol}>
-                <Text style={styles.tableCell}>
-                  {reference.missingQuantity}
-                </Text>
-              </View>
-              {data.usePackaging ? (
-                <View style={styles.tableCol}>
-                  <Text style={styles.tableCell}>
-                    {reference.missingPackagingQuantity}
-                  </Text>
-                </View>
-              ) : null}
             </View>
           ))}
         </View>
 
-        {/* <Text
+        <Text
           style={styles.diagnostic}
-        >{`NOTA: LA FACTURA ELECTRÓNICA SE ENVIÓ AL CORREO`}</Text> */}
+        >{`NOTA: LA FACTURA ELECTRÓNICA SE ENVIÓ AL CORREO`}</Text>
 
         <View style={styles.divider}></View>
 

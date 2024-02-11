@@ -18,14 +18,15 @@ const emptyModel = {
   quantity: "",
 };
 
-const useReferences = (refresh) => {
+const useReferences = (refresh, includeSecondary) => {
   const [references, setReferences] = useState([]);
   useEffect(() => {
     const token = JSON.parse(localStorage.getItem("userInfo")).token;
     let isSubscribed = true;
+    const include = includeSecondary ?? false;
     $.ajax({
       method: "GET",
-      url: mainURL + "rubber-reference/get-all",
+      url: `${mainURL}rubber-reference/get-all?includeSecondary=${include}`,
       contentType: "application/json",
       headers: {
         Authorization: "Bearer " + token,
@@ -39,14 +40,14 @@ const useReferences = (refresh) => {
       if (isSubscribed) setReferences(aux);
     });
     return () => (isSubscribed = false);
-  }, []);
+  }, [includeSecondary]);
   return references;
 };
 
 export default function ReferenceQuantityInput(props) {
-  const { refresh, usedReferences } = props;
+  const { refresh, usedReferences, includeSecondary } = props;
 
-  const references = useReferences(refresh);
+  const references = useReferences(refresh, includeSecondary);
 
   const [model, setModel] = useState(emptyModel);
   const [selectedReference, setSelectedReference] = useState(null);

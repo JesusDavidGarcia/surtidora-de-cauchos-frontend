@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
   },
 });
 
-export default function SharpeningStateDocument(props) {
+export default function PackagingStateDocument(props) {
   const { data, columns, title } = props;
 
   return (

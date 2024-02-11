@@ -1,12 +1,14 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import CircularProgress from "@mui/material/CircularProgress";
+import FormControlLabel from "@mui/material/FormControlLabel";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import CardContent from "@mui/material/CardContent";
 import CardActions from "@mui/material/CardActions";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
+import Checkbox from "@mui/material/Checkbox";
 import ListItem from "@mui/material/ListItem";
 import Divider from "@mui/material/Divider";
 import Button from "@mui/material/Button";
@@ -23,12 +25,15 @@ import $ from "jquery";
 import mainURL from "../../config/environment";
 
 import ReferenceQuantityInput from "../../components/input/referenceQuantity";
+import SelectPackaging from "../../components/input/selectPackaging";
 import SelectClient from "../../components/input/selectClient";
 import { useNavigate } from "react-router-dom";
 
 const emptyModel = {
   clientId: "",
   references: [],
+  usePackaging: false,
+  packagingId: "",
 };
 
 const emptyResponse = {
@@ -53,6 +58,7 @@ export default function CreatePurchaseOrder(props) {
   const [response, setResponse] = useState(emptyResponse);
 
   const [showResponse, setShowResponse] = useState(false);
+  const [disabled, setDisabled] = useState(false);
 
   //Navigation
   const navigate = useNavigate();
@@ -69,6 +75,17 @@ export default function CreatePurchaseOrder(props) {
       setModel(emptyModel);
       setSelectedClient(null);
     }
+  };
+
+  const handleChange = (event) => {
+    const target = event.target;
+    const name = target.name;
+    let value = target.value;
+
+    setModel({
+      ...model,
+      [name]: value,
+    });
   };
 
   const handleAdd = (item) => {
@@ -100,6 +117,10 @@ export default function CreatePurchaseOrder(props) {
     event.preventDefault();
     setLoading(true);
     const token = JSON.parse(localStorage.getItem("userInfo")).token;
+    const newModel = {
+      ...model,
+      packagingId: model.usePackaging ? model.packagingId : null,
+    };
     $.ajax({
       method: "POST",
       url: mainURL + "purchase-order",
@@ -107,7 +128,7 @@ export default function CreatePurchaseOrder(props) {
       headers: {
         Authorization: "Bearer " + token,
       },
-      data: JSON.stringify(model),
+      data: JSON.stringify(newModel),
     })
       .done((res) => {
         setLoading(false);
@@ -127,7 +148,10 @@ export default function CreatePurchaseOrder(props) {
     event.preventDefault();
     setLoading(true);
     const token = JSON.parse(localStorage.getItem("userInfo")).token;
-
+    const newModel = {
+      ...model,
+      packagingId: model.usePackaging ? model.packagingId : null,
+    };
     $.ajax({
       method: "POST",
       url: mainURL + "purchase-order/validate",
@@ -135,7 +159,7 @@ export default function CreatePurchaseOrder(props) {
       headers: {
         Authorization: "Bearer " + token,
       },
-      data: JSON.stringify(model),
+      data: JSON.stringify(newModel),
     })
       .done((res) => {
         console.log(res);
@@ -173,6 +197,18 @@ export default function CreatePurchaseOrder(props) {
     props.setRefresh(!refresh); */
   };
 
+  useEffect(() => {
+    if (
+      model.clientId === "" ||
+      model.references.length === 0 ||
+      (model.usePackaging && model.packagingId === "")
+    ) {
+      setDisabled(true);
+    } else {
+      setDisabled(false);
+    }
+  }, [model]);
+
   return (
     <Box sx={{ height: "85vh", p: 2 }}>
       <Grid item xs={12} md={8} sx={{ p: "16px 0" }}>
@@ -189,19 +225,74 @@ export default function CreatePurchaseOrder(props) {
         <Grid item container md={6}>
           <Card sx={{ width: "100%" }}>
             <CardContent>
-              <Grid item xs={12} md={12}>
-                <SelectClient
-                  handleChange={handleClientChange}
-                  value={selectedClient}
-                />
-              </Grid>
-              <Grid item xs={12} md={12}>
-                <ReferenceQuantityInput
-                  handleAdd={handleAdd}
-                  usedReferences={model.references.map(
-                    (m) => m.rubberReferenceId
-                  )}
-                />
+              <Grid container spacing={2}>
+                <Grid item xs={12} md={6}>
+                  <SelectClient
+                    handleChange={handleClientChange}
+                    value={selectedClient}
+                  />
+                </Grid>
+                {model.usePackaging ? (
+                  <Grid container item xs={12} md={6}>
+                    <Grid item xs={9}>
+                      <SelectPackaging
+                        handleChange={handleChange}
+                        value={model.packagingId}
+                        name="packagingId"
+                      />
+                    </Grid>
+                    <Grid
+                      item
+                      xs={3}
+                      container
+                      justifyContent={"center"}
+                      alignItems={"flex-end"}
+                    >
+                      <IconButton
+                        size="small"
+                        onClick={() =>
+                          setModel({ ...model, usePackaging: false })
+                        }
+                      >
+                        <CancelIcon />
+                      </IconButton>
+                    </Grid>
+                  </Grid>
+                ) : (
+                  <Grid
+                    item
+                    xs={12}
+                    md={6}
+                    container
+                    justifyContent={"center"}
+                    alignItems={"flex-end"}
+                  >
+                    <FormControlLabel
+                      label="Utilizar empaque"
+                      control={
+                        <Checkbox
+                          checked={model.usePackaging}
+                          onChange={(e) =>
+                            setModel({
+                              ...model,
+                              usePackaging: e.target.checked,
+                            })
+                          }
+                        />
+                      }
+                    />
+                  </Grid>
+                )}
+
+                <Grid item xs={12} md={12}>
+                  <ReferenceQuantityInput
+                    handleAdd={handleAdd}
+                    usedReferences={model.references.map(
+                      (m) => m.rubberReferenceId
+                    )}
+                    includeSecondary
+                  />
+                </Grid>
               </Grid>
             </CardContent>
 
@@ -213,6 +304,7 @@ export default function CreatePurchaseOrder(props) {
                       type="submit"
                       variant="outlined"
                       onClick={handleValidate}
+                      disabled={disabled}
                       sx={{ mr: 2 }}
                     >
                       Validar
@@ -220,6 +312,7 @@ export default function CreatePurchaseOrder(props) {
                     <Button
                       type="submit"
                       variant="contained"
+                      disabled={disabled}
                       onClick={handleSubmit}
                     >
                       Crear
@@ -232,7 +325,7 @@ export default function CreatePurchaseOrder(props) {
             </CardActions>
           </Card>
         </Grid>
-        {model !== emptyModel ? (
+        {model.references.length > 0 ? (
           <Grid item container md={6}>
             <Card sx={{ width: "100%" }}>
               <CardContent>
@@ -267,6 +360,12 @@ export default function CreatePurchaseOrder(props) {
                                   m.rubberReferenceId ===
                                   reference.rubberReferenceId
                               )[0]?.missingQuantity
+                            } - Por empacar: ${
+                              response.references.filter(
+                                (m) =>
+                                  m.rubberReferenceId ===
+                                  reference.rubberReferenceId
+                              )[0]?.missingPackagingQuantity
                             }`}
                           </Typography>
                         }

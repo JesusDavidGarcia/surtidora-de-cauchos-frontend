@@ -14,6 +14,7 @@ import Box from "@mui/material/Box";
 import $ from "jquery";
 import mainURL from "../../config/environment";
 import SelectRawMaterial from "../input/selectRawMaterial";
+import SelectReference from "../input/selectReference";
 
 const emptyModel = {
   reference: "",
@@ -22,11 +23,13 @@ const emptyModel = {
   packedWeight: 0,
   currentQuantity: 0,
   sharpeningQuantity: 0,
+  packagingQuantity: 0,
   sharpeningPrice: 0,
   minimum: 0,
   maximum: 0,
   rawMaterialId: 0,
   comments: "",
+  primaryReferenceId: "",
 };
 
 export default function UpdateReferenceDialog(props) {
@@ -34,6 +37,21 @@ export default function UpdateReferenceDialog(props) {
   const [isLoading, setLoading] = useState(false);
   const [model, setModel] = useState(emptyModel);
   const { refresh, referenceId } = props;
+
+  const [selectedReference, setSelectedReference] = useState(null);
+
+  const handleReferenceChange = (newReference) => {
+    if (newReference !== null) {
+      setSelectedReference(newReference);
+      setModel({
+        ...model,
+        id: newReference.id,
+        referenceName: `${newReference.reference} ${newReference.application}`,
+      });
+    } else {
+      setSelectedReference(null);
+    }
+  };
 
   const handleChange = (event) => {
     const target = event.target;
@@ -89,7 +107,7 @@ export default function UpdateReferenceDialog(props) {
   useEffect(() => {
     const token = JSON.parse(localStorage.getItem("userInfo")).token;
     const host = JSON.parse(localStorage.getItem("userInfo")).hostName;
-    if (referenceId !== 0) {
+    if (referenceId !== undefined && referenceId !== "") {
       $.ajax({
         method: "GET",
         url: `${mainURL}rubber-reference/${referenceId}`,
@@ -222,7 +240,7 @@ export default function UpdateReferenceDialog(props) {
                 />
               </FormControl>
             </Grid>
-            <Grid item xs={12} md={6}>
+            <Grid item xs={12} md={4}>
               <FormControl fullWidth required>
                 <TextField
                   value={model.sharpeningQuantity}
@@ -237,7 +255,7 @@ export default function UpdateReferenceDialog(props) {
                 />
               </FormControl>
             </Grid>
-            <Grid item xs={12} md={6}>
+            <Grid item xs={12} md={4}>
               <FormControl fullWidth required>
                 <TextField
                   value={model.sharpeningPrice}
@@ -250,6 +268,28 @@ export default function UpdateReferenceDialog(props) {
                   fullWidth
                 />
               </FormControl>
+            </Grid>
+            <Grid item xs={12} md={4}>
+              <FormControl fullWidth required>
+                <TextField
+                  value={model.packagingQuantity}
+                  onChange={handleChange}
+                  label={"Cantidad en empacada"}
+                  name="packagingQuantity"
+                  variant="standard"
+                  margin="dense"
+                  type="number"
+                  inputProps={{ step: "1" }}
+                  fullWidth
+                />
+              </FormControl>
+            </Grid>
+            <Grid item xs={12}>
+              <SelectReference
+                handleChange={handleReferenceChange}
+                title="Referencia primaria"
+                value={selectedReference}
+              />
             </Grid>
             <Grid item xs={12}>
               <FormControl fullWidth required>
