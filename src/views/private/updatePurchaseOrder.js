@@ -175,7 +175,7 @@ export default function UpdatePurchaseOrder(props) {
   return (
     <Box sx={{ height: "85vh", p: 2 }}>
       <Grid item xs={12} md={8} sx={{ p: "16px 0" }}>
-        <Typography variant="h4">{`Orden de compra: ${1}`}</Typography>
+        <Typography variant="h4">{`Orden de compra: ${model.orderNumber}`}</Typography>
       </Grid>
       {showNotification ? (
         <Grid item xs={12} md={4}>
@@ -194,6 +194,7 @@ export default function UpdatePurchaseOrder(props) {
                   usedReferences={model.references.map(
                     (m) => m.rubberReferenceId
                   )}
+                  includeSecondary
                 />
               </Grid>
             </CardContent>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import CircularProgress from "@mui/material/CircularProgress";
 import DialogActions from "@mui/material/DialogActions";
@@ -32,6 +32,7 @@ const emptyModel = {
 export default function CreatePackagingEntry(props) {
   const [selectedReference, setSelectedReference] = useState(null);
   //const [isFormComplete, setFormComplete] = useState(false);
+  const [maxQuantity, setMaxQuantity] = useState(0);
   const [isLoading, setLoading] = useState(false);
   const [model, setModel] = useState(emptyModel);
   const { refresh } = props;
@@ -112,6 +113,24 @@ export default function CreatePackagingEntry(props) {
     props.setRefresh(!refresh);
   };
 
+  useEffect(() => {
+    const token = JSON.parse(localStorage.getItem("userInfo")).token;
+    const host = JSON.parse(localStorage.getItem("userInfo")).hostName;
+    if (model.rubberReferenceId !== "" && props.open) {
+      $.ajax({
+        method: "GET",
+        url: `${mainURL}rubber-reference/${model.rubberReferenceId}`,
+        contentType: "application/json",
+        headers: {
+          Authorization: "Bearer " + token,
+          hostname: host,
+        },
+      }).done((res) => {
+        setMaxQuantity(res.currentQuantity);
+      });
+    }
+  }, [model.rubberReferenceId, props.open]);
+
   return (
     <Dialog open={props.open} onClose={props.handleClose} maxWidth="md">
       <DialogTitle>{"Registrar ingreso"}</DialogTitle>
@@ -135,6 +154,7 @@ export default function CreatePackagingEntry(props) {
               <SelectReference
                 handleChange={handleReferenceChange}
                 value={selectedReference}
+                includeSecondary
               />
             </Grid>
             <Grid item xs={12} md={8}>
@@ -154,7 +174,7 @@ export default function CreatePackagingEntry(props) {
                   name="quantity"
                   margin="dense"
                   type="number"
-                  inputProps={{ step: "0.25" }}
+                  inputProps={{ step: "0.25", max: maxQuantity }}
                   fullWidth
                   required
                 />

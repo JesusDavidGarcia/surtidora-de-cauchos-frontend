@@ -156,7 +156,7 @@ export default function ClientPurchaseOrderDocument(props) {
 
         <View style={styles.divider}></View>
 
-        <Text
+        {/* <Text
           style={styles.diagnostic}
         >{`Peso total: ${data.shipmentWeight} Kg`}</Text>
         <Text
@@ -164,7 +164,7 @@ export default function ClientPurchaseOrderDocument(props) {
         >{`Número de cajas: ${data.numberOfBoxes}`}</Text>
         <Text
           style={styles.diagnostic}
-        >{`Material faltante: ${data.missingMaterial} Kg`}</Text>
+        >{`Material faltante: ${data.missingMaterial} Kg`}</Text> */}
       </Page>
     </Document>
   );
