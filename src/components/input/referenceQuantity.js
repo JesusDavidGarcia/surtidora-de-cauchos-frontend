@@ -129,7 +129,7 @@ export default function ReferenceQuantityInput(props) {
           />
         </FormControl>
       </Grid>
-      <Grid item xs={4} md={2} container justifyContent={"center"}>
+      <Grid item xs={4} md={2} container justifyContent={"flex-end"}>
         <IconButton onClick={handleSubmit} disabled={model.quantity === 0}>
           <Tooltip title="Agregar referencia">
             <CheckCircle color={model === emptyModel ? "action" : "primary"} />

@@ -188,7 +188,7 @@ export default function PurchaseOrders(props) {
   }, [data, searchText]);
 
   return (
-    <Box sx={{ height: "85vh", p: 2 }}>
+    <Box sx={{ height: "85vh", p: 2,  }}>
       <PurchaseOrderPopover
         open={anchor}
         showDeleteOption
@@ -233,7 +233,7 @@ export default function PurchaseOrders(props) {
           />
         )}
       </Grid>
-      <Box sx={{ height: "70vh", width: "100%", p: "16px 0" }}>
+      <Box sx={{ height: "70vh", width: "100%", p: "16px 0", pb:8 }}>
         <DataGrid
           selectionModel={selectedData.id === "" ? [] : selectedData.id}
           onRowClick={handleSelect}

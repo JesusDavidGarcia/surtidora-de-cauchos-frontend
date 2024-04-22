@@ -194,7 +194,9 @@ export default function PurchaseOrderDocument(props) {
               </View>
               <View style={styles.tableCol}>
                 <Text style={styles.tableCell}>
-                  {reference.missingQuantity}
+                  {reference.missingQuantity % 1 === 0
+                    ? reference.missingQuantity
+                    : reference.missingQuantity.toFixed(2)}
                 </Text>
               </View>
               {data.usePackaging ? (

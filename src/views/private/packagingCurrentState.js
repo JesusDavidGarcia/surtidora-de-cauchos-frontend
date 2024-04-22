@@ -122,10 +122,15 @@ export default function PackagingMatrix(props) {
           );
         });
 
+        const sortedRows = rows.sort((a, b) =>
+          a.Referencia.localeCompare(b.Referencia)
+        );
+
         if (isSubscribed) {
           setColumns(columns);
-          setData(rows);
-          setFilteredData(rows);
+          //setData(rows.sort((a, b) => a.Referencia.localCompare(b.Referencia)));
+          setData(sortedRows);
+          setFilteredData(sortedRows);
           //setLoading(false);
         }
       })
@@ -193,7 +198,7 @@ export default function PackagingMatrix(props) {
         )}
       </Grid>
 
-      <Box sx={{ height: "70vh", width: "100%", p: "16px 0" }}>
+      <Box sx={{ height: "70vh", width: "100%", p: "16px 0", pb: 8 }}>
         <DataGrid
           selectionModel={selectedData.id === "" ? [] : selectedData.id}
           onRowClick={handleSelect}

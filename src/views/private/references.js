@@ -78,12 +78,12 @@ export default function References(props) {
       flex: 1,
       breakpoints: ["xs", "sm", "md", "lg", "xl"],
     },
-    {
+    /* {
       headerName: "Cantidad empacada",
       field: "packagingQuantity",
       flex: 1,
       breakpoints: ["xs", "sm", "md", "lg", "xl"],
-    },
+    }, */
     {
       headerName: "Consumo de materia prima (gr)",
       field: "rawWeight",
@@ -189,6 +189,8 @@ export default function References(props) {
   const handleSelect = (data) => {
     if (data.row !== selectedData) setSelectedData(data.row);
     else setSelectedData(emptyData);
+    navigator.clipboard.writeText(data.id);
+    console.log(data.id);
   };
 
   /* const showDetails = () => {
@@ -316,7 +318,7 @@ export default function References(props) {
         )}
       </Grid>
 
-      <Box sx={{ height: "70vh", width: "100%", p: "16px 0" }}>
+      <Box sx={{ height: "70vh", width: "100%", p: "16px 0", pb: 8 }}>
         <DataGrid
           selectionModel={selectedData.id === "" ? [] : selectedData.id}
           onRowClick={handleSelect}

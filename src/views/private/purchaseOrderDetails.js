@@ -14,13 +14,19 @@ import mainURL from "../../config/environment";
 import { useNavigate, useParams } from "react-router-dom";
 
 import { DataGrid } from "@mui/x-data-grid";
-import { Download, Edit, BrowserUpdated } from "@mui/icons-material";
+import {
+  Download,
+  Edit,
+  BrowserUpdated,
+  PlaylistAdd,
+} from "@mui/icons-material";
 
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import PurchaseOrderDocument from "../../components/docs/purchaseOrder";
 import { useWidth } from "../../utils/withSelector";
 import ClientPurchaseOrderDocument from "../../components/docs/clientPurchaseOrder";
 import { Tooltip } from "@mui/material";
+import AddReferenceToPurchaseOrder from "../../components/dialogs/addReferencesToPurchaseOrder";
 
 const emptyModel = {
   id: "",
@@ -79,6 +85,14 @@ export default function PurchaseOrderDetails(props) {
     },
   ];
 
+  const [dialog, setDialog] = useState(false);
+  const [refresh, setRefresh] = useState(false);
+
+  const handleClose = () => {
+    setRefresh(false);
+    setDialog(false);
+  };
+
   useEffect(() => {
     const token = JSON.parse(localStorage.getItem("userInfo")).token;
     let isSubscribed = true;
@@ -95,6 +109,10 @@ export default function PurchaseOrderDetails(props) {
         const aux: GridRowsProp = res.references.map((ref, idx) => ({
           ...ref,
           id: idx,
+          missingQuantity:
+            ref.missingQuantity % 1 === 0
+              ? ref.missingQuantity
+              : ref.missingQuantity.toFixed(2),
         }));
 
         if (isSubscribed) {
@@ -107,14 +125,24 @@ export default function PurchaseOrderDetails(props) {
         //handleShowNotification("error", res.responseText);
       });
     return () => (isSubscribed = false);
-  }, [orderId]);
+  }, [orderId, refresh]);
 
   const handleToggleView = () => {
     navigate(`/ordenes-compra/${orderId}/editar`);
   };
 
+  const handleToggleDialog = () => {
+    setDialog(true);
+  };
+
   return (
     <Box sx={{ height: "85vh", p: 2 }}>
+      <AddReferenceToPurchaseOrder
+        id={data.id}
+        open={dialog}
+        handleClose={handleClose}
+        orderNumber={data.orderNumber}
+      />
       <Grid container spacing={2} height={"100%"}>
         <Grid item container xs={12}>
           <Card sx={{ width: "100%" }}>
@@ -132,13 +160,23 @@ export default function PurchaseOrderDetails(props) {
                   <Typography variant="body1">
                     {new Date(data.createdOn).toLocaleDateString()}
                   </Typography>
+                  {data.usePackaging ? (
+                    <Typography variant="body1">
+                      {`Empaque ${data.packagingName}`}
+                    </Typography>
+                  ) : null}
                 </React.Fragment>
               }
               action={
                 <Grid container>
+                  <IconButton onClick={handleToggleDialog}>
+                    <PlaylistAdd color="primary" />
+                  </IconButton>
+
                   <IconButton onClick={handleToggleView}>
                     <Edit color="primary" />
                   </IconButton>
+
                   <PDFDownloadLink
                     document={<PurchaseOrderDocument data={data} />}
                     fileName={`Orden de compra interna ${data.orderNumber}.pdf`}
