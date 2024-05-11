@@ -1,34 +1,34 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 
-import CircularProgress from "@mui/material/CircularProgress";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogTitle from "@mui/material/DialogTitle";
-import FormControl from "@mui/material/FormControl";
-import TextField from "@mui/material/TextField";
-import Button from "@mui/material/Button";
-import Dialog from "@mui/material/Dialog";
-import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
+import CircularProgress from '@mui/material/CircularProgress';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
+import FormControl from '@mui/material/FormControl';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
 
-import $ from "jquery";
-import mainURL from "../../config/environment";
-import SelectRawMaterial from "../input/selectRawMaterial";
-import SelectProvider from "../input/selectProvider";
+import $ from 'jquery';
+import mainURL from '../../config/environment';
+import SelectRawMaterial from '../input/selectRawMaterial';
+import SelectProvider from '../input/selectProvider';
 
 //MUI-LAB
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
-import { DatePicker } from "@mui/x-date-pickers";
-import { Typography } from "@mui/material";
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { DatePicker } from '@mui/x-date-pickers';
+import { Typography } from '@mui/material';
 
 const emptyModel = {
-  rawMaterialId: "",
-  weight: "",
-  providerId: "",
-  expirationDate: "",
-  invoiceNumber: "",
-  invoiceValue: "",
+  rawMaterialId: '',
+  weight: '',
+  providerId: '',
+  expirationDate: '',
+  invoiceNumber: '',
+  invoiceValue: '',
 };
 
 export default function UpdateRawMaterialEntryDialog(props) {
@@ -50,7 +50,7 @@ export default function UpdateRawMaterialEntryDialog(props) {
   const handleSubmit = (event) => {
     event.preventDefault();
     setLoading(true);
-    const token = JSON.parse(localStorage.getItem("userInfo")).token;
+    const token = JSON.parse(localStorage.getItem('userInfo')).token;
 
     const formatted = {
       ...model,
@@ -58,20 +58,17 @@ export default function UpdateRawMaterialEntryDialog(props) {
     };
     console.log(formatted);
     $.ajax({
-      method: "PUT",
+      method: 'PUT',
       url: `${mainURL}raw-material-entry-order/${entryId}`,
-      contentType: "application/json",
+      contentType: 'application/json',
       headers: {
-        Authorization: "Bearer " + token,
+        Authorization: 'Bearer ' + token,
       },
       data: JSON.stringify(formatted),
     })
       .done((res) => {
         setLoading(false);
-        props.handleShowNotification(
-          "success",
-          "Inventario actualizado con éxito"
-        );
+        props.handleShowNotification('success', 'Inventario actualizado con éxito');
         handleClear();
       })
       .fail((res) => {
@@ -79,7 +76,7 @@ export default function UpdateRawMaterialEntryDialog(props) {
         if (res.status === 409) {
           handleClear();
         } else {
-          props.handleShowNotification("error", res.responseText);
+          props.handleShowNotification('error', res.responseText);
           handleClear();
         }
       });
@@ -100,19 +97,19 @@ export default function UpdateRawMaterialEntryDialog(props) {
   };
 
   const numberWithCommas = (number) => {
-    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   };
 
   useEffect(() => {
-    const token = JSON.parse(localStorage.getItem("userInfo")).token;
-    const host = JSON.parse(localStorage.getItem("userInfo")).hostName;
-    if (entryId !== "") {
+    const token = JSON.parse(localStorage.getItem('userInfo')).token;
+    const host = JSON.parse(localStorage.getItem('userInfo')).hostName;
+    if (entryId !== '') {
       $.ajax({
-        method: "GET",
+        method: 'GET',
         url: `${mainURL}raw-material-entry-order/${entryId}`,
-        contentType: "application/json",
+        contentType: 'application/json',
         headers: {
-          Authorization: "Bearer " + token,
+          Authorization: 'Bearer ' + token,
           hostname: host,
         },
       }).done((res) => {
@@ -123,7 +120,7 @@ export default function UpdateRawMaterialEntryDialog(props) {
 
   return (
     <Dialog open={props.open} onClose={props.handleClose} maxWidth="md">
-      <DialogTitle>{"Actualizar ingreso de materia prima"}</DialogTitle>
+      <DialogTitle>{'Actualizar ingreso de materia prima'}</DialogTitle>
       <DialogContent>
         <Box component="form" onSubmit={handleSubmit}>
           <Grid container spacing={2}>
@@ -137,7 +134,7 @@ export default function UpdateRawMaterialEntryDialog(props) {
             <Grid item xs={12} md={4}>
               <FormControl fullWidth required>
                 <TextField
-                  label={"Cantidad (Kg)"}
+                  label={'Cantidad (Kg)'}
                   onChange={handleChange}
                   value={model.weight}
                   variant="standard"
@@ -161,14 +158,12 @@ export default function UpdateRawMaterialEntryDialog(props) {
               <FormControl fullWidth>
                 <LocalizationProvider dateAdapter={AdapterDateFns}>
                   <DatePicker
-                    label={"Fecha de vencimiento"}
+                    label={'Fecha de vencimiento'}
                     value={new Date(model.expirationDate)}
                     onChange={handleDateChange}
                     disablePast
                     format="dd/MM/yyyy"
-                    renderInput={(params) => (
-                      <TextField variant="filled" {...params} />
-                    )}
+                    renderInput={(params) => <TextField variant="filled" {...params} />}
                   />
                 </LocalizationProvider>
               </FormControl>
@@ -177,7 +172,7 @@ export default function UpdateRawMaterialEntryDialog(props) {
             <Grid item xs={12} md={4}>
               <FormControl fullWidth required>
                 <TextField
-                  label={"Factura"}
+                  label={'Factura'}
                   onChange={handleChange}
                   value={model.invoiceNumber}
                   variant="standard"
@@ -193,7 +188,7 @@ export default function UpdateRawMaterialEntryDialog(props) {
             <Grid item xs={12} md={4}>
               <FormControl fullWidth required>
                 <TextField
-                  label={"Valor de la factura"}
+                  label={'Valor de la factura'}
                   onChange={handleChange}
                   value={model.invoiceValue}
                   variant="standard"
@@ -205,21 +200,19 @@ export default function UpdateRawMaterialEntryDialog(props) {
                 />
               </FormControl>
             </Grid>
-            <Grid item xs={12} md={4} textAlign={"center"} alignSelf={"end"}>
-              <Typography>{`$ ${numberWithCommas(
-                model.invoiceValue
-              )}`}</Typography>
+            <Grid item xs={12} md={4} textAlign={'center'} alignSelf={'end'}>
+              <Typography>{`$ ${numberWithCommas(model.invoiceValue)}`}</Typography>
             </Grid>
           </Grid>
         </Box>
       </DialogContent>
       <DialogActions>
         {isLoading ? (
-          <Grid container justifyContent={"center"}>
+          <Grid container justifyContent={'center'}>
             <CircularProgress />
           </Grid>
         ) : (
-          <Grid container justifyContent={"flex-end"}>
+          <Grid container justifyContent={'flex-end'}>
             <Button type="submit" onClick={handleClear}>
               Cerrar
             </Button>

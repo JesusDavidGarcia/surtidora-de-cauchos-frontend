@@ -1,9 +1,9 @@
-import React from "react";
+import React from 'react';
 
-import Grid from "@mui/material/Grid";
+import Grid from '@mui/material/Grid';
 
 //Selfmade
-import Dashboard from "../../components/dashboard";
+import Dashboard from '../../components/dashboard';
 
 export default function Main(props) {
   return (

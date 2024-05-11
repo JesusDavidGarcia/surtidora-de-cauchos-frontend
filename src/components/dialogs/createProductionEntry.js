@@ -1,33 +1,33 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 
-import CircularProgress from "@mui/material/CircularProgress";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogTitle from "@mui/material/DialogTitle";
-import FormControl from "@mui/material/FormControl";
-import TextField from "@mui/material/TextField";
-import Button from "@mui/material/Button";
-import Dialog from "@mui/material/Dialog";
-import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
+import CircularProgress from '@mui/material/CircularProgress';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
+import FormControl from '@mui/material/FormControl';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
 
-import SelectReference from "../input/selectReference";
+import SelectReference from '../input/selectReference';
 
-import $ from "jquery";
-import mainURL from "../../config/environment";
+import $ from 'jquery';
+import mainURL from '../../config/environment';
 
 //MUI-LAB
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
-import { DatePicker } from "@mui/x-date-pickers";
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { DatePicker } from '@mui/x-date-pickers';
 
 //import SelectAvailableSharpeners from "../input/selectSharpener";
-import SelectOperator from "../input/selectOperator";
+import SelectOperator from '../input/selectOperator';
 
 const emptyModel = {
-  rubberReferenceId: "",
-  sharpenerId: "",
-  operatorId: "",
+  rubberReferenceId: '',
+  sharpenerId: '',
+  operatorId: '',
   produced: 0,
   wasted: 0,
   maxQuantity: 0,
@@ -79,7 +79,7 @@ export default function CreateProviderDialog(props) {
       [name]: value,
     });
 
-    if (model.produced > 0 || name === "produced") {
+    if (model.produced > 0 || name === 'produced') {
       setFormComplete(true);
     }
   };
@@ -124,7 +124,7 @@ export default function CreateProviderDialog(props) {
   const handleSubmit = (event) => {
     event.preventDefault();
     setLoading(true);
-    const token = JSON.parse(localStorage.getItem("userInfo")).token;
+    const token = JSON.parse(localStorage.getItem('userInfo')).token;
 
     const formatted = {
       ...model,
@@ -132,20 +132,17 @@ export default function CreateProviderDialog(props) {
     };
 
     $.ajax({
-      method: "POST",
+      method: 'POST',
       url: `${mainURL}production-entry`,
-      contentType: "application/json",
+      contentType: 'application/json',
       headers: {
-        Authorization: "Bearer " + token,
+        Authorization: 'Bearer ' + token,
       },
       data: JSON.stringify(formatted),
     })
       .done((res) => {
         setLoading(false);
-        props.handleShowNotification(
-          "success",
-          "Inventario actualizado con éxito"
-        );
+        props.handleShowNotification('success', 'Inventario actualizado con éxito');
         handleClear();
       })
       .fail((res) => {
@@ -153,7 +150,7 @@ export default function CreateProviderDialog(props) {
         if (res.status === 409) {
           handleClear();
         } else {
-          props.handleShowNotification("error", res.responseText);
+          props.handleShowNotification('error', res.responseText);
           handleClear();
         }
       });
@@ -170,7 +167,7 @@ export default function CreateProviderDialog(props) {
 
   return (
     <Dialog open={props.open} onClose={props.handleClose} maxWidth="md">
-      <DialogTitle>{"Registrar ingreso"}</DialogTitle>
+      <DialogTitle>{'Registrar ingreso'}</DialogTitle>
       <DialogContent>
         <Box component="form" onSubmit={handleSubmit}>
           <Grid container spacing={2} sx={{ pt: 2 }}>
@@ -178,7 +175,7 @@ export default function CreateProviderDialog(props) {
               <FormControl fullWidth>
                 <LocalizationProvider dateAdapter={AdapterDateFns}>
                   <DatePicker
-                    label={"Fecha de producción"}
+                    label={'Fecha de producción'}
                     value={model.productionDate}
                     onChange={handleDateChange}
                     format="dd/MM/yyyy"
@@ -188,10 +185,7 @@ export default function CreateProviderDialog(props) {
               </FormControl>
             </Grid>
             <Grid item xs={12} md={6}>
-              <SelectReference
-                handleChange={handleReferenceChange}
-                value={selectedReference}
-              />
+              <SelectReference handleChange={handleReferenceChange} value={selectedReference} />
             </Grid>
             {/*  <Grid item xs={12} md={6}>
               <SelectAvailableSharpeners
@@ -227,14 +221,14 @@ export default function CreateProviderDialog(props) {
             <Grid item xs={12} md={3}>
               <FormControl fullWidth required>
                 <TextField
-                  label={"Producido"}
+                  label={'Producido'}
                   onChange={handleChange}
                   value={model.produced}
                   variant="standard"
                   name="produced"
                   margin="dense"
                   type="number"
-                  inputProps={{ step: "0.25" /* , max: model.maxQuantity */ }}
+                  inputProps={{ step: '0.25' /* , max: model.maxQuantity */ }}
                   fullWidth
                   required
                 />
@@ -243,7 +237,7 @@ export default function CreateProviderDialog(props) {
             <Grid item xs={12} md={3}>
               <FormControl fullWidth required>
                 <TextField
-                  label={"Desechado"}
+                  label={'Desechado'}
                   onChange={handleChange}
                   value={model.wasted}
                   variant="standard"
@@ -251,7 +245,7 @@ export default function CreateProviderDialog(props) {
                   margin="dense"
                   type="number"
                   inputProps={{
-                    step: "0.25",
+                    step: '0.25',
                     //max: model.maxQuantity - model.produced,
                   }}
                   fullWidth
@@ -264,19 +258,15 @@ export default function CreateProviderDialog(props) {
       </DialogContent>
       <DialogActions>
         {isLoading ? (
-          <Grid container justifyContent={"center"}>
+          <Grid container justifyContent={'center'}>
             <CircularProgress />
           </Grid>
         ) : (
-          <Grid container justifyContent={"flex-end"}>
+          <Grid container justifyContent={'flex-end'}>
             <Button type="submit" onClick={handleClear}>
               Cerrar
             </Button>
-            <Button
-              type="submit"
-              disabled={!isFormComplete}
-              onClick={handleSubmit}
-            >
+            <Button type="submit" disabled={!isFormComplete} onClick={handleSubmit}>
               Agregar
             </Button>
           </Grid>

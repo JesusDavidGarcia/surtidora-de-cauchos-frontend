@@ -1,24 +1,24 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 
-import CircularProgress from "@mui/material/CircularProgress";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogTitle from "@mui/material/DialogTitle";
+import CircularProgress from '@mui/material/CircularProgress';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
 
-import TextField from "@mui/material/TextField";
-import Dialog from "@mui/material/Dialog";
-import Button from "@mui/material/Button";
-import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
+import TextField from '@mui/material/TextField';
+import Dialog from '@mui/material/Dialog';
+import Button from '@mui/material/Button';
+import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
 
 //Icons
-import $ from "jquery";
-import mainURL from "../../config/environment";
+import $ from 'jquery';
+import mainURL from '../../config/environment';
 
 const emptyModel = {
-  fullName: "",
-  email: "",
-  phoneNumber: "",
+  fullName: '',
+  email: '',
+  phoneNumber: '',
 };
 
 export default function UpdateUserDialog(props) {
@@ -36,11 +36,9 @@ export default function UpdateUserDialog(props) {
     let value = target.value;
 
     switch (name) {
-      case "email":
+      case 'email':
         value = value.toLowerCase();
-        const isEmailValid = Boolean(
-          value.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i)
-        );
+        const isEmailValid = Boolean(value.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i));
         if (isEmailValid) {
           setEmailValid(true);
         } else {
@@ -60,7 +58,7 @@ export default function UpdateUserDialog(props) {
         break;
     }
 
-    if (model.fullName !== "" && isEmailValid !== "" && model.password !== "") {
+    if (model.fullName !== '' && isEmailValid !== '' && model.password !== '') {
       setFormComplete(true);
     }
   };
@@ -68,39 +66,33 @@ export default function UpdateUserDialog(props) {
   const handleSubmit = (event) => {
     event.preventDefault();
     setLoading(true);
-    const token = JSON.parse(localStorage.getItem("userInfo")).token;
+    const token = JSON.parse(localStorage.getItem('userInfo')).token;
     if (isEmailValid) {
       $.ajax({
-        method: "PUT",
+        method: 'PUT',
         url: `${mainURL}user/${userId}`,
-        contentType: "application/json",
+        contentType: 'application/json',
         headers: {
-          Authorization: "Bearer " + token,
+          Authorization: 'Bearer ' + token,
         },
         data: JSON.stringify(model),
       })
         .done((res) => {
-          props.handleShowNotification(
-            "success",
-            "Usuario actualizado con éxito"
-          );
+          props.handleShowNotification('success', 'Usuario actualizado con éxito');
           handleClear();
         })
         .fail((res) => {
           if (res.status === 409) {
-            props.handleShowNotification(
-              "error",
-              "Correo electrónico ya registrado"
-            );
+            props.handleShowNotification('error', 'Correo electrónico ya registrado');
             handleClear();
           } else {
-            props.handleShowNotification("error", res.responseText);
+            props.handleShowNotification('error', res.responseText);
             handleClear();
           }
         });
     } else {
       setLoading(false);
-      props.handleShowNotification("warning", "Correo electrónico no válido");
+      props.handleShowNotification('warning', 'Correo electrónico no válido');
     }
   };
 
@@ -112,15 +104,15 @@ export default function UpdateUserDialog(props) {
   };
 
   useEffect(() => {
-    const token = JSON.parse(localStorage.getItem("userInfo")).token;
-    const host = JSON.parse(localStorage.getItem("userInfo")).hostName;
+    const token = JSON.parse(localStorage.getItem('userInfo')).token;
+    const host = JSON.parse(localStorage.getItem('userInfo')).hostName;
     if (userId !== 0) {
       $.ajax({
-        method: "GET",
+        method: 'GET',
         url: mainURL + `user/${userId}`,
-        contentType: "application/json",
+        contentType: 'application/json',
         headers: {
-          Authorization: "Bearer " + token,
+          Authorization: 'Bearer ' + token,
           hostname: host,
         },
       }).done((res) => {
@@ -131,11 +123,11 @@ export default function UpdateUserDialog(props) {
 
   return (
     <Dialog open={props.open} onClose={props.handleClose} maxWidth="md">
-      <DialogTitle>{"Editar usuario"}</DialogTitle>
+      <DialogTitle>{'Editar usuario'}</DialogTitle>
       <DialogContent>
         <Box component="form" onSubmit={handleSubmit}>
           <TextField
-            label={"Nombre completo"}
+            label={'Nombre completo'}
             onChange={handleChange}
             value={model.fullName}
             variant="standard"
@@ -147,7 +139,7 @@ export default function UpdateUserDialog(props) {
             required
           />
           <TextField
-            label={"Correo electrónico"}
+            label={'Correo electrónico'}
             onChange={handleChange}
             error={!isEmailValid}
             value={model.email}
@@ -161,7 +153,7 @@ export default function UpdateUserDialog(props) {
           <TextField
             value={model.phoneNumber}
             onChange={handleChange}
-            label={"Teléfono"}
+            label={'Teléfono'}
             name="phoneNumber"
             variant="standard"
             margin="dense"
@@ -172,19 +164,15 @@ export default function UpdateUserDialog(props) {
       </DialogContent>
       <DialogActions>
         {isLoading ? (
-          <Grid container justifyContent={"center"}>
+          <Grid container justifyContent={'center'}>
             <CircularProgress />
           </Grid>
         ) : (
-          <Grid container justifyContent={"flex-end"}>
+          <Grid container justifyContent={'flex-end'}>
             <Button type="submit" onClick={handleClear}>
               Cerrar
             </Button>
-            <Button
-              type="submit"
-              disabled={!isFormComplete}
-              onClick={handleSubmit}
-            >
+            <Button type="submit" disabled={!isFormComplete} onClick={handleSubmit}>
               Actualizar
             </Button>
           </Grid>

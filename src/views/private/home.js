@@ -1,37 +1,37 @@
-import * as React from "react";
+import * as React from 'react';
 
-import CssBaseline from "@mui/material/CssBaseline";
-import Toolbar from "@mui/material/Toolbar";
-import Box from "@mui/material/Box";
+import CssBaseline from '@mui/material/CssBaseline';
+import Toolbar from '@mui/material/Toolbar';
+import Box from '@mui/material/Box';
 
-import { Route, Routes, useNavigate } from "react-router-dom";
+import { Route, Routes, useNavigate } from 'react-router-dom';
 
 //Components
-import BottomNavbar from "../../components/navigation/bottomNavbar";
-import Navbar from "../../components/navigation/navbar";
+import BottomNavbar from '../../components/navigation/bottomNavbar';
+import Navbar from '../../components/navigation/navbar';
 
 //Pages
-import NotificationCenter from "../../components/notificationCenter";
-import PurchaseOrderDetails from "./purchaseOrderDetails";
-import CreatePurchaseOrder from "./createPurchaseOrder";
-import UpdatePurchaseOrder from "./updatePurchaseOrder";
-import RawMaterialEntries from "./rawMaterialEntries";
-import ProductionEntries from "./productionEntries";
-import PurchaseOrders from "./purchaseOrders";
-import References from "./references";
-import Operators from "./operators";
-import Providers from "./providers";
-import Clients from "./clients";
-import Users from "./users";
-import Main from "./main";
+import NotificationCenter from '../../components/notificationCenter';
+import PurchaseOrderDetails from './purchaseOrderDetails';
+import CreatePurchaseOrder from './createPurchaseOrder';
+import UpdatePurchaseOrder from './updatePurchaseOrder';
+import RawMaterialEntries from './rawMaterialEntries';
+import ProductionEntries from './productionEntries';
+import PurchaseOrders from './purchaseOrders';
+import References from './references';
+import Operators from './operators';
+import Providers from './providers';
+import Clients from './clients';
+import Users from './users';
+import Main from './main';
 
-import mainURL from "../../config/environment";
-import $ from "jquery";
-import SharpeningEntries from "./sharpeningEntries";
-import SharpenersMatrix from "./sharpeningCurrentState";
-import PackagingEntries from "./packagingEntries";
-import PackagingMatrix from "./packagingCurrentState";
-import Packaging from "./packaging";
+import mainURL from '../../config/environment';
+import $ from 'jquery';
+import SharpeningEntries from './sharpeningEntries';
+import SharpenersMatrix from './sharpeningCurrentState';
+import PackagingEntries from './packagingEntries';
+import PackagingMatrix from './packagingCurrentState';
+import Packaging from './packaging';
 
 export default function Home(props) {
   const [openNC, setOpenNC] = React.useState(false);
@@ -64,15 +64,15 @@ export default function Home(props) {
   };
 
   React.useEffect(() => {
-    const token = JSON.parse(localStorage.getItem("userInfo")).token;
+    const token = JSON.parse(localStorage.getItem('userInfo')).token;
     let isSubscribed = true;
     setLoading(true);
     $.ajax({
-      method: "GET",
+      method: 'GET',
       url: `${mainURL}notification/references?onlyBelow=${onlyBelow}`,
-      contentType: "application/json",
+      contentType: 'application/json',
       headers: {
-        Authorization: "Bearer " + token,
+        Authorization: 'Bearer ' + token,
       },
     })
       .done((res) => {
@@ -82,41 +82,39 @@ export default function Home(props) {
       })
       .fail((res) => {
         if (res.status === 401) {
-          alert("Session expired");
-          localStorage.removeItem("userInfo");
-          navigate("/login");
+          alert('Session expired');
+          localStorage.removeItem('userInfo');
+          navigate('/login');
         }
       });
     return () => (isSubscribed = false);
   }, [navigate, onlyBelow]);
 
   React.useEffect(() => {
-    const token = JSON.parse(localStorage.getItem("userInfo")).token;
+    const token = JSON.parse(localStorage.getItem('userInfo')).token;
     let isSubscribed = true;
     //handleShowNotification("info", "Cargando clientes");
     //setLoading(true);
     $.ajax({
-      method: "GET",
-      url: mainURL + "operator-sharpening/get-all",
-      contentType: "application/json",
+      method: 'GET',
+      url: mainURL + 'operator-sharpening/get-all',
+      contentType: 'application/json',
       headers: {
-        Authorization: "Bearer " + token,
+        Authorization: 'Bearer ' + token,
       },
     })
       .done((res) => {
         const filtered = res.filter((m) => m.quantity > 0);
 
         const sharpeners = [...new Set(filtered.map((item) => item.sharpener))];
-        const references = [
-          ...new Set(filtered.map((item) => item.referenceName)),
-        ];
+        const references = [...new Set(filtered.map((item) => item.referenceName))];
         const combination = [
           ...new Set(
             filtered.map((item, idx) => ({
               id: idx,
               [item.sharpener]: item.quantity.toFixed(2),
               Referencia: item.referenceName,
-            }))
+            })),
           ),
         ];
 
@@ -124,14 +122,14 @@ export default function Home(props) {
           headerName: item,
           field: item,
           flex: 1,
-          breakpoints: ["xs", "sm", "md", "lg", "xl"],
+          breakpoints: ['xs', 'sm', 'md', 'lg', 'xl'],
         }));
 
         columns.unshift({
-          headerName: "Referencia",
-          field: "Referencia",
+          headerName: 'Referencia',
+          field: 'Referencia',
           flex: 1,
-          breakpoints: ["xs", "sm", "md", "lg", "xl"],
+          breakpoints: ['xs', 'sm', 'md', 'lg', 'xl'],
         });
 
         const rows = [];
@@ -140,7 +138,7 @@ export default function Home(props) {
           rows.push(
             combination
               .filter((m) => m.Referencia === ref)
-              .reduce((r, c) => Object.assign(r, c), {})
+              .reduce((r, c) => Object.assign(r, c), {}),
           );
         });
 
@@ -154,14 +152,14 @@ export default function Home(props) {
   }, []);
 
   return (
-    <Box sx={{ display: "flex" }}>
+    <Box sx={{ display: 'flex' }}>
       <CssBaseline />
       <Navbar
         handleToggle={handleToggleNC}
         notificationsLength={notifications.length}
         openNC={openNC}
       />
-      <Box component="main" sx={{ flexGrow: 1, height: "93vh" }}>
+      <Box component="main" sx={{ flexGrow: 1, height: '93vh' }}>
         <Toolbar />
         <Routes>
           <Route path="/" element={<Main />} />
@@ -172,18 +170,9 @@ export default function Home(props) {
           <Route path="ordenes-compra" element={<PurchaseOrders />} />
           <Route path="operarios" element={<Operators />} />
 
-          <Route
-            path="ordenes-compra/crear"
-            element={<CreatePurchaseOrder />}
-          />
-          <Route
-            path="ordenes-compra/:orderId/editar"
-            element={<UpdatePurchaseOrder />}
-          />
-          <Route
-            path="ordenes-compra/:orderId"
-            element={<PurchaseOrderDetails />}
-          />
+          <Route path="ordenes-compra/crear" element={<CreatePurchaseOrder />} />
+          <Route path="ordenes-compra/:orderId/editar" element={<UpdatePurchaseOrder />} />
+          <Route path="ordenes-compra/:orderId" element={<PurchaseOrderDetails />} />
           <Route path="produccion" element={<ProductionEntries />} />
           <Route path="ingresos-refilado" element={<SharpeningEntries />} />
           <Route path="ingresos-empacado" element={<PackagingEntries />} />

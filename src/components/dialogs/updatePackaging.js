@@ -1,21 +1,21 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 
-import CircularProgress from "@mui/material/CircularProgress";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogTitle from "@mui/material/DialogTitle";
-import FormControl from "@mui/material/FormControl";
-import TextField from "@mui/material/TextField";
-import Button from "@mui/material/Button";
-import Dialog from "@mui/material/Dialog";
-import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
+import CircularProgress from '@mui/material/CircularProgress';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
+import FormControl from '@mui/material/FormControl';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
 
-import $ from "jquery";
-import mainURL from "../../config/environment";
+import $ from 'jquery';
+import mainURL from '../../config/environment';
 
 const emptyModel = {
-  name: "",
+  name: '',
 };
 
 export default function UpdatePackagingDialog(props) {
@@ -31,11 +31,9 @@ export default function UpdatePackagingDialog(props) {
     let value = target.value;
 
     switch (name) {
-      case "email":
+      case 'email':
         value = value.toLowerCase();
-        const isEmailValid = Boolean(
-          value.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i)
-        );
+        const isEmailValid = Boolean(value.match(/^([\w.%+-]+)@([\w-]+\.)+([\w]{2,})$/i));
         if (isEmailValid) {
           setEmailValid(true);
         } else {
@@ -55,7 +53,7 @@ export default function UpdatePackagingDialog(props) {
         break;
     }
 
-    if (model.name !== "" && isEmailValid !== "" && isEmailValid) {
+    if (model.name !== '' && isEmailValid !== '' && isEmailValid) {
       setFormComplete(true);
     }
   };
@@ -63,28 +61,25 @@ export default function UpdatePackagingDialog(props) {
   const handleSubmit = (event) => {
     event.preventDefault();
     setLoading(true);
-    const token = JSON.parse(localStorage.getItem("userInfo")).token;
+    const token = JSON.parse(localStorage.getItem('userInfo')).token;
 
     $.ajax({
-      method: "PUT",
+      method: 'PUT',
       url: `${mainURL}packaging/${packagingId}`,
-      contentType: "application/json",
+      contentType: 'application/json',
       headers: {
-        Authorization: "Bearer " + token,
+        Authorization: 'Bearer ' + token,
       },
       data: JSON.stringify(model),
     })
       .done((res) => {
         setLoading(false);
-        props.handleShowNotification(
-          "success",
-          "Empaque actualizado con éxito"
-        );
+        props.handleShowNotification('success', 'Empaque actualizado con éxito');
         handleClear();
       })
       .fail((res) => {
         setLoading(false);
-        props.handleShowNotification("error", res.responseText);
+        props.handleShowNotification('error', res.responseText);
         handleClear();
       });
   };
@@ -97,15 +92,15 @@ export default function UpdatePackagingDialog(props) {
   };
 
   useEffect(() => {
-    const token = JSON.parse(localStorage.getItem("userInfo")).token;
-    const host = JSON.parse(localStorage.getItem("userInfo")).hostName;
-    if (packagingId !== "") {
+    const token = JSON.parse(localStorage.getItem('userInfo')).token;
+    const host = JSON.parse(localStorage.getItem('userInfo')).hostName;
+    if (packagingId !== '') {
       $.ajax({
-        method: "GET",
+        method: 'GET',
         url: `${mainURL}packaging/${packagingId}`,
-        contentType: "application/json",
+        contentType: 'application/json',
         headers: {
-          Authorization: "Bearer " + token,
+          Authorization: 'Bearer ' + token,
           hostname: host,
         },
       }).done((res) => {
@@ -116,14 +111,14 @@ export default function UpdatePackagingDialog(props) {
 
   return (
     <Dialog open={props.open} onClose={props.handleClose} maxWidth="md">
-      <DialogTitle>{"Editar empaque"}</DialogTitle>
-      <DialogContent sx={{ minWidth: "20rem" }}>
+      <DialogTitle>{'Editar empaque'}</DialogTitle>
+      <DialogContent sx={{ minWidth: '20rem' }}>
         <Box component="form" onSubmit={handleSubmit}>
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <FormControl fullWidth required>
                 <TextField
-                  label={"Nombre"}
+                  label={'Nombre'}
                   onChange={handleChange}
                   value={model.name}
                   variant="standard"
@@ -141,19 +136,15 @@ export default function UpdatePackagingDialog(props) {
       </DialogContent>
       <DialogActions>
         {isLoading ? (
-          <Grid container justifyContent={"center"}>
+          <Grid container justifyContent={'center'}>
             <CircularProgress />
           </Grid>
         ) : (
-          <Grid container justifyContent={"flex-end"}>
+          <Grid container justifyContent={'flex-end'}>
             <Button type="submit" onClick={handleClear}>
               Cerrar
             </Button>
-            <Button
-              type="submit"
-              disabled={!isFormComplete}
-              onClick={handleSubmit}
-            >
+            <Button type="submit" disabled={!isFormComplete} onClick={handleSubmit}>
               Actualizar
             </Button>
           </Grid>

@@ -1,99 +1,115 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 
 //MUI
-import Typography from "@mui/material/Typography";
-import IconButton from "@mui/material/IconButton";
-import Alert from "@mui/material/Alert";
-import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
+import Typography from '@mui/material/Typography';
+import IconButton from '@mui/material/IconButton';
+import Alert from '@mui/material/Alert';
+import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
 
-import { DataGrid } from "@mui/x-data-grid";
+import { DataGrid } from '@mui/x-data-grid';
 
 //Icons
-import MoreVertIcon from "@mui/icons-material/MoreVert";
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 
-import UpdateEntryDialog from "../../components/dialogs/updateProductionEntry";
-import CreateEntryDialog from "../../components/dialogs/createProductionEntry";
-import DeleteEntryDialog from "../../components/dialogs/deleteGeneric";
-import SearchAndCreate from "../../components/input/searchAndCreate";
-import ProductionPopover from "../../components/popovers/generic";
+import UpdateEntryDialog from '../../components/dialogs/updateProductionEntry';
+import CreateEntryDialog from '../../components/dialogs/createProductionEntry';
+import DeleteEntryDialog from '../../components/dialogs/deleteGeneric';
+import SearchAndCreate from '../../components/input/searchAndCreate';
+import ProductionPopover from '../../components/popovers/generic';
 
-import mainURL from "../../config/environment";
-import $ from "jquery";
-import { useWidth } from "../../utils/withSelector";
+import mainURL from '../../config/environment';
+import $ from 'jquery';
+import { useWidth } from '../../utils/withSelector';
 
 const emptyData = {
-  id: "",
-  rubberReferenceId: "",
-  referenceName: "",
-  operator: "",
+  id: '',
+  rubberReferenceId: '',
+  referenceName: '',
+  operator: '',
   produced: 0,
   wasted: 0,
 };
 
-const errorMessage =
-  "No se puede borrar este cliente porque hay obras registradas a su nombre";
+const errorMessage = 'No se puede borrar este cliente porque hay obras registradas a su nombre';
 
 export default function ProductionEntries(props) {
   //Data management
   const [selectedData, setSelectedData] = useState(emptyData);
-  const [filteredData, setFilteredData] = useState([]);
+  //const [filteredData, setFilteredData] = useState([]);
   const [refresh, setRefresh] = useState(false);
+
+  //Page management
+  const [hasNextPage, setHasNextPage] = useState(false);
+  const [pageSize, setPageSize] = useState(25);
+  const [rowCount, setRowCount] = useState(0);
+  const [page, setPage] = useState(1);
+
+  const handlePageChange = (event) => {
+    setPage(event.page);
+    setPageSize(event.pageSize);
+  };
 
   const [data, setData] = useState([]);
   const breakpoint = useWidth();
 
-  //const navigate = useNavigate();
-  const columns: GridColDef[] = [
+  //const navigate = useNavigate();: GridColDef[]
+  const columns = [
     {
-      headerName: "Referencia",
-      field: "referenceName",
-      flex: 1,
-      breakpoints: ["xs", "sm", "md", "lg", "xl"],
+      headerName: 'Referencia',
+      field: 'referenceName',
+      flex: 2,
+      breakpoints: ['xs', 'sm', 'md', 'lg', 'xl'],
     },
     {
-      headerName: "Operario",
-      field: "operator",
+      headerName: 'Operario',
+      field: 'operator',
       flex: 1,
-      breakpoints: ["xs", "sm", "md", "lg", "xl"],
+      breakpoints: ['xs', 'sm', 'md', 'lg', 'xl'],
     },
     {
-      headerName: "Producido",
-      field: "produced",
+      headerName: 'Refilador',
+      field: 'sharpener',
       flex: 1,
-      breakpoints: ["xs", "sm", "md", "lg", "xl"],
+      breakpoints: ['xs', 'sm', 'md', 'lg', 'xl'],
     },
     {
-      headerName: "Desechado",
-      field: "wasted",
+      headerName: 'Producido',
+      field: 'produced',
       flex: 1,
-      breakpoints: ["sm", "md", "lg", "xl"],
+      breakpoints: ['xs', 'sm', 'md', 'lg', 'xl'],
     },
     {
-      headerName: "Fecha de producción",
-      field: "productionDate",
+      headerName: 'Desechado',
+      field: 'wasted',
+      flex: 1,
+      breakpoints: ['sm', 'md', 'lg', 'xl'],
+    },
+    {
+      headerName: 'Fecha de producción',
+      field: 'productionDate',
       flex: 1,
       renderCell: (params: GridRenderCellParams) => (
         <Typography key={params.row.id} variant="body2">
           {new Date(params.row.productionDate).toLocaleDateString()}
         </Typography>
       ),
-      breakpoints: ["sm", "md", "lg", "xl"],
+      breakpoints: ['sm', 'md', 'lg', 'xl'],
     },
     {
-      headerName: "Opciones",
-      field: "id",
+      headerName: 'Opciones',
+      field: 'id',
       renderCell: (params: GridRenderCellParams) => (
         <IconButton onClick={handlePopoverOpen(params.row)}>
           <MoreVertIcon />
         </IconButton>
       ),
       //flex: 1,
-      align: "center",
-      headerAlign: "center",
+      align: 'center',
+      headerAlign: 'center',
       sortable: false,
       editable: false,
-      breakpoints: ["xs", "sm", "md", "lg", "xl"],
+      breakpoints: ['xs', 'sm', 'md', 'lg', 'xl'],
     },
   ];
 
@@ -109,20 +125,20 @@ export default function ProductionEntries(props) {
 
   const handleOpenDialog = (dialog) => (event) => {
     switch (dialog) {
-      case "create":
+      case 'create':
         setCreateDialog(true);
         break;
 
-      case "delete":
+      case 'delete':
         setDeleteDialog(true);
         break;
 
-      case "update":
+      case 'update':
         setUpdateDialog(true);
         break;
 
       default:
-        console.log("None");
+        console.log('None');
         break;
     }
   };
@@ -130,8 +146,8 @@ export default function ProductionEntries(props) {
   //Notification management
   const [showNotification, setShowNotification] = useState(false);
   const [notificationMessage, setNotificationMessage] = useState({
-    severity: "",
-    message: "",
+    severity: '',
+    message: '',
   });
 
   const handleShowNotification = (severity, message) => {
@@ -151,7 +167,7 @@ export default function ProductionEntries(props) {
   };
 
   //Search management
-  const [searchText, setSearchText] = useState("");
+  const [searchText, setSearchText] = useState('');
   const handleSearch = (event) => {
     const target = event.target;
     const value = target.value;
@@ -172,44 +188,42 @@ export default function ProductionEntries(props) {
   }; */
 
   useEffect(() => {
-    const token = JSON.parse(localStorage.getItem("userInfo")).token;
+    const token = JSON.parse(localStorage.getItem('userInfo')).token;
     let isSubscribed = true;
     //handleShowNotification("info", "Cargando clientes");
     $.ajax({
-      method: "GET",
-      url: mainURL + "production-entry/get-all",
-      contentType: "application/json",
+      method: 'GET',
+      url: `${mainURL}production-entry/get-all?pageSize=${pageSize}&pageNumber=${page}`,
+      contentType: 'application/json',
       headers: {
-        Authorization: "Bearer " + token,
+        Authorization: 'Bearer ' + token,
       },
     })
       .done((res) => {
-        const aux: GridRowsProp = res.sort(
-          (a, b) => new Date(b.createdOn) - new Date(a.createdOn)
-        );
-        console.log(aux);
+        /* : GridRowsProp */
+        const aux = res.results;
         if (isSubscribed) {
           setData(aux);
-          setFilteredData(aux);
+          setHasNextPage(res.hasNext);
+          setRowCount(res.totalItemCount);
+          //setFilteredData(aux);
           //handleShowNotification("success", "Referencias cargados con éxito");
         }
       })
       .fail((res) => {
-        handleShowNotification("error", res.responseText);
+        handleShowNotification('error', res.responseText);
       });
     return () => (isSubscribed = false);
-  }, [refresh]);
+  }, [refresh, page, pageSize]);
 
-  useEffect(() => {
-    const myReg = new RegExp("^.*" + searchText.toLowerCase() + ".*");
-    const newArray = data.filter((f) =>
-      f.referenceName.toLowerCase().match(myReg)
-    );
+  /*   useEffect(() => {
+    const myReg = new RegExp('^.*' + searchText.toLowerCase() + '.*');
+    const newArray = data.filter((f) => f.referenceName.toLowerCase().match(myReg));
     setFilteredData(newArray);
-  }, [data, searchText]);
+  }, [data, searchText]); */
 
   return (
-    <Box sx={{ height: "85vh", p: 2 }}>
+    <Box sx={{ height: '85vh', p: 2 }}>
       <ProductionPopover
         open={anchor}
         showDeleteOption
@@ -222,12 +236,12 @@ export default function ProductionEntries(props) {
         refresh={refresh}
         open={deleteDialog}
         setRefresh={setRefresh}
-        title={"Eliminar registro"}
+        title={'Eliminar registro'}
         errorMessage={errorMessage}
         name={`${selectedData.referenceName}`}
         handleClose={handleCloseDialogs}
         deleteURL={`production-entry/${selectedData.id}`}
-        successMessage={"Registro eliminado con éxito"}
+        successMessage={'Registro eliminado con éxito'}
         handleShowNotification={handleShowNotification}
       />
       <UpdateEntryDialog
@@ -246,14 +260,14 @@ export default function ProductionEntries(props) {
         handleShowNotification={handleShowNotification}
       />
       <Grid
-        justifyContent={"space-between"}
-        alignItems={"center"}
-        sx={{ p: "1rem 0" }}
+        justifyContent={'space-between'}
+        alignItems={'center'}
+        sx={{ p: '1rem 0' }}
         spacing={2}
         container
       >
         <Grid item xs={12} md={8}>
-          <Typography variant={"h4"}>{"Producción"}</Typography>
+          <Typography variant={'h4'}>{'Producción'}</Typography>
         </Grid>
 
         {showNotification ? (
@@ -273,14 +287,18 @@ export default function ProductionEntries(props) {
         )}
       </Grid>
 
-      <Box sx={{ height: "70vh", width: "100%", p: "16px 0", pb:8 }}>
+      <Box sx={{ height: '70vh', width: '100%', p: '16px 0', pb: 8 }}>
         <DataGrid
-          selectionModel={selectedData.id === "" ? [] : selectedData.id}
-          onRowClick={handleSelect}
-          rows={filteredData}
           columns={columns.filter((m) => m.breakpoints.includes(breakpoint))}
+          selectionModel={selectedData.id === '' ? [] : selectedData.id}
+          paginationModel={{ page: page, pageSize: pageSize }}
+          paginationMeta={{ hasNextPage: hasNextPage }}
+          onPaginationModelChange={handlePageChange}
+          onRowClick={handleSelect}
+          paginationMode="server"
           disableColumnMenu
-          autoPageSize
+          rowCount={rowCount}
+          rows={data}
         />
       </Box>
     </Box>

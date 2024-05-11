@@ -1,46 +1,46 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 
-import CircularProgress from "@mui/material/CircularProgress";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
-import CardContent from "@mui/material/CardContent";
-import CardActions from "@mui/material/CardActions";
-import IconButton from "@mui/material/IconButton";
-import Typography from "@mui/material/Typography";
-import Checkbox from "@mui/material/Checkbox";
-import ListItem from "@mui/material/ListItem";
-import Divider from "@mui/material/Divider";
-import Button from "@mui/material/Button";
-import Alert from "@mui/material/Alert";
-import Grid from "@mui/material/Grid";
-import Card from "@mui/material/Card";
-import List from "@mui/material/List";
-import Box from "@mui/material/Box";
+import CircularProgress from '@mui/material/CircularProgress';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import CardContent from '@mui/material/CardContent';
+import CardActions from '@mui/material/CardActions';
+import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
+import Checkbox from '@mui/material/Checkbox';
+import ListItem from '@mui/material/ListItem';
+import Divider from '@mui/material/Divider';
+import Button from '@mui/material/Button';
+import Alert from '@mui/material/Alert';
+import Grid from '@mui/material/Grid';
+import Card from '@mui/material/Card';
+import List from '@mui/material/List';
+import Box from '@mui/material/Box';
 
-import CancelIcon from "@mui/icons-material/Cancel";
-import InboxIcon from "@mui/icons-material/Inbox";
+import CancelIcon from '@mui/icons-material/Cancel';
+import InboxIcon from '@mui/icons-material/Inbox';
 
-import $ from "jquery";
-import mainURL from "../../config/environment";
+import $ from 'jquery';
+import mainURL from '../../config/environment';
 
-import ReferenceQuantityInput from "../../components/input/referenceQuantity";
-import SelectPackaging from "../../components/input/selectPackaging";
-import SelectClient from "../../components/input/selectClient";
-import { useNavigate } from "react-router-dom";
+import ReferenceQuantityInput from '../../components/input/referenceQuantity';
+import SelectPackaging from '../../components/input/selectPackaging';
+import SelectClient from '../../components/input/selectClient';
+import { useNavigate } from 'react-router-dom';
 
 const emptyModel = {
-  clientId: "",
+  clientId: '',
   references: [],
   usePackaging: false,
-  packagingId: "",
+  packagingId: '',
 };
 
 const emptyResponse = {
-  id: "",
-  clientId: "",
-  clientName: "",
-  createdOn: "2023-05-08T22:19:35.235Z",
+  id: '',
+  clientId: '',
+  clientName: '',
+  createdOn: '2023-05-08T22:19:35.235Z',
   shipmentWeight: 0,
   invoicePrice: 0,
   numberOfBoxes: 0,
@@ -116,30 +116,30 @@ export default function CreatePurchaseOrder(props) {
   const handleSubmit = (event) => {
     event.preventDefault();
     setLoading(true);
-    const token = JSON.parse(localStorage.getItem("userInfo")).token;
+    const token = JSON.parse(localStorage.getItem('userInfo')).token;
     const newModel = {
       ...model,
       packagingId: model.usePackaging ? model.packagingId : null,
     };
     $.ajax({
-      method: "POST",
-      url: mainURL + "purchase-order",
-      contentType: "application/json",
+      method: 'POST',
+      url: mainURL + 'purchase-order',
+      contentType: 'application/json',
       headers: {
-        Authorization: "Bearer " + token,
+        Authorization: 'Bearer ' + token,
       },
       data: JSON.stringify(newModel),
     })
       .done((res) => {
         setLoading(false);
-        handleShowNotification("success", "Orden de compra agregada con éxito");
+        handleShowNotification('success', 'Orden de compra agregada con éxito');
         navigate(`/ordenes-compra/${res.id}`);
         handleClear();
       })
       .fail((res) => {
         setLoading(false);
 
-        handleShowNotification("error", res.responseText);
+        handleShowNotification('error', res.responseText);
         handleClear();
       });
   };
@@ -147,17 +147,17 @@ export default function CreatePurchaseOrder(props) {
   const handleValidate = (event) => {
     event.preventDefault();
     setLoading(true);
-    const token = JSON.parse(localStorage.getItem("userInfo")).token;
+    const token = JSON.parse(localStorage.getItem('userInfo')).token;
     const newModel = {
       ...model,
       packagingId: model.usePackaging ? model.packagingId : null,
     };
     $.ajax({
-      method: "POST",
-      url: mainURL + "purchase-order/validate",
-      contentType: "application/json",
+      method: 'POST',
+      url: mainURL + 'purchase-order/validate',
+      contentType: 'application/json',
       headers: {
-        Authorization: "Bearer " + token,
+        Authorization: 'Bearer ' + token,
       },
       data: JSON.stringify(newModel),
     })
@@ -180,8 +180,8 @@ export default function CreatePurchaseOrder(props) {
   //Notification management
   const [showNotification, setShowNotification] = useState(false);
   const [notificationMessage, setNotificationMessage] = useState({
-    severity: "",
-    message: "",
+    severity: '',
+    message: '',
   });
 
   const handleShowNotification = (severity, message) => {
@@ -199,9 +199,9 @@ export default function CreatePurchaseOrder(props) {
 
   useEffect(() => {
     if (
-      model.clientId === "" ||
+      model.clientId === '' ||
       model.references.length === 0 ||
-      (model.usePackaging && model.packagingId === "")
+      (model.usePackaging && model.packagingId === '')
     ) {
       setDisabled(true);
     } else {
@@ -210,9 +210,9 @@ export default function CreatePurchaseOrder(props) {
   }, [model]);
 
   return (
-    <Box sx={{ height: "85vh", p: 2 }}>
-      <Grid item xs={12} md={8} sx={{ p: "16px 0" }}>
-        <Typography variant="h4">{"Crear order de compra"}</Typography>
+    <Box sx={{ height: '85vh', p: 2 }}>
+      <Grid item xs={12} md={8} sx={{ p: '16px 0' }}>
+        <Typography variant="h4">{'Crear order de compra'}</Typography>
       </Grid>
       {showNotification ? (
         <Grid item xs={12} md={4}>
@@ -223,14 +223,11 @@ export default function CreatePurchaseOrder(props) {
       ) : null}
       <Grid container spacing={2} sx={{ pb: 10 }}>
         <Grid item container md={6}>
-          <Card sx={{ width: "100%" }}>
+          <Card sx={{ width: '100%' }}>
             <CardContent>
               <Grid container spacing={2}>
                 <Grid item xs={12} md={6}>
-                  <SelectClient
-                    handleChange={handleClientChange}
-                    value={selectedClient}
-                  />
+                  <SelectClient handleChange={handleClientChange} value={selectedClient} />
                 </Grid>
                 {model.usePackaging ? (
                   <Grid container item xs={12} md={6}>
@@ -241,18 +238,10 @@ export default function CreatePurchaseOrder(props) {
                         name="packagingId"
                       />
                     </Grid>
-                    <Grid
-                      item
-                      xs={3}
-                      container
-                      justifyContent={"center"}
-                      alignItems={"flex-end"}
-                    >
+                    <Grid item xs={3} container justifyContent={'center'} alignItems={'flex-end'}>
                       <IconButton
                         size="small"
-                        onClick={() =>
-                          setModel({ ...model, usePackaging: false })
-                        }
+                        onClick={() => setModel({ ...model, usePackaging: false })}
                       >
                         <CancelIcon />
                       </IconButton>
@@ -264,8 +253,8 @@ export default function CreatePurchaseOrder(props) {
                     xs={12}
                     md={6}
                     container
-                    justifyContent={"center"}
-                    alignItems={"flex-end"}
+                    justifyContent={'center'}
+                    alignItems={'flex-end'}
                   >
                     <FormControlLabel
                       label="Utilizar empaque"
@@ -287,9 +276,7 @@ export default function CreatePurchaseOrder(props) {
                 <Grid item xs={12} md={12}>
                   <ReferenceQuantityInput
                     handleAdd={handleAdd}
-                    usedReferences={model.references.map(
-                      (m) => m.rubberReferenceId
-                    )}
+                    usedReferences={model.references.map((m) => m.rubberReferenceId)}
                     includeSecondary
                   />
                 </Grid>
@@ -297,7 +284,7 @@ export default function CreatePurchaseOrder(props) {
             </CardContent>
 
             <CardActions>
-              <Grid container justifyContent={"flex-end"}>
+              <Grid container justifyContent={'flex-end'}>
                 {!isLoading ? (
                   <React.Fragment>
                     <Button
@@ -327,7 +314,7 @@ export default function CreatePurchaseOrder(props) {
         </Grid>
         {model.references.length > 0 ? (
           <Grid item container md={6}>
-            <Card sx={{ width: "100%" }}>
+            <Card sx={{ width: '100%' }}>
               <CardContent>
                 <Typography variant="h5">{model.clientName}</Typography>
                 <List>
@@ -336,11 +323,7 @@ export default function CreatePurchaseOrder(props) {
                       disablePadding
                       key={index}
                       secondaryAction={
-                        <IconButton
-                          edge="end"
-                          aria-label="delete"
-                          onClick={handleDelete(index)}
-                        >
+                        <IconButton edge="end" aria-label="delete" onClick={handleDelete(index)}>
                           <CancelIcon />
                         </IconButton>
                       }
@@ -352,19 +335,13 @@ export default function CreatePurchaseOrder(props) {
                         primary={reference.referenceName}
                         secondary={
                           <Typography variant="body2">
-                            {`Cantidad recibida: ${
-                              reference.quantity
-                            } - Faltante: ${
+                            {`Cantidad recibida: ${reference.quantity} - Faltante: ${
                               response.references.filter(
-                                (m) =>
-                                  m.rubberReferenceId ===
-                                  reference.rubberReferenceId
+                                (m) => m.rubberReferenceId === reference.rubberReferenceId,
                               )[0]?.missingQuantity
                             } - Por empacar: ${
                               response.references.filter(
-                                (m) =>
-                                  m.rubberReferenceId ===
-                                  reference.rubberReferenceId
+                                (m) => m.rubberReferenceId === reference.rubberReferenceId,
                               )[0]?.missingPackagingQuantity
                             }`}
                           </Typography>
@@ -376,37 +353,21 @@ export default function CreatePurchaseOrder(props) {
                 </List>
                 {showResponse ? (
                   <Grid container>
-                    <Grid container alignItems={"center"}>
+                    <Grid container alignItems={'center'}>
                       <Typography variant="subtitle1">Peso total:</Typography>
-                      <Typography
-                        variant="body1"
-                        sx={{ ml: 2 }}
-                        color="textSecondary"
-                      >
+                      <Typography variant="body1" sx={{ ml: 2 }} color="textSecondary">
                         {response.shipmentWeight}
                       </Typography>
                     </Grid>
-                    <Grid container alignItems={"center"}>
-                      <Typography variant="subtitle1">
-                        Número de cajas:
-                      </Typography>
-                      <Typography
-                        variant="body1"
-                        sx={{ ml: 2 }}
-                        color="textSecondary"
-                      >
+                    <Grid container alignItems={'center'}>
+                      <Typography variant="subtitle1">Número de cajas:</Typography>
+                      <Typography variant="body1" sx={{ ml: 2 }} color="textSecondary">
                         {response.numberOfBoxes}
                       </Typography>
                     </Grid>
-                    <Grid container alignItems={"center"}>
-                      <Typography variant="subtitle1">
-                        Material faltante
-                      </Typography>
-                      <Typography
-                        variant="body1"
-                        sx={{ ml: 2 }}
-                        color="textSecondary"
-                      >
+                    <Grid container alignItems={'center'}>
+                      <Typography variant="subtitle1">Material faltante</Typography>
+                      <Typography variant="body1" sx={{ ml: 2 }} color="textSecondary">
                         {response.missingMaterial}
                       </Typography>
                     </Grid>

@@ -1,25 +1,25 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 
-import CircularProgress from "@mui/material/CircularProgress";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogTitle from "@mui/material/DialogTitle";
-import FormControl from "@mui/material/FormControl";
-import TextField from "@mui/material/TextField";
-import Button from "@mui/material/Button";
-import Dialog from "@mui/material/Dialog";
-import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
+import CircularProgress from '@mui/material/CircularProgress';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
+import FormControl from '@mui/material/FormControl';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
 
-import $ from "jquery";
-import mainURL from "../../config/environment";
-import SelectRawMaterial from "../input/selectRawMaterial";
-import SelectReference from "../input/selectReference";
-import { Checkbox, FormControlLabel } from "@mui/material";
+import $ from 'jquery';
+import mainURL from '../../config/environment';
+import SelectRawMaterial from '../input/selectRawMaterial';
+import SelectReference from '../input/selectReference';
+import { Checkbox, FormControlLabel } from '@mui/material';
 
 const emptyModel = {
-  reference: "",
-  application: "",
+  reference: '',
+  application: '',
   rawWeight: 0,
   packedWeight: 0,
   currentQuantity: 0,
@@ -29,8 +29,8 @@ const emptyModel = {
   minimum: 0,
   maximum: 0,
   rawMaterialId: 0,
-  comments: "",
-  primaryReferenceId: "",
+  comments: '',
+  primaryReferenceId: '',
 };
 
 export default function CreateProviderDialog(props) {
@@ -74,7 +74,7 @@ export default function CreateProviderDialog(props) {
   const handleSubmit = (event) => {
     event.preventDefault();
     setLoading(true);
-    const token = JSON.parse(localStorage.getItem("userInfo")).token;
+    const token = JSON.parse(localStorage.getItem('userInfo')).token;
 
     const sendModel = {
       ...model,
@@ -82,26 +82,23 @@ export default function CreateProviderDialog(props) {
     };
 
     $.ajax({
-      method: "POST",
-      url: mainURL + "rubber-reference",
-      contentType: "application/json",
+      method: 'POST',
+      url: mainURL + 'rubber-reference',
+      contentType: 'application/json',
       headers: {
-        Authorization: "Bearer " + token,
+        Authorization: 'Bearer ' + token,
       },
       data: JSON.stringify(sendModel),
     })
       .done((res) => {
         setLoading(false);
-        props.handleShowNotification(
-          "success",
-          "Referencia agregado con éxito"
-        );
+        props.handleShowNotification('success', 'Referencia agregado con éxito');
         handleClear();
       })
       .fail((res) => {
         setLoading(false);
 
-        props.handleShowNotification("error", res.responseText);
+        props.handleShowNotification('error', res.responseText);
         handleClear();
       });
   };
@@ -115,14 +112,14 @@ export default function CreateProviderDialog(props) {
 
   return (
     <Dialog open={props.open} onClose={props.handleClose} maxWidth="md">
-      <DialogTitle>{"Crear referencia"}</DialogTitle>
+      <DialogTitle>{'Crear referencia'}</DialogTitle>
       <DialogContent>
         <Box component="form" onSubmit={handleSubmit}>
           <Grid container spacing={2}>
             <Grid item xs={12} md={6}>
               <FormControl fullWidth required>
                 <TextField
-                  label={"Referencia"}
+                  label={'Referencia'}
                   onChange={handleChange}
                   value={model.reference}
                   variant="standard"
@@ -140,7 +137,7 @@ export default function CreateProviderDialog(props) {
                 <TextField
                   value={model.application}
                   onChange={handleChange}
-                  label={"Aplicación"}
+                  label={'Aplicación'}
                   name="application"
                   variant="standard"
                   margin="dense"
@@ -163,7 +160,7 @@ export default function CreateProviderDialog(props) {
                 <TextField
                   value={model.rawWeight}
                   onChange={handleChange}
-                  label={"Consumo de material (gr)"}
+                  label={'Consumo de material (gr)'}
                   name="rawWeight"
                   variant="standard"
                   margin="dense"
@@ -177,7 +174,7 @@ export default function CreateProviderDialog(props) {
                 <TextField
                   value={model.packedWeight}
                   onChange={handleChange}
-                  label={"Peso de embalaje (Kg)"}
+                  label={'Peso de embalaje (Kg)'}
                   name="packedWeight"
                   variant="standard"
                   margin="dense"
@@ -191,12 +188,12 @@ export default function CreateProviderDialog(props) {
                 <TextField
                   value={model.minimum}
                   onChange={handleChange}
-                  label={"Cantidad mínima"}
+                  label={'Cantidad mínima'}
                   name="minimum"
                   variant="standard"
                   margin="dense"
                   type="number"
-                  inputProps={{ step: "0.25" }}
+                  inputProps={{ step: '0.25' }}
                   fullWidth
                 />
               </FormControl>
@@ -206,12 +203,12 @@ export default function CreateProviderDialog(props) {
                 <TextField
                   value={model.maximum}
                   onChange={handleChange}
-                  label={"Cantidad máxima"}
+                  label={'Cantidad máxima'}
                   name="maximum"
                   variant="standard"
                   margin="dense"
                   type="number"
-                  inputProps={{ step: "0.25" }}
+                  inputProps={{ step: '0.25' }}
                   fullWidth
                 />
               </FormControl>
@@ -221,12 +218,12 @@ export default function CreateProviderDialog(props) {
                 <TextField
                   value={model.currentQuantity}
                   onChange={handleChange}
-                  label={"Cantidad actual"}
+                  label={'Cantidad actual'}
                   name="currentQuantity"
                   variant="standard"
                   margin="dense"
                   type="number"
-                  inputProps={{ step: "0.25" }}
+                  inputProps={{ step: '0.25' }}
                   fullWidth
                 />
               </FormControl>
@@ -236,12 +233,12 @@ export default function CreateProviderDialog(props) {
                 <TextField
                   value={model.sharpeningQuantity}
                   onChange={handleChange}
-                  label={"Cantidad en refilado"}
+                  label={'Cantidad en refilado'}
                   name="sharpeningQuantity"
                   variant="standard"
                   margin="dense"
                   type="number"
-                  inputProps={{ step: "0.25" }}
+                  inputProps={{ step: '0.25' }}
                   fullWidth
                 />
               </FormControl>
@@ -251,7 +248,7 @@ export default function CreateProviderDialog(props) {
                 <TextField
                   value={model.sharpeningPrice}
                   onChange={handleChange}
-                  label={"Precio de refilado"}
+                  label={'Precio de refilado'}
                   name="sharpeningPrice"
                   variant="standard"
                   margin="dense"
@@ -265,12 +262,12 @@ export default function CreateProviderDialog(props) {
                 <TextField
                   value={model.packagingQuantity}
                   onChange={handleChange}
-                  label={"Cantidad en empacada"}
+                  label={'Cantidad en empacada'}
                   name="packagingQuantity"
                   variant="standard"
                   margin="dense"
                   type="number"
-                  inputProps={{ step: "1" }}
+                  inputProps={{ step: '1' }}
                   fullWidth
                 />
               </FormControl>
@@ -301,7 +298,7 @@ export default function CreateProviderDialog(props) {
                 <TextField
                   value={model.comments}
                   onChange={handleChange}
-                  label={"Comentarios adicionales"}
+                  label={'Comentarios adicionales'}
                   name="comments"
                   multiline
                   rows={3}
@@ -316,19 +313,15 @@ export default function CreateProviderDialog(props) {
       </DialogContent>
       <DialogActions>
         {isLoading ? (
-          <Grid container justifyContent={"center"}>
+          <Grid container justifyContent={'center'}>
             <CircularProgress />
           </Grid>
         ) : (
-          <Grid container justifyContent={"flex-end"}>
+          <Grid container justifyContent={'flex-end'}>
             <Button type="submit" onClick={handleClear}>
               Cerrar
             </Button>
-            <Button
-              type="submit"
-              disabled={!isFormComplete}
-              onClick={handleSubmit}
-            >
+            <Button type="submit" disabled={!isFormComplete} onClick={handleSubmit}>
               Agregar
             </Button>
           </Grid>

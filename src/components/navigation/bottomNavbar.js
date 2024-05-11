@@ -1,88 +1,88 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 
 //MUI
-import BottomNavigationAction from "@mui/material/BottomNavigationAction";
-import BottomNavigation from "@mui/material/BottomNavigation";
-import Paper from "@mui/material/Paper";
+import BottomNavigationAction from '@mui/material/BottomNavigationAction';
+import BottomNavigation from '@mui/material/BottomNavigation';
+import Paper from '@mui/material/Paper';
 
 //Icons
 
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
 
-import ShoppingCartCheckoutIcon from "@mui/icons-material/ShoppingCartCheckout";
-import LocalShippingIcon from "@mui/icons-material/LocalShipping";
-import EngineeringIcon from "@mui/icons-material/Engineering";
-import ContentCutIcon from "@mui/icons-material/ContentCut";
-import ViewAgendaIcon from "@mui/icons-material/ViewAgenda";
-import DashboardIcon from "@mui/icons-material/Dashboard";
-import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
-import InventoryIcon from "@mui/icons-material/Inventory";
-import GroupsIcon from "@mui/icons-material/Groups";
-import GroupIcon from "@mui/icons-material/Group";
-import HailIcon from "@mui/icons-material/Hail";
-import BackpackIcon from "@mui/icons-material/Backpack";
+import ShoppingCartCheckoutIcon from '@mui/icons-material/ShoppingCartCheckout';
+import LocalShippingIcon from '@mui/icons-material/LocalShipping';
+import EngineeringIcon from '@mui/icons-material/Engineering';
+import ContentCutIcon from '@mui/icons-material/ContentCut';
+import ViewAgendaIcon from '@mui/icons-material/ViewAgenda';
+import DashboardIcon from '@mui/icons-material/Dashboard';
+import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
+import InventoryIcon from '@mui/icons-material/Inventory';
+import GroupsIcon from '@mui/icons-material/Groups';
+import GroupIcon from '@mui/icons-material/Group';
+import HailIcon from '@mui/icons-material/Hail';
+import BackpackIcon from '@mui/icons-material/Backpack';
 
-import InventoryPopover from "../popovers/inventory";
-import SectionsPopover from "../popovers/sections";
-import DualPopover from "../popovers/dual";
+import InventoryPopover from '../popovers/inventory';
+import SectionsPopover from '../popovers/sections';
+import DualPopover from '../popovers/dual';
 
 const sections = [
   {
-    id: "raw-material",
-    title: "Materia prima",
+    id: 'raw-material',
+    title: 'Materia prima',
     icon: <ViewAgendaIcon />,
-    path: "/materia-prima",
+    path: '/materia-prima',
     permission: 9,
   },
 
   {
-    id: "references",
-    title: "Referencias",
+    id: 'references',
+    title: 'Referencias',
     icon: <InventoryIcon />,
-    path: "/referencias",
+    path: '/referencias',
     permission: 9,
   },
   {
-    id: "production",
-    title: "Producción",
+    id: 'production',
+    title: 'Producción',
     icon: <EngineeringIcon />,
-    path: "/produccion",
+    path: '/produccion',
     permission: 9,
   },
 
   {
-    id: "purchase-orders",
-    title: "Órdenes de compra",
+    id: 'purchase-orders',
+    title: 'Órdenes de compra',
     icon: <ShoppingCartCheckoutIcon />,
-    path: "/ordenes-compra",
+    path: '/ordenes-compra',
     permission: 9,
   },
   {
-    id: "operators",
-    title: "Operarios",
+    id: 'operators',
+    title: 'Operarios',
     icon: <GroupsIcon />,
-    path: "/operarios",
+    path: '/operarios',
     permission: 9,
   },
   {
-    id: "providers",
-    title: "Proveedores",
+    id: 'providers',
+    title: 'Proveedores',
     icon: <LocalShippingIcon />,
-    path: "/proveedores",
+    path: '/proveedores',
     permission: 9,
   },
   {
-    id: "clients",
-    title: "Clientes",
+    id: 'clients',
+    title: 'Clientes',
     icon: <HailIcon />,
-    path: "/clientes",
+    path: '/clientes',
     permission: 9,
   },
   {
-    id: "users",
-    title: "Usuarios",
+    id: 'users',
+    title: 'Usuarios',
     icon: <GroupIcon />,
-    path: "/usuarios",
+    path: '/usuarios',
     permission: 1,
   },
 ];
@@ -104,19 +104,19 @@ export default function BottomNavbar() {
   const handleInventoryPopoverOpen = (type) => (event) => {
     event.stopPropagation();
     switch (type) {
-      case "inventory":
+      case 'inventory':
         setAnchorInventory(event.currentTarget);
         break;
 
-      case "sections":
+      case 'sections':
         setAnchorSections(event.currentTarget);
         break;
 
-      case "sharpening":
+      case 'sharpening':
         setAnchorSharpening(event.currentTarget);
         break;
 
-      case "packaging":
+      case 'packaging':
         setAnchorPackaging(event.currentTarget);
         break;
 
@@ -134,7 +134,7 @@ export default function BottomNavbar() {
 
   useEffect(() => {
     let isSubscribed = true;
-    const mainRoute = `/${currentPath.split("/")[1]}`;
+    const mainRoute = `/${currentPath.split('/')[1]}`;
     if (isSubscribed) setValue(mainRoute);
     return () => (isSubscribed = false);
   }, [currentPath]);
@@ -142,53 +142,43 @@ export default function BottomNavbar() {
   return (
     <Paper
       sx={{
-        position: "fixed",
+        position: 'fixed',
         bottom: 0,
         left: 0,
         right: 0,
       }}
     >
-      <InventoryPopover
-        open={anchorInventory}
-        handleClose={handleInventoryPopoverClose}
-      />
-      <SectionsPopover
-        open={anchorSections}
-        handleClose={handleInventoryPopoverClose}
-      />
+      <InventoryPopover open={anchorInventory} handleClose={handleInventoryPopoverClose} />
+      <SectionsPopover open={anchorSections} handleClose={handleInventoryPopoverClose} />
 
       <DualPopover
-        type={"sharpening"}
+        type={'sharpening'}
         open={anchorSharpening}
         handleClose={handleInventoryPopoverClose}
       />
       <DualPopover
-        type={"packaging"}
+        type={'packaging'}
         open={anchorPackaging}
         handleClose={handleInventoryPopoverClose}
       />
 
       <BottomNavigation
         showLabels
-        sx={{ display: { xs: "none", md: "flex" } }}
+        sx={{ display: { xs: 'none', md: 'flex' } }}
         value={value}
         onChange={(event, newValue) => {
           setValue(newValue);
           navigate(newValue);
         }}
       >
+        <BottomNavigationAction value={'/'} label="Inicio" icon={<DashboardIcon />} />
         <BottomNavigationAction
-          value={"/"}
-          label="Inicio"
-          icon={<DashboardIcon />}
-        />
-        <BottomNavigationAction
-          onClick={handleInventoryPopoverOpen("sharpening")}
+          onClick={handleInventoryPopoverOpen('sharpening')}
           label="Refilado"
           icon={<ContentCutIcon />}
         />
         <BottomNavigationAction
-          onClick={handleInventoryPopoverOpen("packaging")}
+          onClick={handleInventoryPopoverOpen('packaging')}
           label="Empacado"
           icon={<BackpackIcon />}
         />
@@ -206,25 +196,21 @@ export default function BottomNavbar() {
       </BottomNavigation>
       <BottomNavigation
         showLabels
-        sx={{ display: { xs: "flex", md: "none" } }}
+        sx={{ display: { xs: 'flex', md: 'none' } }}
         value={value}
         onChange={(event, newValue) => {
           setValue(newValue);
           navigate(newValue);
         }}
       >
+        <BottomNavigationAction value={'/'} label="Inicio" icon={<DashboardIcon />} />
         <BottomNavigationAction
-          value={"/"}
-          label="Inicio"
-          icon={<DashboardIcon />}
-        />
-        <BottomNavigationAction
-          onClick={handleInventoryPopoverOpen("inventory")}
+          onClick={handleInventoryPopoverOpen('inventory')}
           label="Inventario"
           icon={<InventoryIcon />}
         />
         <BottomNavigationAction
-          onClick={handleInventoryPopoverOpen("sections")}
+          onClick={handleInventoryPopoverOpen('sections')}
           label="Más opciones"
           icon={<MoreHorizIcon />}
         />

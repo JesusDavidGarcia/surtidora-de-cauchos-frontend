@@ -1,21 +1,21 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 
-import CircularProgress from "@mui/material/CircularProgress";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogTitle from "@mui/material/DialogTitle";
-import FormControl from "@mui/material/FormControl";
-import TextField from "@mui/material/TextField";
-import Button from "@mui/material/Button";
-import Dialog from "@mui/material/Dialog";
-import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
+import CircularProgress from '@mui/material/CircularProgress';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
+import FormControl from '@mui/material/FormControl';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
 
-import $ from "jquery";
-import mainURL from "../../config/environment";
+import $ from 'jquery';
+import mainURL from '../../config/environment';
 
 const emptyModel = {
-  name: "",
+  name: '',
 };
 
 export default function CreatePackaging(props) {
@@ -34,7 +34,7 @@ export default function CreatePackaging(props) {
       [name]: value,
     });
 
-    if (model.fullName !== "") {
+    if (model.fullName !== '') {
       setFormComplete(true);
     }
   };
@@ -42,25 +42,25 @@ export default function CreatePackaging(props) {
   const handleSubmit = (event) => {
     event.preventDefault();
     setLoading(true);
-    const token = JSON.parse(localStorage.getItem("userInfo")).token;
+    const token = JSON.parse(localStorage.getItem('userInfo')).token;
 
     $.ajax({
-      method: "POST",
-      url: mainURL + "packaging",
-      contentType: "application/json",
+      method: 'POST',
+      url: mainURL + 'packaging',
+      contentType: 'application/json',
       headers: {
-        Authorization: "Bearer " + token,
+        Authorization: 'Bearer ' + token,
       },
       data: JSON.stringify(model),
     })
       .done((res) => {
         setLoading(false);
-        props.handleShowNotification("success", "Empaque agregado con éxito");
+        props.handleShowNotification('success', 'Empaque agregado con éxito');
         handleClear();
       })
       .fail((res) => {
         setLoading(false);
-        props.handleShowNotification("error", res.responseText);
+        props.handleShowNotification('error', res.responseText);
         handleClear();
       });
   };
@@ -74,14 +74,14 @@ export default function CreatePackaging(props) {
 
   return (
     <Dialog open={props.open} onClose={props.handleClose}>
-      <DialogTitle>{"Crear empaque"}</DialogTitle>
-      <DialogContent sx={{ minWidth: "20rem" }}>
+      <DialogTitle>{'Crear empaque'}</DialogTitle>
+      <DialogContent sx={{ minWidth: '20rem' }}>
         <Box component="form" onSubmit={handleSubmit}>
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <FormControl fullWidth required>
                 <TextField
-                  label={"Nombre"}
+                  label={'Nombre'}
                   onChange={handleChange}
                   value={model.name}
                   variant="standard"
@@ -99,19 +99,15 @@ export default function CreatePackaging(props) {
       </DialogContent>
       <DialogActions>
         {isLoading ? (
-          <Grid container justifyContent={"center"}>
+          <Grid container justifyContent={'center'}>
             <CircularProgress />
           </Grid>
         ) : (
-          <Grid container justifyContent={"flex-end"}>
+          <Grid container justifyContent={'flex-end'}>
             <Button type="submit" onClick={handleClear}>
               Cerrar
             </Button>
-            <Button
-              type="submit"
-              disabled={!isFormComplete}
-              onClick={handleSubmit}
-            >
+            <Button type="submit" disabled={!isFormComplete} onClick={handleSubmit}>
               Agregar
             </Button>
           </Grid>

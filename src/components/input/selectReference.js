@@ -1,31 +1,29 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 
-import FormControl from "@mui/material/FormControl";
-import Autocomplete from "@mui/material/Autocomplete";
-import TextField from "@mui/material/TextField";
+import FormControl from '@mui/material/FormControl';
+import Autocomplete from '@mui/material/Autocomplete';
+import TextField from '@mui/material/TextField';
 
-import $ from "jquery";
-import mainURL from "../../config/environment";
+import $ from 'jquery';
+import mainURL from '../../config/environment';
 
 const useReferences = (refresh, includeSecondary) => {
   const [references, setReferences] = useState([]);
   useEffect(() => {
-    const token = JSON.parse(localStorage.getItem("userInfo")).token;
+    const token = JSON.parse(localStorage.getItem('userInfo')).token;
     let isSubscribed = true;
     const include = includeSecondary ?? false;
     console.log(include);
     $.ajax({
-      method: "GET",
+      method: 'GET',
       url: `${mainURL}rubber-reference/get-all?includeSecondary=${include}`,
-      contentType: "application/json",
+      contentType: 'application/json',
       headers: {
-        Authorization: "Bearer " + token,
+        Authorization: 'Bearer ' + token,
       },
     }).done((res) => {
       const aux = res.sort((a, b) =>
-        `${a.reference} ${a.application}`.localeCompare(
-          `${b.reference} ${b.application}`
-        )
+        `${a.reference} ${a.application}`.localeCompare(`${b.reference} ${b.application}`),
       );
       if (isSubscribed) setReferences(aux);
     });
@@ -44,11 +42,7 @@ export default function SelectReference(props) {
   const references = useReferences(refresh, includeSecondary);
 
   return (
-    <FormControl
-      sx={{ height: "56px", justifyContent: "flex-end" }}
-      fullWidth
-      required={required}
-    >
+    <FormControl sx={{ height: '56px', justifyContent: 'flex-end' }} fullWidth required={required}>
       <Autocomplete
         id="tags-standard"
         options={references}
@@ -58,11 +52,7 @@ export default function SelectReference(props) {
           handleChange(newValue);
         }}
         renderInput={(params) => (
-          <TextField
-            {...params}
-            variant="standard"
-            label={title ?? "Referencia"}
-          />
+          <TextField {...params} variant="standard" label={title ?? 'Referencia'} />
         )}
       />
     </FormControl>

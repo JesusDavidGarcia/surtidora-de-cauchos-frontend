@@ -1,17 +1,17 @@
-import React from "react";
+import React from 'react';
 
 //MUI
-import FormControl from "@mui/material/FormControl";
-import IconButton from "@mui/material/IconButton";
-import TextField from "@mui/material/TextField";
-import Button from "@mui/material/Button";
-import Grid from "@mui/material/Grid";
+import FormControl from '@mui/material/FormControl';
+import IconButton from '@mui/material/IconButton';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import Grid from '@mui/material/Grid';
 
 //Icons
-import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
-import PlaylistAddIcon from "@mui/icons-material/PlaylistAdd";
-import SearchIcon from "@mui/icons-material/Search";
-import ClearIcon from "@mui/icons-material/Clear";
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import PlaylistAddIcon from '@mui/icons-material/PlaylistAdd';
+import SearchIcon from '@mui/icons-material/Search';
+import ClearIcon from '@mui/icons-material/Clear';
 
 /* import mainURL from "../../config/environment";
 import $ from "jquery"; */
@@ -75,18 +75,18 @@ export default function SearchAndCreate(props) {
       >
         <FormControl fullWidth>
           <TextField
-            label={title ?? "Buscar por nombre"}
+            label={title ?? 'Buscar por nombre'}
             variant="standard"
             onChange={handleSearch}
             value={searchText}
             InputProps={{
               startAdornment: <SearchIcon color="action" />,
               endAdornment: showAdvanceSearchIcon ? (
-                <IconButton size="small" onClick={handleOpenDialog("search")}>
+                <IconButton size="small" onClick={handleOpenDialog('search')}>
                   <ArrowDropDownIcon color="action" />
                 </IconButton>
               ) : showRefreshIcon ? (
-                <IconButton size="small" onClick={handleOpenDialog("refresh")}>
+                <IconButton size="small" onClick={handleOpenDialog('refresh')}>
                   <ClearIcon color="action" />
                 </IconButton>
               ) : null,
@@ -99,11 +99,11 @@ export default function SearchAndCreate(props) {
           item
           xs={showDownloadReportOption ? 3 : 6}
           md={showDownloadReportOption ? 2 : 4}
-          sx={{ textAlign: "end", alignSelf: "center" }}
+          sx={{ textAlign: 'end', alignSelf: 'center' }}
         >
-          <Button variant="contained" onClick={handleOpenDialog("create")}>
+          <Button variant="contained" onClick={handleOpenDialog('create')}>
             <PlaylistAddIcon /* sx={{ mr: 1 }} */ />
-            {showDownloadReportOption ? null : buttonLabel ?? "Crear"}
+            {showDownloadReportOption ? null : buttonLabel ?? 'Crear'}
           </Button>
         </Grid>
       ) : null}
@@ -112,7 +112,7 @@ export default function SearchAndCreate(props) {
           item
           xs={permission ? 3 : 6}
           md={permission ? 2 : 4}
-          sx={{ textAlign: "end", alignSelf: "center" }}
+          sx={{ textAlign: 'end', alignSelf: 'center' }}
         >
           {props.children}
         </Grid>

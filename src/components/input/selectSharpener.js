@@ -1,31 +1,29 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 
-import FormControl from "@mui/material/FormControl";
-import Autocomplete from "@mui/material/Autocomplete";
-import TextField from "@mui/material/TextField";
+import FormControl from '@mui/material/FormControl';
+import Autocomplete from '@mui/material/Autocomplete';
+import TextField from '@mui/material/TextField';
 
-import $ from "jquery";
-import mainURL from "../../config/environment";
+import $ from 'jquery';
+import mainURL from '../../config/environment';
 
 const useSharpeners = (reference) => {
   const [sharpeners, setSharpeners] = useState([]);
   useEffect(() => {
-    const token = JSON.parse(localStorage.getItem("userInfo")).token;
+    const token = JSON.parse(localStorage.getItem('userInfo')).token;
     let isSubscribed = true;
     if (reference) {
       $.ajax({
-        method: "GET",
+        method: 'GET',
         url: `${mainURL}operator-sharpening/get-all?reference=${reference}`,
-        contentType: "application/json",
+        contentType: 'application/json',
         headers: {
-          Authorization: "Bearer " + token,
+          Authorization: 'Bearer ' + token,
         },
       }).done((res) => {
         console.log(res);
         const aux = res.sort((a, b) =>
-          `${a.reference} ${a.application}`.localeCompare(
-            `${b.reference} ${b.application}`
-          )
+          `${a.reference} ${a.application}`.localeCompare(`${b.reference} ${b.application}`),
         );
         if (isSubscribed) setSharpeners(aux);
       });
@@ -55,9 +53,7 @@ export default function SelectSharpener(props) {
         onChange={(event, newValue) => {
           handleChange(newValue);
         }}
-        renderInput={(params) => (
-          <TextField {...params} variant="standard" label="Refilador" />
-        )}
+        renderInput={(params) => <TextField {...params} variant="standard" label="Refilador" />}
       />
     </FormControl>
   );

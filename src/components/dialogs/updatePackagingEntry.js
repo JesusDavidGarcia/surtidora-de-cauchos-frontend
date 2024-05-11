@@ -1,28 +1,28 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 
-import CircularProgress from "@mui/material/CircularProgress";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogTitle from "@mui/material/DialogTitle";
-import FormControl from "@mui/material/FormControl";
-import TextField from "@mui/material/TextField";
-import Button from "@mui/material/Button";
-import Dialog from "@mui/material/Dialog";
-import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
+import CircularProgress from '@mui/material/CircularProgress';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
+import FormControl from '@mui/material/FormControl';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
 
 //MUI-LAB
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
-import { DatePicker } from "@mui/x-date-pickers";
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { DatePicker } from '@mui/x-date-pickers';
 
-import $ from "jquery";
-import mainURL from "../../config/environment";
-import SelectPackaging from "../input/selectPackaging";
+import $ from 'jquery';
+import mainURL from '../../config/environment';
+import SelectPackaging from '../input/selectPackaging';
 
 const emptyModel = {
-  rubberReferenceId: "",
-  packagingId: "",
+  rubberReferenceId: '',
+  packagingId: '',
   quantity: 0,
   packagingDate: Date.now(),
 };
@@ -54,23 +54,20 @@ export default function UpdateSharpeningEntry(props) {
   const handleSubmit = (event) => {
     event.preventDefault();
     setLoading(true);
-    const token = JSON.parse(localStorage.getItem("userInfo")).token;
+    const token = JSON.parse(localStorage.getItem('userInfo')).token;
 
     $.ajax({
-      method: "PUT",
+      method: 'PUT',
       url: `${mainURL}packaging-entry/${entryId}`,
-      contentType: "application/json",
+      contentType: 'application/json',
       headers: {
-        Authorization: "Bearer " + token,
+        Authorization: 'Bearer ' + token,
       },
       data: JSON.stringify(model),
     })
       .done((res) => {
         setLoading(false);
-        props.handleShowNotification(
-          "success",
-          "Registro actualizado con éxito"
-        );
+        props.handleShowNotification('success', 'Registro actualizado con éxito');
         handleClear();
       })
       .fail((res) => {
@@ -78,7 +75,7 @@ export default function UpdateSharpeningEntry(props) {
         if (res.status === 409) {
           handleClear();
         } else {
-          props.handleShowNotification("error", res.responseText);
+          props.handleShowNotification('error', res.responseText);
           handleClear();
         }
       });
@@ -92,15 +89,15 @@ export default function UpdateSharpeningEntry(props) {
   };
 
   useEffect(() => {
-    const token = JSON.parse(localStorage.getItem("userInfo")).token;
-    const host = JSON.parse(localStorage.getItem("userInfo")).hostName;
-    if (entryId !== "") {
+    const token = JSON.parse(localStorage.getItem('userInfo')).token;
+    const host = JSON.parse(localStorage.getItem('userInfo')).hostName;
+    if (entryId !== '') {
       $.ajax({
-        method: "GET",
+        method: 'GET',
         url: `${mainURL}packaging-entry/${entryId}`,
-        contentType: "application/json",
+        contentType: 'application/json',
         headers: {
-          Authorization: "Bearer " + token,
+          Authorization: 'Bearer ' + token,
           hostname: host,
         },
       }).done((res) => {
@@ -111,7 +108,7 @@ export default function UpdateSharpeningEntry(props) {
 
   return (
     <Dialog open={props.open} onClose={props.handleClose} maxWidth="md">
-      <DialogTitle>{"Actualizar ingreso"}</DialogTitle>
+      <DialogTitle>{'Actualizar ingreso'}</DialogTitle>
       <DialogContent>
         <Box component="form" onSubmit={handleSubmit}>
           <Grid container spacing={2} sx={{ pt: 2 }}>
@@ -119,7 +116,7 @@ export default function UpdateSharpeningEntry(props) {
               <FormControl fullWidth>
                 <LocalizationProvider dateAdapter={AdapterDateFns}>
                   <DatePicker
-                    label={"Fecha de empacado"}
+                    label={'Fecha de empacado'}
                     value={model.packagingDate}
                     onChange={handleDateChange}
                     format="dd/MM/yyyy"
@@ -144,14 +141,14 @@ export default function UpdateSharpeningEntry(props) {
             <Grid item xs={12} md={4}>
               <FormControl fullWidth required>
                 <TextField
-                  label={"Cantidad"}
+                  label={'Cantidad'}
                   onChange={handleChange}
                   value={model.quantity}
                   variant="standard"
                   name="quantity"
                   margin="dense"
                   type="number"
-                  inputProps={{ step: "0.25" }}
+                  inputProps={{ step: '0.25' }}
                   fullWidth
                   required
                 />
@@ -162,11 +159,11 @@ export default function UpdateSharpeningEntry(props) {
       </DialogContent>
       <DialogActions>
         {isLoading ? (
-          <Grid container justifyContent={"center"}>
+          <Grid container justifyContent={'center'}>
             <CircularProgress />
           </Grid>
         ) : (
-          <Grid container justifyContent={"flex-end"}>
+          <Grid container justifyContent={'flex-end'}>
             <Button type="submit" onClick={handleClear}>
               Cerrar
             </Button>

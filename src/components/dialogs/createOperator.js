@@ -1,23 +1,23 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 
-import CircularProgress from "@mui/material/CircularProgress";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogTitle from "@mui/material/DialogTitle";
-import FormControl from "@mui/material/FormControl";
-import TextField from "@mui/material/TextField";
-import Button from "@mui/material/Button";
-import Dialog from "@mui/material/Dialog";
-import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
+import CircularProgress from '@mui/material/CircularProgress';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
+import FormControl from '@mui/material/FormControl';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
 
-import $ from "jquery";
-import mainURL from "../../config/environment";
-import SelectArea from "../input/selectArea";
+import $ from 'jquery';
+import mainURL from '../../config/environment';
+import SelectArea from '../input/selectArea';
 
 const emptyModel = {
-  fullName: "",
-  area: "",
+  fullName: '',
+  area: '',
 };
 
 export default function CreateOperatorDialog(props) {
@@ -36,7 +36,7 @@ export default function CreateOperatorDialog(props) {
       [name]: value,
     });
 
-    if (model.fullName !== "") {
+    if (model.fullName !== '') {
       setFormComplete(true);
     }
   };
@@ -44,25 +44,25 @@ export default function CreateOperatorDialog(props) {
   const handleSubmit = (event) => {
     event.preventDefault();
     setLoading(true);
-    const token = JSON.parse(localStorage.getItem("userInfo")).token;
+    const token = JSON.parse(localStorage.getItem('userInfo')).token;
 
     $.ajax({
-      method: "POST",
-      url: mainURL + "operator",
-      contentType: "application/json",
+      method: 'POST',
+      url: mainURL + 'operator',
+      contentType: 'application/json',
       headers: {
-        Authorization: "Bearer " + token,
+        Authorization: 'Bearer ' + token,
       },
       data: JSON.stringify(model),
     })
       .done((res) => {
         setLoading(false);
-        props.handleShowNotification("success", "Operario agregado con éxito");
+        props.handleShowNotification('success', 'Operario agregado con éxito');
         handleClear();
       })
       .fail((res) => {
         setLoading(false);
-        props.handleShowNotification("error", res.responseText);
+        props.handleShowNotification('error', res.responseText);
         handleClear();
       });
   };
@@ -76,14 +76,14 @@ export default function CreateOperatorDialog(props) {
 
   return (
     <Dialog open={props.open} onClose={props.handleClose} maxWidth="md">
-      <DialogTitle>{"Crear operario"}</DialogTitle>
+      <DialogTitle>{'Crear operario'}</DialogTitle>
       <DialogContent>
         <Box component="form" onSubmit={handleSubmit}>
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <FormControl fullWidth required>
                 <TextField
-                  label={"Nombre"}
+                  label={'Nombre'}
                   onChange={handleChange}
                   value={model.fullName}
                   variant="standard"
@@ -97,30 +97,22 @@ export default function CreateOperatorDialog(props) {
               </FormControl>
             </Grid>
             <Grid item xs={12}>
-              <SelectArea
-                name="area"
-                value={model.area}
-                handleChange={handleChange}
-              />
+              <SelectArea name="area" value={model.area} handleChange={handleChange} />
             </Grid>
           </Grid>
         </Box>
       </DialogContent>
       <DialogActions>
         {isLoading ? (
-          <Grid container justifyContent={"center"}>
+          <Grid container justifyContent={'center'}>
             <CircularProgress />
           </Grid>
         ) : (
-          <Grid container justifyContent={"flex-end"}>
+          <Grid container justifyContent={'flex-end'}>
             <Button type="submit" onClick={handleClear}>
               Cerrar
             </Button>
-            <Button
-              type="submit"
-              disabled={!isFormComplete}
-              onClick={handleSubmit}
-            >
+            <Button type="submit" disabled={!isFormComplete} onClick={handleSubmit}>
               Agregar
             </Button>
           </Grid>

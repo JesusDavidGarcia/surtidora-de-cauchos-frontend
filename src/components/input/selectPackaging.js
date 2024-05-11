@@ -1,23 +1,23 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 
-import FormControl from "@mui/material/FormControl";
-import InputLabel from "@mui/material/InputLabel";
-import Select from "@mui/material/Select";
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+import Select from '@mui/material/Select';
 
-import $ from "jquery";
-import mainURL from "../../config/environment";
+import $ from 'jquery';
+import mainURL from '../../config/environment';
 
 const usePackaging = (area) => {
   const [packaging, setPackaging] = useState([]);
   useEffect(() => {
-    const token = JSON.parse(localStorage.getItem("userInfo")).token;
+    const token = JSON.parse(localStorage.getItem('userInfo')).token;
     let isSubscribed = true;
     $.ajax({
-      method: "GET",
+      method: 'GET',
       url: `${mainURL}packaging/get-all`,
-      contentType: "application/json",
+      contentType: 'application/json',
       headers: {
-        Authorization: "Bearer " + token,
+        Authorization: 'Bearer ' + token,
       },
     }).done((res) => {
       if (isSubscribed) setPackaging(res);
@@ -37,19 +37,9 @@ export default function SelectPackaging(props) {
   const packaging = usePackaging();
 
   return (
-    <FormControl
-      fullWidth
-      required={required}
-      sx={{ height: "56px", justifyContent: "flex-end" }}
-    >
-      <InputLabel variant="standard">{title ?? "Empaque"}</InputLabel>
-      <Select
-        value={value}
-        onChange={handleChange}
-        name={name}
-        variant="standard"
-        native
-      >
+    <FormControl fullWidth required={required} sx={{ height: '56px', justifyContent: 'flex-end' }}>
+      <InputLabel variant="standard">{title ?? 'Empaque'}</InputLabel>
+      <Select value={value} onChange={handleChange} name={name} variant="standard" native>
         <option value="" />
         {packaging.map((operator) => (
           <option key={operator.id} value={operator.id}>

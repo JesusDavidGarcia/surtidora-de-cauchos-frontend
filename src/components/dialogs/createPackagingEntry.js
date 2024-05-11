@@ -1,30 +1,30 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
 
-import CircularProgress from "@mui/material/CircularProgress";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogTitle from "@mui/material/DialogTitle";
-import FormControl from "@mui/material/FormControl";
-import TextField from "@mui/material/TextField";
-import Button from "@mui/material/Button";
-import Dialog from "@mui/material/Dialog";
-import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
+import CircularProgress from '@mui/material/CircularProgress';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
+import FormControl from '@mui/material/FormControl';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
 
-import SelectReference from "../input/selectReference";
+import SelectReference from '../input/selectReference';
 
-import $ from "jquery";
-import mainURL from "../../config/environment";
+import $ from 'jquery';
+import mainURL from '../../config/environment';
 
 //MUI-LAB
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
-import { DatePicker } from "@mui/x-date-pickers";
-import SelectPackaging from "../input/selectPackaging";
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { DatePicker } from '@mui/x-date-pickers';
+import SelectPackaging from '../input/selectPackaging';
 
 const emptyModel = {
-  rubberReferenceId: "",
-  packagingId: "",
+  rubberReferenceId: '',
+  packagingId: '',
   quantity: 0,
   packagingDate: Date.now(),
 };
@@ -72,27 +72,24 @@ export default function CreatePackagingEntry(props) {
   const handleSubmit = (event) => {
     event.preventDefault();
     setLoading(true);
-    const token = JSON.parse(localStorage.getItem("userInfo")).token;
+    const token = JSON.parse(localStorage.getItem('userInfo')).token;
 
     const formatted = {
       ...model,
       packagingDate: new Date(model.packagingDate).toISOString(),
     };
     $.ajax({
-      method: "POST",
+      method: 'POST',
       url: `${mainURL}packaging-entry`,
-      contentType: "application/json",
+      contentType: 'application/json',
       headers: {
-        Authorization: "Bearer " + token,
+        Authorization: 'Bearer ' + token,
       },
       data: JSON.stringify(formatted),
     })
       .done((res) => {
         setLoading(false);
-        props.handleShowNotification(
-          "success",
-          "Inventario actualizado con éxito"
-        );
+        props.handleShowNotification('success', 'Inventario actualizado con éxito');
         handleClear();
       })
       .fail((res) => {
@@ -100,7 +97,7 @@ export default function CreatePackagingEntry(props) {
         if (res.status === 409) {
           handleClear();
         } else {
-          props.handleShowNotification("error", res.responseText);
+          props.handleShowNotification('error', res.responseText);
           handleClear();
         }
       });
@@ -114,15 +111,15 @@ export default function CreatePackagingEntry(props) {
   };
 
   useEffect(() => {
-    const token = JSON.parse(localStorage.getItem("userInfo")).token;
-    const host = JSON.parse(localStorage.getItem("userInfo")).hostName;
-    if (model.rubberReferenceId !== "" && props.open) {
+    const token = JSON.parse(localStorage.getItem('userInfo')).token;
+    const host = JSON.parse(localStorage.getItem('userInfo')).hostName;
+    if (model.rubberReferenceId !== '' && props.open) {
       $.ajax({
-        method: "GET",
+        method: 'GET',
         url: `${mainURL}rubber-reference/${model.rubberReferenceId}`,
-        contentType: "application/json",
+        contentType: 'application/json',
         headers: {
-          Authorization: "Bearer " + token,
+          Authorization: 'Bearer ' + token,
           hostname: host,
         },
       }).done((res) => {
@@ -133,7 +130,7 @@ export default function CreatePackagingEntry(props) {
 
   return (
     <Dialog open={props.open} onClose={props.handleClose} maxWidth="md">
-      <DialogTitle>{"Registrar ingreso"}</DialogTitle>
+      <DialogTitle>{'Registrar ingreso'}</DialogTitle>
       <DialogContent>
         <Box component="form" onSubmit={handleSubmit}>
           <Grid container spacing={2} sx={{ pt: 2 }}>
@@ -141,7 +138,7 @@ export default function CreatePackagingEntry(props) {
               <FormControl fullWidth>
                 <LocalizationProvider dateAdapter={AdapterDateFns}>
                   <DatePicker
-                    label={"Fecha de empacado"}
+                    label={'Fecha de empacado'}
                     value={model.packagingDate}
                     onChange={handleDateChange}
                     format="dd/MM/yyyy"
@@ -167,14 +164,14 @@ export default function CreatePackagingEntry(props) {
             <Grid item xs={12} md={4}>
               <FormControl fullWidth required>
                 <TextField
-                  label={"Cantidad"}
+                  label={'Cantidad'}
                   onChange={handleChange}
                   value={model.quantity}
                   variant="standard"
                   name="quantity"
                   margin="dense"
                   type="number"
-                  inputProps={{ step: "0.25", max: maxQuantity }}
+                  inputProps={{ step: '0.25', max: maxQuantity }}
                   fullWidth
                   required
                 />
@@ -185,19 +182,15 @@ export default function CreatePackagingEntry(props) {
       </DialogContent>
       <DialogActions>
         {isLoading ? (
-          <Grid container justifyContent={"center"}>
+          <Grid container justifyContent={'center'}>
             <CircularProgress />
           </Grid>
         ) : (
-          <Grid container justifyContent={"flex-end"}>
+          <Grid container justifyContent={'flex-end'}>
             <Button type="submit" onClick={handleClear}>
               Cerrar
             </Button>
-            <Button
-              type="submit"
-              disabled={model.quantity === 0}
-              onClick={handleSubmit}
-            >
+            <Button type="submit" disabled={model.quantity === 0} onClick={handleSubmit}>
               Agregar
             </Button>
           </Grid>

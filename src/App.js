@@ -1,11 +1,11 @@
-import { Route, Routes } from "react-router-dom";
-import "./App.css";
+import { Route, Routes } from 'react-router-dom';
+import './App.css';
 
-import Login from "./views/public/login";
-import ChangePassword from "./views/public/changePassword";
-import ForgotPassword from "./views/public/forgotPassword";
-import ResetPassword from "./views/public/resetPassword";
-import ValidateSession from "./views/private/validateSession";
+import Login from './views/public/login';
+import ChangePassword from './views/public/changePassword';
+import ForgotPassword from './views/public/forgotPassword';
+import ResetPassword from './views/public/resetPassword';
+import ValidateSession from './views/private/validateSession';
 
 function App() {
   return (

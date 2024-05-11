@@ -1,21 +1,21 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 
-import CircularProgress from "@mui/material/CircularProgress";
-import CssBaseline from "@mui/material/CssBaseline";
-import TextField from "@mui/material/TextField";
-import Button from "@mui/material/Button";
+import CircularProgress from '@mui/material/CircularProgress';
+import CssBaseline from '@mui/material/CssBaseline';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
 //import Alert from "@mui/material/Alert";
-import Paper from "@mui/material/Paper";
-import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
+import Paper from '@mui/material/Paper';
+import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
 
-import Copyright from "../../components/copyright";
+import Copyright from '../../components/copyright';
 
 //React router dom
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
 
-import mainURL from "../../config/environment";
-import $ from "jquery";
+import mainURL from '../../config/environment';
+import $ from 'jquery';
 
 export default function ChangePassword() {
   const navigate = useNavigate();
@@ -23,9 +23,9 @@ export default function ChangePassword() {
 
   //Data management
   const [model, setModel] = useState({
-    email: "",
-    oldPassword: "",
-    newPassword: "",
+    email: '',
+    oldPassword: '',
+    newPassword: '',
   });
 
   const handleChange = (event) => {
@@ -55,15 +55,15 @@ export default function ChangePassword() {
     event.preventDefault();
 
     $.ajax({
-      method: "POST",
-      url: mainURL + "login/change-password",
-      contentType: "application/json",
+      method: 'POST',
+      url: mainURL + 'login/change-password',
+      contentType: 'application/json',
       data: JSON.stringify(model),
     })
       .done((res) => {
         setLoading(false);
-        localStorage.setItem("userInfo", JSON.stringify(res));
-        navigate("/login");
+        localStorage.setItem('userInfo', JSON.stringify(res));
+        navigate('/login');
       })
       .fail((res) => {
         setLoading(false);
@@ -72,7 +72,7 @@ export default function ChangePassword() {
   };
 
   return (
-    <Grid container component="main" sx={{ height: "100vh" }}>
+    <Grid container component="main" sx={{ height: '100vh' }}>
       <CssBaseline />
       <Grid
         item
@@ -80,14 +80,12 @@ export default function ChangePassword() {
         sm={4}
         md={7}
         sx={{
-          backgroundImage: "url(assets/bg-black.jpg)",
-          backgroundRepeat: "no-repeat",
+          backgroundImage: 'url(assets/bg-black.jpg)',
+          backgroundRepeat: 'no-repeat',
           backgroundColor: (t) =>
-            t.palette.mode === "light"
-              ? t.palette.grey[50]
-              : t.palette.grey[900],
-          backgroundSize: "cover",
-          backgroundPosition: "center",
+            t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
         }}
       />
       <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
@@ -95,21 +93,16 @@ export default function ChangePassword() {
           sx={{
             my: 8,
             mx: 4,
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-            height: "100%",
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            height: '100%',
           }}
         >
-          <img src="assets/logo.png" width={"80%"} alt="logo" />
+          <img src="assets/logo.png" width={'80%'} alt="logo" />
 
-          <Box
-            component="form"
-            noValidate
-            onSubmit={handleSubmit}
-            sx={{ mt: 1, width: "80%" }}
-          >
+          <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1, width: '80%' }}>
             <TextField
               margin="normal"
               required
@@ -148,19 +141,10 @@ export default function ChangePassword() {
               <CircularProgress />
             ) : (
               <React.Fragment>
-                <Button
-                  type="submit"
-                  fullWidth
-                  variant="contained"
-                  sx={{ mt: 3, mb: 2 }}
-                >
+                <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
                   Cambiar contraseña
-                </Button>{" "}
-                <Button
-                  fullWidth
-                  variant="outlined"
-                  onClick={() => navigate("")}
-                >
+                </Button>{' '}
+                <Button fullWidth variant="outlined" onClick={() => navigate('')}>
                   Volver a inicio de sesión
                 </Button>
               </React.Fragment>

@@ -1,21 +1,21 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 
-import CircularProgress from "@mui/material/CircularProgress";
-import CssBaseline from "@mui/material/CssBaseline";
-import TextField from "@mui/material/TextField";
-import Button from "@mui/material/Button";
-import Alert from "@mui/material/Alert";
-import Paper from "@mui/material/Paper";
-import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
+import CircularProgress from '@mui/material/CircularProgress';
+import CssBaseline from '@mui/material/CssBaseline';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import Alert from '@mui/material/Alert';
+import Paper from '@mui/material/Paper';
+import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
 
-import Copyright from "../../components/copyright";
+import Copyright from '../../components/copyright';
 
 //React router dom
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link } from 'react-router-dom';
 
-import mainURL from "../../config/environment";
-import $ from "jquery";
+import mainURL from '../../config/environment';
+import $ from 'jquery';
 
 export default function Login() {
   const navigate = useNavigate();
@@ -24,15 +24,15 @@ export default function Login() {
 
   //Data management
   const [model, setModel] = useState({
-    email: "",
-    password: "",
+    email: '',
+    password: '',
   });
 
   //Notification management
   const [showNotification, setShowNotification] = useState(false);
   const [notificationMessage, setNotificationMessage] = useState({
-    severity: "",
-    message: "",
+    severity: '',
+    message: '',
   });
 
   const handleShowNotification = (severity, message) => {
@@ -57,28 +57,28 @@ export default function Login() {
     event.preventDefault();
     setLoading(true);
     $.ajax({
-      method: "POST",
-      url: mainURL + "login/authenticate-user",
-      contentType: "application/json",
+      method: 'POST',
+      url: mainURL + 'login/authenticate-user',
+      contentType: 'application/json',
       data: JSON.stringify(model),
     })
       .done((res) => {
         setLoading(false);
-        localStorage.setItem("userInfo", JSON.stringify(res));
-        navigate("/");
+        localStorage.setItem('userInfo', JSON.stringify(res));
+        navigate('/');
       })
       .fail((res) => {
         setLoading(false);
         if (res.status === 401) {
-          handleShowNotification("warning", "Contraseña o email inválidos");
+          handleShowNotification('warning', 'Contraseña o email inválidos');
         } else if (res.status === 500) {
-          handleShowNotification("warning", "Algo anda mal");
+          handleShowNotification('warning', 'Algo anda mal');
         }
       });
   };
 
   return (
-    <Grid container component="main" sx={{ height: "100vh" }}>
+    <Grid container component="main" sx={{ height: '100vh' }}>
       <CssBaseline />
       <Grid
         item
@@ -86,14 +86,12 @@ export default function Login() {
         sm={4}
         md={7}
         sx={{
-          backgroundImage: "url(assets/bg-black.jpg)",
-          backgroundRepeat: "no-repeat",
+          backgroundImage: 'url(assets/bg-black.jpg)',
+          backgroundRepeat: 'no-repeat',
           backgroundColor: (t) =>
-            t.palette.mode === "light"
-              ? t.palette.grey[50]
-              : t.palette.grey[900],
-          backgroundSize: "cover",
-          backgroundPosition: "center",
+            t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
         }}
       />
       <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
@@ -101,21 +99,16 @@ export default function Login() {
           sx={{
             my: 8,
             mx: 4,
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-            height: "100%",
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            height: '100%',
           }}
         >
-          <img src="assets/logo.png" width={"80%"} alt="logo" />
+          <img src="assets/logo.png" width={'80%'} alt="logo" />
 
-          <Box
-            component="form"
-            noValidate
-            onSubmit={handleSubmit}
-            sx={{ mt: 1, width: "80%" }}
-          >
+          <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1, width: '80%' }}>
             <TextField
               margin="normal"
               required
@@ -140,7 +133,7 @@ export default function Login() {
             />
 
             {isLoading ? (
-              <Grid container justifyContent={"center"}>
+              <Grid container justifyContent={'center'}>
                 <CircularProgress />
               </Grid>
             ) : showNotification ? (
@@ -148,14 +141,14 @@ export default function Login() {
                 {notificationMessage.message}
               </Alert>
             ) : (
-              <Grid container justifyContent={"center"} sx={{ mt: 3, mb: 2 }}>
+              <Grid container justifyContent={'center'} sx={{ mt: 3, mb: 2 }}>
                 <Button type="submit" fullWidth variant="contained">
                   Iniciar sesión
                 </Button>
               </Grid>
             )}
             {!isLoading ? (
-              <Grid container justifyContent={"center"}>
+              <Grid container justifyContent={'center'}>
                 <Grid item>
                   <Link to="/forgot-password" variant="body2">
                     ¿Olvidó su contraseña?

@@ -1,28 +1,26 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 
-import Autocomplete from "@mui/material/Autocomplete";
-import FormControl from "@mui/material/FormControl";
-import TextField from "@mui/material/TextField";
+import Autocomplete from '@mui/material/Autocomplete';
+import FormControl from '@mui/material/FormControl';
+import TextField from '@mui/material/TextField';
 
-import $ from "jquery";
-import mainURL from "../../config/environment";
+import $ from 'jquery';
+import mainURL from '../../config/environment';
 
 const useClients = (refresh) => {
   const [cllients, setClients] = useState([]);
   useEffect(() => {
-    const token = JSON.parse(localStorage.getItem("userInfo")).token;
+    const token = JSON.parse(localStorage.getItem('userInfo')).token;
     let isSubscribed = true;
     $.ajax({
-      method: "GET",
-      url: mainURL + "client/get-all",
-      contentType: "application/json",
+      method: 'GET',
+      url: mainURL + 'client/get-all',
+      contentType: 'application/json',
       headers: {
-        Authorization: "Bearer " + token,
+        Authorization: 'Bearer ' + token,
       },
     }).done((res) => {
-      const aux = res.sort((a, b) =>
-        a.name.toLowerCase().localeCompare(b.name.toLowerCase())
-      );
+      const aux = res.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()));
 
       if (isSubscribed) setClients(aux);
     });
@@ -40,11 +38,7 @@ export default function SelectClient(props) {
   const clients = useClients(refresh);
 
   return (
-    <FormControl
-      fullWidth
-      required={required}
-      sx={{ height: "56px", justifyContent: "flex-end" }}
-    >
+    <FormControl fullWidth required={required} sx={{ height: '56px', justifyContent: 'flex-end' }}>
       <Autocomplete
         id="tags-standard"
         options={clients}
@@ -53,9 +47,7 @@ export default function SelectClient(props) {
         onChange={(event, newValue) => {
           handleChange(newValue);
         }}
-        renderInput={(params) => (
-          <TextField {...params} variant="standard" label="Cliente" />
-        )}
+        renderInput={(params) => <TextField {...params} variant="standard" label="Cliente" />}
       />
     </FormControl>
   );

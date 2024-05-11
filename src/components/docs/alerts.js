@@ -1,21 +1,21 @@
-import React from "react";
+import React from 'react';
 
-import { Page, Text, View, Document, StyleSheet } from "@react-pdf/renderer";
+import { Page, Text, View, Document, StyleSheet } from '@react-pdf/renderer';
 
 const styles = StyleSheet.create({
   page: {
-    flexDirection: "column",
-    justifyContent: "flex-start",
+    flexDirection: 'column',
+    justifyContent: 'flex-start',
   },
   body: {
     paddingTop: 35,
     paddingBottom: 65,
     paddingHorizontal: 35,
-    fontFamily: "Times-Roman",
+    fontFamily: 'Times-Roman',
   },
   headers: {
-    flexDirection: "row",
-    justifyContent: "space-between",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
   title: {
     fontSize: 20,
@@ -25,56 +25,56 @@ const styles = StyleSheet.create({
   },
   section: {
     paddingVertical: 10,
-    flexDirection: "column",
+    flexDirection: 'column',
   },
   table: {
-    display: "table",
-    width: "auto",
-    borderStyle: "solid",
-    margin: "16px 0",
+    display: 'table',
+    width: 'auto',
+    borderStyle: 'solid',
+    margin: '16px 0',
     borderWidth: 1,
-    boxShadow: "0 1px 3px rgba(0,0,0,0.2)",
+    boxShadow: '0 1px 3px rgba(0,0,0,0.2)',
     borderRightWidth: 0,
     borderBottomWidth: 0,
   },
   tableRow: {
-    margin: "auto",
-    flexDirection: "row",
-    background: "#f6f6f6",
+    margin: 'auto',
+    flexDirection: 'row',
+    background: '#f6f6f6',
   },
   tableCol: {
-    width: "15%",
-    borderStyle: "solid",
+    width: '15%',
+    borderStyle: 'solid',
     borderWidth: 1,
     borderLeftWidth: 0,
     borderTopWidth: 0,
   },
   refTableCol: {
-    width: "20%",
-    borderStyle: "solid",
+    width: '20%',
+    borderStyle: 'solid',
     borderWidth: 1,
     borderLeftWidth: 0,
     borderTopWidth: 0,
   },
   appTableCol: {
-    width: "35%",
-    borderStyle: "solid",
+    width: '35%',
+    borderStyle: 'solid',
     borderWidth: 1,
     borderLeftWidth: 0,
     borderTopWidth: 0,
   },
   refTableCell: {
-    margin: "2px",
+    margin: '2px',
     fontSize: 14,
   },
   tableCell: {
-    margin: "auto",
+    margin: 'auto',
     fontSize: 14,
   },
 });
 
 const emptyData = {
-  title: "Informe de alertas Surtidora de Cauchos",
+  title: 'Informe de alertas Surtidora de Cauchos',
   createdOn: Date.now(),
   references: [],
 };
@@ -87,9 +87,7 @@ export default function AlertDocument(props) {
       <Page size="A4" style={styles.body}>
         <View style={styles.headers}>
           <Text style={styles.title}>{emptyData.title}</Text>
-          <Text style={styles.date}>
-            {new Date(emptyData.createdOn).toLocaleDateString()}
-          </Text>
+          <Text style={styles.date}>{new Date(emptyData.createdOn).toLocaleDateString()}</Text>
         </View>
 
         <View style={styles.table}>
@@ -125,9 +123,7 @@ export default function AlertDocument(props) {
                 <Text style={styles.tableCell}>{reference.maximum}</Text>
               </View>
               <View style={styles.tableCol}>
-                <Text style={styles.tableCell}>
-                  {reference.currentQuantity}
-                </Text>
+                <Text style={styles.tableCell}>{reference.currentQuantity}</Text>
               </View>
             </View>
           ))}
@@ -135,7 +131,7 @@ export default function AlertDocument(props) {
       </Page>
       <Page size="A4" style={styles.body}>
         <View style={styles.headers}>
-          <Text style={styles.title}>{"Reporte de refilado"}</Text>
+          <Text style={styles.title}>{'Reporte de refilado'}</Text>
           <Text style={styles.date}>{new Date().toLocaleDateString()}</Text>
         </View>
 

@@ -1,41 +1,39 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 
-import Autocomplete from "@mui/material/Autocomplete";
-import FormControl from "@mui/material/FormControl";
-import TextField from "@mui/material/TextField";
-import Tooltip from "@mui/material/Tooltip";
-import Grid from "@mui/material/Grid";
+import Autocomplete from '@mui/material/Autocomplete';
+import FormControl from '@mui/material/FormControl';
+import TextField from '@mui/material/TextField';
+import Tooltip from '@mui/material/Tooltip';
+import Grid from '@mui/material/Grid';
 
-import { IconButton } from "@mui/material";
-import { CheckCircle } from "@mui/icons-material";
+import { IconButton } from '@mui/material';
+import { CheckCircle } from '@mui/icons-material';
 
-import $ from "jquery";
-import mainURL from "../../config/environment";
+import $ from 'jquery';
+import mainURL from '../../config/environment';
 
 const emptyModel = {
-  name: "",
-  rubberReferenceId: "",
-  quantity: "",
+  name: '',
+  rubberReferenceId: '',
+  quantity: '',
 };
 
 const useReferences = (refresh, includeSecondary) => {
   const [references, setReferences] = useState([]);
   useEffect(() => {
-    const token = JSON.parse(localStorage.getItem("userInfo")).token;
+    const token = JSON.parse(localStorage.getItem('userInfo')).token;
     let isSubscribed = true;
     const include = includeSecondary ?? false;
     $.ajax({
-      method: "GET",
+      method: 'GET',
       url: `${mainURL}rubber-reference/get-all?includeSecondary=${include}`,
-      contentType: "application/json",
+      contentType: 'application/json',
       headers: {
-        Authorization: "Bearer " + token,
+        Authorization: 'Bearer ' + token,
       },
     }).done((res) => {
       const aux = res.sort((a, b) =>
-        `${a.reference} ${a.application}`.localeCompare(
-          `${b.reference} ${b.application}`
-        )
+        `${a.reference} ${a.application}`.localeCompare(`${b.reference} ${b.application}`),
       );
       if (isSubscribed) setReferences(aux);
     });
@@ -57,7 +55,7 @@ export default function ReferenceQuantityInput(props) {
     const value = target.value;
     const name = target.name;
 
-    if (name === "rubberReferenceId") {
+    if (name === 'rubberReferenceId') {
       const item = references.filter((x) => x.id === value)[0];
       console.log(item);
       setModel({
@@ -96,7 +94,7 @@ export default function ReferenceQuantityInput(props) {
   };
 
   return (
-    <Grid container alignItems={"center"} spacing={2}>
+    <Grid container alignItems={'center'} spacing={2}>
       <Grid item xs={12} md={8}>
         <FormControl required fullWidth>
           <Autocomplete
@@ -116,7 +114,7 @@ export default function ReferenceQuantityInput(props) {
       <Grid item xs={8} md={2}>
         <FormControl required fullWidth>
           <TextField
-            label={"Cantidad"}
+            label={'Cantidad'}
             onChange={handleChange}
             value={model.quantity}
             variant="standard"
@@ -129,10 +127,10 @@ export default function ReferenceQuantityInput(props) {
           />
         </FormControl>
       </Grid>
-      <Grid item xs={4} md={2} container justifyContent={"flex-end"}>
+      <Grid item xs={4} md={2} container justifyContent={'flex-end'}>
         <IconButton onClick={handleSubmit} disabled={model.quantity === 0}>
           <Tooltip title="Agregar referencia">
-            <CheckCircle color={model === emptyModel ? "action" : "primary"} />
+            <CheckCircle color={model === emptyModel ? 'action' : 'primary'} />
           </Tooltip>
         </IconButton>
       </Grid>

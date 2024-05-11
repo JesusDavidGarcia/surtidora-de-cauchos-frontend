@@ -1,13 +1,13 @@
-import { createTheme } from "@mui/material/styles";
+import { createTheme } from '@mui/material/styles';
 
 // A custom theme for this app
 const theme = createTheme({
   palette: {
     primary: {
-      main: "#020408",
+      main: '#020408',
     },
     secondary: {
-      main: "#888C8C",
+      main: '#888C8C',
     },
   },
 });

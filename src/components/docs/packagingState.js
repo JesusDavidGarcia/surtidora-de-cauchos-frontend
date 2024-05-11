@@ -1,17 +1,17 @@
-import React from "react";
+import React from 'react';
 
-import { Page, Text, View, Document, StyleSheet } from "@react-pdf/renderer";
+import { Page, Text, View, Document, StyleSheet } from '@react-pdf/renderer';
 
 const styles = StyleSheet.create({
   body: {
     paddingTop: 35,
     paddingBottom: 65,
     paddingHorizontal: 35,
-    fontFamily: "Times-Roman",
+    fontFamily: 'Times-Roman',
   },
   headers: {
-    flexDirection: "row",
-    justifyContent: "space-between",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
   title: {
     fontSize: 20,
@@ -20,45 +20,45 @@ const styles = StyleSheet.create({
     fontSize: 14,
   },
   table: {
-    display: "table",
-    width: "auto",
-    borderStyle: "solid",
-    margin: "16px 0",
+    display: 'table',
+    width: 'auto',
+    borderStyle: 'solid',
+    margin: '16px 0',
     borderWidth: 1,
-    boxShadow: "0 1px 3px rgba(0,0,0,0.2)",
+    boxShadow: '0 1px 3px rgba(0,0,0,0.2)',
     borderRightWidth: 0,
     borderBottomWidth: 0,
   },
   tableRow: {
-    margin: "auto",
-    flexDirection: "row",
-    background: "#f6f6f6",
+    margin: 'auto',
+    flexDirection: 'row',
+    background: '#f6f6f6',
   },
   tableCol: {
-    borderStyle: "solid",
+    borderStyle: 'solid',
     borderWidth: 1,
     borderLeftWidth: 0,
     borderTopWidth: 0,
   },
   refTableCol: {
-    borderStyle: "solid",
+    borderStyle: 'solid',
     borderWidth: 1,
     borderLeftWidth: 0,
     borderTopWidth: 0,
   },
   appTableCol: {
-    width: "45%",
-    borderStyle: "solid",
+    width: '45%',
+    borderStyle: 'solid',
     borderWidth: 1,
     borderLeftWidth: 0,
     borderTopWidth: 0,
   },
   refTableCell: {
-    margin: "2px",
+    margin: '2px',
     fontSize: 14,
   },
   tableCell: {
-    margin: "auto",
+    margin: 'auto',
     fontSize: 14,
   },
 });
@@ -98,9 +98,7 @@ export default function PackagingStateDocument(props) {
                     width: `${(100 / columns.length).toFixed(0)}%`,
                   }}
                 >
-                  <Text style={styles.refTableCell}>
-                    {reference[col.field]}
-                  </Text>
+                  <Text style={styles.refTableCell}>{reference[col.field]}</Text>
                 </View>
               ))}
             </View>

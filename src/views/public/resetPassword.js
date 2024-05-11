@@ -1,22 +1,22 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 
-import CircularProgress from "@mui/material/CircularProgress";
-import FormHelperText from "@mui/material/FormHelperText";
-import CssBaseline from "@mui/material/CssBaseline";
-import TextField from "@mui/material/TextField";
-import Button from "@mui/material/Button";
-import Paper from "@mui/material/Paper";
-import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
+import CircularProgress from '@mui/material/CircularProgress';
+import FormHelperText from '@mui/material/FormHelperText';
+import CssBaseline from '@mui/material/CssBaseline';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import Paper from '@mui/material/Paper';
+import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
 
-import Copyright from "../../components/copyright";
+import Copyright from '../../components/copyright';
 
 //React router dom
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
 
-import mainURL from "../../config/environment";
-import queryString from "query-string";
-import $ from "jquery";
+import mainURL from '../../config/environment';
+import queryString from 'query-string';
+import $ from 'jquery';
 
 export default function ResetPassword() {
   const navigate = useNavigate();
@@ -26,10 +26,10 @@ export default function ResetPassword() {
   //Data management
   const [isPasswordValid, setPasswordValid] = useState(true);
   const [model, setModel] = useState({
-    email: "",
-    token: "",
-    password: "",
-    confirmPassword: "",
+    email: '',
+    token: '',
+    password: '',
+    confirmPassword: '',
   });
 
   const doPasswordsMatch = Boolean(model.password === model.confirmPassword);
@@ -38,15 +38,15 @@ export default function ResetPassword() {
     event.preventDefault();
     setLoading(true);
     $.ajax({
-      method: "POST",
-      url: mainURL + "login/reset-password",
-      contentType: "application/json",
+      method: 'POST',
+      url: mainURL + 'login/reset-password',
+      contentType: 'application/json',
       data: JSON.stringify(model),
     })
       .done((res) => {
         setLoading(false);
-        localStorage.setItem("userInfo", JSON.stringify(res));
-        navigate("/login");
+        localStorage.setItem('userInfo', JSON.stringify(res));
+        navigate('/login');
       })
       .fail((res) => {
         setLoading(false);
@@ -61,10 +61,8 @@ export default function ResetPassword() {
     const queryInfo = queryString.parse(window.location.search);
 
     switch (name) {
-      case "password":
-        const isPasswordValid = Boolean(
-          value.match(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{4,}$/i)
-        );
+      case 'password':
+        const isPasswordValid = Boolean(value.match(/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{4,}$/i));
         if (isPasswordValid) {
           setPasswordValid(true);
         } else {
@@ -90,7 +88,7 @@ export default function ResetPassword() {
   };
 
   return (
-    <Grid container component="main" sx={{ height: "100vh" }}>
+    <Grid container component="main" sx={{ height: '100vh' }}>
       <CssBaseline />
       <Grid
         item
@@ -98,14 +96,12 @@ export default function ResetPassword() {
         sm={4}
         md={7}
         sx={{
-          backgroundImage: "url(assets/bg-black.jpg)",
-          backgroundRepeat: "no-repeat",
+          backgroundImage: 'url(assets/bg-black.jpg)',
+          backgroundRepeat: 'no-repeat',
           backgroundColor: (t) =>
-            t.palette.mode === "light"
-              ? t.palette.grey[50]
-              : t.palette.grey[900],
-          backgroundSize: "cover",
-          backgroundPosition: "center",
+            t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
         }}
       />
       <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
@@ -113,21 +109,16 @@ export default function ResetPassword() {
           sx={{
             my: 8,
             mx: 4,
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-            height: "100%",
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            height: '100%',
           }}
         >
-          <img src="assets/logo.png" width={"80%"} alt="logo" />
+          <img src="assets/logo.png" width={'80%'} alt="logo" />
 
-          <Box
-            component="form"
-            noValidate
-            onSubmit={handleSubmit}
-            sx={{ mt: 1, width: "80%" }}
-          >
+          <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1, width: '80%' }}>
             <TextField
               error={!isPasswordValid}
               margin="dense"
@@ -143,7 +134,7 @@ export default function ResetPassword() {
             {!isPasswordValid ? (
               <FormHelperText>
                 {
-                  "La contraseña debe contener al menos una letra mayúscula, una minúscula y un número"
+                  'La contraseña debe contener al menos una letra mayúscula, una minúscula y un número'
                 }
               </FormHelperText>
             ) : null}
@@ -160,17 +151,12 @@ export default function ResetPassword() {
               onChange={handleChange}
             />
             {!doPasswordsMatch ? (
-              <FormHelperText>{"Las contraseñas no coinciden"}</FormHelperText>
+              <FormHelperText>{'Las contraseñas no coinciden'}</FormHelperText>
             ) : null}
             {isLoading ? (
               <CircularProgress />
             ) : (
-              <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                sx={{ mt: 3, mb: 2 }}
-              >
+              <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
                 Reestablecer contraseña
               </Button>
             )}

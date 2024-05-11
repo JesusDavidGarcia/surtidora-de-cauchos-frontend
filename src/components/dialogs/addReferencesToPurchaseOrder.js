@@ -1,30 +1,30 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 
-import DialogContentText from "@mui/material/DialogContentText";
-import CircularProgress from "@mui/material/CircularProgress";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
-import DialogTitle from "@mui/material/DialogTitle";
-import IconButton from "@mui/material/IconButton";
-import Typography from "@mui/material/Typography";
-import ListItem from "@mui/material/ListItem";
-import Divider from "@mui/material/Divider";
-import Button from "@mui/material/Button";
-import Dialog from "@mui/material/Dialog";
-import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
+import DialogContentText from '@mui/material/DialogContentText';
+import CircularProgress from '@mui/material/CircularProgress';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import DialogTitle from '@mui/material/DialogTitle';
+import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
+import ListItem from '@mui/material/ListItem';
+import Divider from '@mui/material/Divider';
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
 
-import List from "@mui/material/List";
+import List from '@mui/material/List';
 
-import CancelIcon from "@mui/icons-material/Cancel";
-import InboxIcon from "@mui/icons-material/Inbox";
+import CancelIcon from '@mui/icons-material/Cancel';
+import InboxIcon from '@mui/icons-material/Inbox';
 
-import ReferenceQuantityInput from "../../components/input/referenceQuantity";
+import ReferenceQuantityInput from '../../components/input/referenceQuantity';
 
-import $ from "jquery";
-import mainURL from "../../config/environment";
+import $ from 'jquery';
+import mainURL from '../../config/environment';
 
 const emptyModel = {
   references: [],
@@ -52,14 +52,14 @@ export default function AddReferenceToPurchaseOrder(props) {
   const handleSubmit = (event) => {
     event.preventDefault();
     setLoading(true);
-    const token = JSON.parse(localStorage.getItem("userInfo")).token;
+    const token = JSON.parse(localStorage.getItem('userInfo')).token;
 
     $.ajax({
-      method: "PUT",
+      method: 'PUT',
       url: `${mainURL}purchase-order/${id}/add-references`,
-      contentType: "application/json",
+      contentType: 'application/json',
       headers: {
-        Authorization: "Bearer " + token,
+        Authorization: 'Bearer ' + token,
       },
       data: JSON.stringify(model),
     })
@@ -82,8 +82,8 @@ export default function AddReferenceToPurchaseOrder(props) {
 
   return (
     <Dialog open={props.open} onClose={props.handleClose} maxWidth="md">
-      <DialogTitle>{"Añadir referencias"}</DialogTitle>
-      <DialogContent sx={{ minWidth: "40rem" }}>
+      <DialogTitle>{'Añadir referencias'}</DialogTitle>
+      <DialogContent sx={{ minWidth: '40rem' }}>
         <DialogContentText>
           {`Añadir referencias a la orden de compra #${orderNumber}`}
         </DialogContentText>
@@ -92,9 +92,7 @@ export default function AddReferenceToPurchaseOrder(props) {
             <Grid item xs={12}>
               <ReferenceQuantityInput
                 handleAdd={handleAdd}
-                usedReferences={model.references.map(
-                  (m) => m.rubberReferenceId
-                )}
+                usedReferences={model.references.map((m) => m.rubberReferenceId)}
                 includeSecondary
               />
             </Grid>
@@ -102,17 +100,13 @@ export default function AddReferenceToPurchaseOrder(props) {
         </Box>
         {model.references.length > 0 ? (
           <Grid item container xs={12}>
-            <List sx={{ width: "100%" }}>
+            <List sx={{ width: '100%' }}>
               {model.references.map((reference, index) => (
                 <ListItem
                   disablePadding
                   key={index}
                   secondaryAction={
-                    <IconButton
-                      edge="end"
-                      aria-label="delete"
-                      onClick={handleDelete(index)}
-                    >
+                    <IconButton edge="end" aria-label="delete" onClick={handleDelete(index)}>
                       <CancelIcon />
                     </IconButton>
                   }
@@ -137,19 +131,15 @@ export default function AddReferenceToPurchaseOrder(props) {
       </DialogContent>
       <DialogActions>
         {isLoading ? (
-          <Grid container justifyContent={"center"}>
+          <Grid container justifyContent={'center'}>
             <CircularProgress />
           </Grid>
         ) : (
-          <Grid container justifyContent={"flex-end"}>
+          <Grid container justifyContent={'flex-end'}>
             <Button type="submit" onClick={handleClear}>
               Cerrar
             </Button>
-            <Button
-              type="submit"
-              disabled={model.references.length === 0}
-              onClick={handleSubmit}
-            >
+            <Button type="submit" disabled={model.references.length === 0} onClick={handleSubmit}>
               Agregar
             </Button>
           </Grid>

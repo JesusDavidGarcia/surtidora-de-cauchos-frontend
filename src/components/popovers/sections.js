@@ -1,99 +1,99 @@
-import React from "react";
+import React from 'react';
 
 //React router
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
 
 //MUI
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemText from "@mui/material/ListItemText";
-import Popover from "@mui/material/Popover";
-import List from "@mui/material/List";
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemText from '@mui/material/ListItemText';
+import Popover from '@mui/material/Popover';
+import List from '@mui/material/List';
 
-import ShoppingCartCheckoutIcon from "@mui/icons-material/ShoppingCartCheckout";
-import LocalShippingIcon from "@mui/icons-material/LocalShipping";
-import EngineeringIcon from "@mui/icons-material/Engineering";
-import ContentCutIcon from "@mui/icons-material/ContentCut";
-import BackpackIcon from "@mui/icons-material/ContentCut";
-import GroupsIcon from "@mui/icons-material/Groups";
-import GroupIcon from "@mui/icons-material/Group";
-import HailIcon from "@mui/icons-material/Hail";
+import ShoppingCartCheckoutIcon from '@mui/icons-material/ShoppingCartCheckout';
+import LocalShippingIcon from '@mui/icons-material/LocalShipping';
+import EngineeringIcon from '@mui/icons-material/Engineering';
+import ContentCutIcon from '@mui/icons-material/ContentCut';
+import BackpackIcon from '@mui/icons-material/ContentCut';
+import GroupsIcon from '@mui/icons-material/Groups';
+import GroupIcon from '@mui/icons-material/Group';
+import HailIcon from '@mui/icons-material/Hail';
 
 const sections = [
   {
-    id: "packaging-entries",
-    title: "Ingresos empacado",
+    id: 'packaging-entries',
+    title: 'Ingresos empacado',
     icon: <ContentCutIcon />,
-    path: "/ingresos-empacado",
+    path: '/ingresos-empacado',
     permission: 9,
   },
   {
-    id: "packaging-matrix",
-    title: "Actualidad empacado",
+    id: 'packaging-matrix',
+    title: 'Actualidad empacado',
     icon: <GroupIcon />,
-    path: "/actualidad-empacado",
+    path: '/actualidad-empacado',
     permission: 9,
   },
   {
-    id: "packaging",
-    title: "Empaques",
+    id: 'packaging',
+    title: 'Empaques',
     icon: <BackpackIcon />,
-    path: "/empaques",
+    path: '/empaques',
     permission: 9,
   },
   {
-    id: "sharpening",
-    title: "Ingresos refilado",
+    id: 'sharpening',
+    title: 'Ingresos refilado',
     icon: <ContentCutIcon />,
-    path: "/ingresos-refilado",
+    path: '/ingresos-refilado',
     permission: 9,
   },
   {
-    id: "sharpeners",
-    title: "Actualidad refilado",
+    id: 'sharpeners',
+    title: 'Actualidad refilado',
     icon: <GroupIcon />,
-    path: "/actualidad-refilado",
+    path: '/actualidad-refilado',
     permission: 9,
   },
   {
-    id: "production",
-    title: "Producción",
+    id: 'production',
+    title: 'Producción',
     icon: <EngineeringIcon />,
-    path: "/produccion",
+    path: '/produccion',
     permission: 9,
   },
   {
-    id: "purchase-orders",
-    title: "Órdenes de compra",
+    id: 'purchase-orders',
+    title: 'Órdenes de compra',
     icon: <ShoppingCartCheckoutIcon />,
-    path: "/ordenes-compra",
+    path: '/ordenes-compra',
     permission: 9,
   },
   {
-    id: "operators",
-    title: "Operarios",
+    id: 'operators',
+    title: 'Operarios',
     icon: <GroupsIcon />,
-    path: "/operarios",
+    path: '/operarios',
     permission: 9,
   },
   {
-    id: "providers",
-    title: "Proveedores",
+    id: 'providers',
+    title: 'Proveedores',
     icon: <LocalShippingIcon />,
-    path: "/proveedores",
+    path: '/proveedores',
     permission: 9,
   },
   {
-    id: "clients",
-    title: "Clientes",
+    id: 'clients',
+    title: 'Clientes',
     icon: <HailIcon />,
-    path: "/clientes",
+    path: '/clientes',
     permission: 9,
   },
   {
-    id: "users",
-    title: "Usuarios",
+    id: 'users',
+    title: 'Usuarios',
     icon: <GroupIcon />,
-    path: "/usuarios",
+    path: '/usuarios',
     permission: 1,
   },
 ];
@@ -109,12 +109,12 @@ export default function InventoryPopover(props) {
   return (
     <Popover
       anchorOrigin={{
-        vertical: "top",
-        horizontal: "center",
+        vertical: 'top',
+        horizontal: 'center',
       }}
       transformOrigin={{
-        vertical: "bottom",
-        horizontal: "center",
+        vertical: 'bottom',
+        horizontal: 'center',
       }}
       open={Boolean(open)}
       anchorEl={open}

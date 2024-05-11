@@ -1,28 +1,28 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from 'react';
 
 //Charts
-import ReactEcharts from "echarts-for-react";
+import ReactEcharts from 'echarts-for-react';
 
-import CircularProgress from "@mui/material/CircularProgress";
-import CardContent from "@mui/material/CardContent";
-import CardHeader from "@mui/material/CardHeader";
-import IconButton from "@mui/material/IconButton";
-import Tooltip from "@mui/material/Tooltip";
-import Card from "@mui/material/Card";
-import Grid from "@mui/material/Grid";
+import CircularProgress from '@mui/material/CircularProgress';
+import CardContent from '@mui/material/CardContent';
+import CardHeader from '@mui/material/CardHeader';
+import IconButton from '@mui/material/IconButton';
+import Tooltip from '@mui/material/Tooltip';
+import Card from '@mui/material/Card';
+import Grid from '@mui/material/Grid';
 
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
 
 //Excel export
-import * as FileSaver from "file-saver";
-import * as XLSX from "xlsx";
+import * as FileSaver from 'file-saver';
+import * as XLSX from 'xlsx';
 
 //Jquery
-import apiURL from "../../config/environment";
-import $ from "jquery";
+import apiURL from '../../config/environment';
+import $ from 'jquery';
 
-import { Download } from "@mui/icons-material";
-import FilterPopover from "../popovers/filter";
+import { Download } from '@mui/icons-material';
+import FilterPopover from '../popovers/filter';
 
 export default function LineChart(props) {
   const [chartSettings, setChartSettings] = useState({});
@@ -45,13 +45,13 @@ export default function LineChart(props) {
   const handleSubmit = (filter) => (event) => {
     setLoading(true);
     console.log(filter);
-    const token = JSON.parse(localStorage.getItem("userInfo")).token;
+    const token = JSON.parse(localStorage.getItem('userInfo')).token;
     $.ajax({
-      method: "GET",
+      method: 'GET',
       url: `${apiURL}report/production?detailed=${filter}`,
-      contentType: "application/json",
+      contentType: 'application/json',
       headers: {
-        Authorization: "Bearer " + token,
+        Authorization: 'Bearer ' + token,
       },
     })
       .done((res) => {
@@ -59,16 +59,16 @@ export default function LineChart(props) {
         //console.log(res);
         //props.handleShowNotification("success", "Cliente agregado con éxito");
         const fileName = `Reporte ${
-          filter ? "diario" : "mensual"
+          filter ? 'diario' : 'mensual'
         } de producción surtidora de cauchos`;
         const fileType =
-          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8";
-        const fileExtension = ".xlsx";
+          'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
+        const fileExtension = '.xlsx';
         const ws = XLSX.utils.json_to_sheet(res);
-        const wb = { Sheets: { data: ws }, SheetNames: ["data"] };
+        const wb = { Sheets: { data: ws }, SheetNames: ['data'] };
         const excelBuffer = XLSX.write(wb, {
-          bookType: "xlsx",
-          type: "array",
+          bookType: 'xlsx',
+          type: 'array',
         });
 
         const data = new Blob([excelBuffer], { type: fileType });
@@ -82,14 +82,14 @@ export default function LineChart(props) {
 
   useEffect(() => {
     let isSubscribed = true;
-    const token = JSON.parse(localStorage.getItem("userInfo")).token;
+    const token = JSON.parse(localStorage.getItem('userInfo')).token;
 
     $.ajax({
-      method: "GET",
+      method: 'GET',
       url: apiURL + endpoint,
-      contentType: "application/json",
+      contentType: 'application/json',
       headers: {
-        Authorization: "Bearer " + token,
+        Authorization: 'Bearer ' + token,
       },
     })
       .done((res) => {
@@ -105,11 +105,11 @@ export default function LineChart(props) {
 
         if (isSubscribed) {
           setChartSettings({
-            color: ["#205ba7", "#fff000"],
+            color: ['#205ba7', '#fff000'],
 
             // Global text styles
             textStyle: {
-              fontFamily: "Roboto, Arial, Verdana, sans-serif",
+              fontFamily: 'Roboto, Arial, Verdana, sans-serif',
               fontSize: 13,
             },
 
@@ -141,34 +141,34 @@ export default function LineChart(props) {
 
             // Add legend
             legend: {
-              data: ["Producido", "Desperdiciado"],
+              data: ['Producido', 'Desperdiciado'],
               itemHeight: 5,
               itemGap: 5,
-              top: "top",
+              top: 'top',
             },
 
             // Add tooltip
             tooltip: {
-              trigger: "axis",
+              trigger: 'axis',
               //backgroundColor: "rgba(0,0,0,0.75)",
               padding: [10, 15],
               textStyle: {
                 fontSize: 13,
-                fontFamily: "Roboto, sans-serif",
+                fontFamily: 'Roboto, sans-serif',
               },
             },
 
             // Horizontal axis
             xAxis: [
               {
-                type: "category",
+                type: 'category',
                 boundaryGap: true,
                 axisLabel: {
-                  color: "#333",
+                  color: '#333',
                 },
                 axisLine: {
                   lineStyle: {
-                    color: "#999",
+                    color: '#999',
                   },
                 }, //Fechas
                 data: months,
@@ -178,25 +178,25 @@ export default function LineChart(props) {
             // Vertical axis
             yAxis: [
               {
-                type: "value",
+                type: 'value',
                 axisLabel: {
-                  formatter: "{value} ",
-                  color: "#333",
+                  formatter: '{value} ',
+                  color: '#333',
                 },
                 axisLine: {
                   lineStyle: {
-                    color: "#999",
+                    color: '#999',
                   },
                 },
                 splitLine: {
                   lineStyle: {
-                    color: ["#eee"],
+                    color: ['#eee'],
                   },
                 },
                 splitArea: {
                   show: true,
                   areaStyle: {
-                    color: ["rgba(250,250,250,0.1)", "rgba(0,0,0,0.01)"],
+                    color: ['rgba(250,250,250,0.1)', 'rgba(0,0,0,0.01)'],
                   },
                 },
               },
@@ -205,27 +205,27 @@ export default function LineChart(props) {
             // Add series
             series: [
               {
-                name: "Producido",
-                type: months.length > 3 ? "line" : "bar",
+                name: 'Producido',
+                type: months.length > 3 ? 'line' : 'bar',
                 smooth: true,
                 symbolSize: 6,
                 itemStyle: {
                   //color: "#cbcb35",
                   borderWidth: 2,
                 }, //Impression data
-                barWidth: "20%",
+                barWidth: '20%',
                 data: produced,
               },
               {
-                name: "Desperdiciado",
-                type: months.length > 3 ? "line" : "bar",
+                name: 'Desperdiciado',
+                type: months.length > 3 ? 'line' : 'bar',
                 smooth: true,
                 symbolSize: 6,
                 itemStyle: {
                   borderWidth: 2,
                 },
                 data: wasted,
-                barWidth: "20%",
+                barWidth: '20%',
               },
             ],
           });
@@ -233,9 +233,9 @@ export default function LineChart(props) {
       })
       .fail((res) => {
         if (res.status === 401) {
-          alert("Sesión expirada");
-          localStorage.removeItem("userInfo");
-          navigate("/login");
+          alert('Sesión expirada');
+          localStorage.removeItem('userInfo');
+          navigate('/login');
         }
       });
 
@@ -252,7 +252,7 @@ export default function LineChart(props) {
       <Card>
         <CardHeader
           title={title}
-          titleTypographyProps={{ fontSize: "1.2rem" }}
+          titleTypographyProps={{ fontSize: '1.2rem' }}
           action={
             loading ? (
               <CircularProgress />
@@ -266,7 +266,7 @@ export default function LineChart(props) {
           }
         />
         <CardContent>
-          <ReactEcharts ref={useRef("echarts_react")} option={chartSettings} />
+          <ReactEcharts ref={useRef('echarts_react')} option={chartSettings} />
         </CardContent>
       </Card>
     </Grid>

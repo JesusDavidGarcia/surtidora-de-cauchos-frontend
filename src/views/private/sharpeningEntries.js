@@ -1,49 +1,48 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 
 //MUI
-import FormControl from "@mui/material/FormControl";
-import Typography from "@mui/material/Typography";
-import IconButton from "@mui/material/IconButton";
-import TextField from "@mui/material/TextField";
-import Alert from "@mui/material/Alert";
-import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
+import FormControl from '@mui/material/FormControl';
+import Typography from '@mui/material/Typography';
+import IconButton from '@mui/material/IconButton';
+import TextField from '@mui/material/TextField';
+import Alert from '@mui/material/Alert';
+import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
 
-import { DataGrid } from "@mui/x-data-grid";
+import { DataGrid } from '@mui/x-data-grid';
 
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
-import { DatePicker } from "@mui/x-date-pickers";
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { DatePicker } from '@mui/x-date-pickers';
 
 //Icons
-import MoreVertIcon from "@mui/icons-material/MoreVert";
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 
-import UpdateEntryDialog from "../../components/dialogs/updateSharpeningEntry";
-import CreateEntryDialog from "../../components/dialogs/createSharpeningEntry";
-import DeleteEntryDialog from "../../components/dialogs/deleteGeneric";
-import SearchAndCreate from "../../components/input/searchAndCreate";
-import ProductionPopover from "../../components/popovers/generic";
+import UpdateEntryDialog from '../../components/dialogs/updateSharpeningEntry';
+import CreateEntryDialog from '../../components/dialogs/createSharpeningEntry';
+import DeleteEntryDialog from '../../components/dialogs/deleteGeneric';
+import SearchAndCreate from '../../components/input/searchAndCreate';
+import ProductionPopover from '../../components/popovers/generic';
 
-import mainURL from "../../config/environment";
-import $ from "jquery";
-import { useWidth } from "../../utils/withSelector";
-import { PDFDownloadLink } from "@react-pdf/renderer";
-import SharpeningEntriesDocument from "../../components/docs/sharpeningEntries";
-import { Button, CircularProgress, Tooltip } from "@mui/material";
-import { Download, ImportExport } from "@mui/icons-material";
-import SelectOperator from "../../components/input/selectOperator";
+import mainURL from '../../config/environment';
+import $ from 'jquery';
+import { useWidth } from '../../utils/withSelector';
+import { PDFDownloadLink } from '@react-pdf/renderer';
+import SharpeningEntriesDocument from '../../components/docs/sharpeningEntries';
+import { Button, CircularProgress, Tooltip } from '@mui/material';
+import { Download, ImportExport } from '@mui/icons-material';
+import SelectOperator from '../../components/input/selectOperator';
 
 const emptyData = {
-  id: "",
-  rubberReferenceId: "",
-  referenceName: "",
-  operator: "",
+  id: '',
+  rubberReferenceId: '',
+  referenceName: '',
+  operator: '',
   produced: 0,
   wasted: 0,
 };
 
-const errorMessage =
-  "No se puede borrar este cliente porque hay obras registradas a su nombre";
+const errorMessage = 'No se puede borrar este cliente porque hay obras registradas a su nombre';
 
 const emptyRange = {
   start: new Date(Date.now()).setDate(1),
@@ -56,7 +55,7 @@ export default function SharpeningEntries(props) {
   const [selectedData, setSelectedData] = useState(emptyData);
   const [dateRange, setDateRange] = useState(emptyRange);
   const [showFilters, setShowFilters] = useState(false);
-  const [filteredData, setFilteredData] = useState([]);
+  //const [filteredData, setFilteredData] = useState([]);
   const [exportData, setExportData] = useState([]);
   const [refresh, setRefresh] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -68,48 +67,48 @@ export default function SharpeningEntries(props) {
   //const navigate = useNavigate();
   const columns: GridColDef[] = [
     {
-      headerName: "Referencia",
-      field: "referenceName",
+      headerName: 'Referencia',
+      field: 'referenceName',
       flex: 1,
-      breakpoints: ["xs", "sm", "md", "lg", "xl"],
+      breakpoints: ['xs', 'sm', 'md', 'lg', 'xl'],
     },
     {
-      headerName: "Operario",
-      field: "sharpener",
+      headerName: 'Operario',
+      field: 'sharpener',
       flex: 1,
-      breakpoints: ["xs", "sm", "md", "lg", "xl"],
+      breakpoints: ['xs', 'sm', 'md', 'lg', 'xl'],
     },
     {
-      headerName: "Cantidad",
-      field: "quantity",
+      headerName: 'Cantidad',
+      field: 'quantity',
       flex: 1,
-      breakpoints: ["xs", "sm", "md", "lg", "xl"],
+      breakpoints: ['xs', 'sm', 'md', 'lg', 'xl'],
     },
     {
-      headerName: "Fecha de refilado",
-      field: "sharpeningDate",
+      headerName: 'Fecha de refilado',
+      field: 'sharpeningDate',
       flex: 1,
       renderCell: (params: GridRenderCellParams) => (
         <Typography key={params.row.id} variant="body2">
           {new Date(params.row.sharpeningDate).toLocaleDateString()}
         </Typography>
       ),
-      breakpoints: ["sm", "md", "lg", "xl"],
+      breakpoints: ['sm', 'md', 'lg', 'xl'],
     },
     {
-      headerName: "Opciones",
-      field: "id",
+      headerName: 'Opciones',
+      field: 'id',
       renderCell: (params: GridRenderCellParams) => (
         <IconButton onClick={handlePopoverOpen(params.row)}>
           <MoreVertIcon />
         </IconButton>
       ),
       //flex: 1,
-      align: "center",
-      headerAlign: "center",
+      align: 'center',
+      headerAlign: 'center',
       sortable: false,
       editable: false,
-      breakpoints: ["xs", "sm", "md", "lg", "xl"],
+      breakpoints: ['xs', 'sm', 'md', 'lg', 'xl'],
     },
   ];
 
@@ -125,20 +124,20 @@ export default function SharpeningEntries(props) {
 
   const handleOpenDialog = (dialog) => (event) => {
     switch (dialog) {
-      case "create":
+      case 'create':
         setCreateDialog(true);
         break;
 
-      case "delete":
+      case 'delete':
         setDeleteDialog(true);
         break;
 
-      case "update":
+      case 'update':
         setUpdateDialog(true);
         break;
 
       default:
-        console.log("None");
+        console.log('None');
         break;
     }
   };
@@ -146,9 +145,20 @@ export default function SharpeningEntries(props) {
   //Notification management
   const [showNotification, setShowNotification] = useState(false);
   const [notificationMessage, setNotificationMessage] = useState({
-    severity: "",
-    message: "",
+    severity: '',
+    message: '',
   });
+
+  //Page management
+  const [hasNextPage, setHasNextPage] = useState(false);
+  const [pageSize, setPageSize] = useState(25);
+  const [rowCount, setRowCount] = useState(0);
+  const [page, setPage] = useState(1);
+
+  const handlePageChange = (event) => {
+    setPage(event.page);
+    setPageSize(event.pageSize);
+  };
 
   const handleShowNotification = (severity, message) => {
     setNotificationMessage({ severity: severity, message: message });
@@ -167,7 +177,7 @@ export default function SharpeningEntries(props) {
   };
 
   //Search management
-  const [searchText, setSearchText] = useState("");
+  const [searchText, setSearchText] = useState('');
   const handleSearch = (event) => {
     const target = event.target;
     const value = target.value;
@@ -183,7 +193,7 @@ export default function SharpeningEntries(props) {
     else setSelectedData(emptyData);
   };
 
-  useEffect(() => {
+  /*  useEffect(() => {
     const token = JSON.parse(localStorage.getItem("userInfo")).token;
     let isSubscribed = true;
     //handleShowNotification("info", "Cargando clientes");
@@ -210,22 +220,51 @@ export default function SharpeningEntries(props) {
         handleShowNotification("error", res.responseText);
       });
     return () => (isSubscribed = false);
-  }, [refresh]);
+  }, [refresh]); */
 
   useEffect(() => {
-    const token = JSON.parse(localStorage.getItem("userInfo")).token;
+    const token = JSON.parse(localStorage.getItem('userInfo')).token;
     let isSubscribed = true;
-    const start = new Date(dateRange.start).toISOString().split("T")[0];
-    const end = new Date(dateRange.end).toISOString().split("T")[0];
+    //handleShowNotification("info", "Cargando clientes");
+    $.ajax({
+      method: 'GET',
+      url: `${mainURL}sharpening-entry/get-all?pageSize=${pageSize}&pageNumber=${page}`,
+      contentType: 'application/json',
+      headers: {
+        Authorization: 'Bearer ' + token,
+      },
+    })
+      .done((res) => {
+        /* : GridRowsProp */
+        const aux = res.results;
+        if (isSubscribed) {
+          setData(aux);
+          setHasNextPage(res.hasNext);
+          setRowCount(res.totalItemCount);
+          //setFilteredData(aux);
+          //handleShowNotification("success", "Referencias cargados con éxito");
+        }
+      })
+      .fail((res) => {
+        handleShowNotification('error', res.responseText);
+      });
+    return () => (isSubscribed = false);
+  }, [refresh, page, pageSize]);
+
+  useEffect(() => {
+    const token = JSON.parse(localStorage.getItem('userInfo')).token;
+    let isSubscribed = true;
+    const start = new Date(dateRange.start).toISOString().split('T')[0];
+    const end = new Date(dateRange.end).toISOString().split('T')[0];
     setLoading(true);
     $.ajax({
-      method: "GET",
+      method: 'GET',
       url: `${mainURL}report/sharpening?start=${start}&end=${end}${
-        sharpener !== 0 ? `&sharpenerId=${sharpener}` : ""
+        sharpener !== 0 ? `&sharpenerId=${sharpener}` : ''
       }`,
-      contentType: "application/json",
+      contentType: 'application/json',
       headers: {
-        Authorization: "Bearer " + token,
+        Authorization: 'Bearer ' + token,
       },
     })
       .done((res) => {
@@ -235,21 +274,21 @@ export default function SharpeningEntries(props) {
         }
       })
       .fail((res) => {
-        handleShowNotification("error", res.responseText);
+        handleShowNotification('error', res.responseText);
       });
     return () => (isSubscribed = false);
   }, [refresh, dateRange, sharpener]);
 
-  useEffect(() => {
+  /* useEffect(() => {
     const myReg = new RegExp("^.*" + searchText.toLowerCase() + ".*");
     const newArray = data.filter((f) =>
       f.referenceName.toLowerCase().match(myReg)
     );
     setFilteredData(newArray);
-  }, [data, searchText]);
+  }, [data, searchText]); */
 
   return (
-    <Box sx={{ height: "85vh", p: 2 }}>
+    <Box sx={{ height: '85vh', p: 2 }}>
       <ProductionPopover
         open={anchor}
         showDeleteOption
@@ -262,12 +301,12 @@ export default function SharpeningEntries(props) {
         refresh={refresh}
         open={deleteDialog}
         setRefresh={setRefresh}
-        title={"Eliminar registro"}
+        title={'Eliminar registro'}
         errorMessage={errorMessage}
         name={`${selectedData.referenceName}`}
         handleClose={handleCloseDialogs}
         deleteURL={`sharpening-entry/${selectedData.id}`}
-        successMessage={"Registro eliminado con éxito"}
+        successMessage={'Registro eliminado con éxito'}
         handleShowNotification={handleShowNotification}
       />
       <UpdateEntryDialog
@@ -286,15 +325,15 @@ export default function SharpeningEntries(props) {
         handleShowNotification={handleShowNotification}
       />
       <Grid
-        justifyContent={"space-between"}
-        alignItems={"center"}
-        sx={{ p: "1rem 0" }}
+        justifyContent={'space-between'}
+        alignItems={'center'}
+        sx={{ p: '1rem 0' }}
         spacing={2}
         container
       >
         <Grid item xs={12} container>
           <Grid item xs={12} md={8}>
-            <Typography variant={"h4"}>{"Ingresos a refilado"}</Typography>
+            <Typography variant={'h4'}>{'Ingresos a refilado'}</Typography>
           </Grid>
 
           {showNotification ? (
@@ -335,7 +374,7 @@ export default function SharpeningEntries(props) {
               <FormControl fullWidth>
                 <LocalizationProvider dateAdapter={AdapterDateFns}>
                   <DatePicker
-                    label={"Fecha de inicio"}
+                    label={'Fecha de inicio'}
                     value={dateRange.start}
                     onChange={(e) =>
                       setDateRange({
@@ -353,7 +392,7 @@ export default function SharpeningEntries(props) {
               <FormControl fullWidth>
                 <LocalizationProvider dateAdapter={AdapterDateFns}>
                   <DatePicker
-                    label={"Fecha de finalización"}
+                    label={'Fecha de finalización'}
                     value={dateRange.end}
                     onChange={(e) =>
                       setDateRange({
@@ -375,19 +414,10 @@ export default function SharpeningEntries(props) {
                 area="Refilado"
               />
             </Grid>
-            <Grid
-              item
-              xs={6}
-              md={2}
-              container
-              justifyContent={"center"}
-              alignItems={"center"}
-            >
+            <Grid item xs={6} md={2} container justifyContent={'center'} alignItems={'center'}>
               <PDFDownloadLink
                 document={<SharpeningEntriesDocument data={exportData} />}
-                fileName={`Informe de refilado ${
-                  new Date().toISOString().split("T")[0]
-                }.pdf`}
+                fileName={`Informe de refilado ${new Date().toISOString().split('T')[0]}.pdf`}
               >
                 <Tooltip title="Descargar reporte">
                   <Button
@@ -407,14 +437,18 @@ export default function SharpeningEntries(props) {
         ) : null}
       </Grid>
 
-      <Box sx={{ height: "70vh", width: "100%", p: "16px 0", pb:8 }}>
+      <Box sx={{ height: '70vh', width: '100%', p: '16px 0', pb: 8 }}>
         <DataGrid
-          selectionModel={selectedData.id === "" ? [] : selectedData.id}
-          onRowClick={handleSelect}
-          rows={filteredData}
           columns={columns.filter((m) => m.breakpoints.includes(breakpoint))}
+          selectionModel={selectedData.id === '' ? [] : selectedData.id}
+          paginationModel={{ page: page, pageSize: pageSize }}
+          paginationMeta={{ hasNextPage: hasNextPage }}
+          onPaginationModelChange={handlePageChange}
+          onRowClick={handleSelect}
+          paginationMode="server"
           disableColumnMenu
-          autoPageSize
+          rowCount={rowCount}
+          rows={data}
         />
       </Box>
     </Box>

@@ -1,10 +1,10 @@
-import React from "react";
+import React from 'react';
 
 //MUI
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemText from "@mui/material/ListItemText";
-import Popover from "@mui/material/Popover";
-import List from "@mui/material/List";
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemText from '@mui/material/ListItemText';
+import Popover from '@mui/material/Popover';
+import List from '@mui/material/List';
 
 export default function FilterPopover(props) {
   const { open, handleSubmit } = props;
@@ -12,12 +12,12 @@ export default function FilterPopover(props) {
   return (
     <Popover
       anchorOrigin={{
-        vertical: "bottom",
-        horizontal: "left",
+        vertical: 'bottom',
+        horizontal: 'left',
       }}
       transformOrigin={{
-        vertical: "top",
-        horizontal: "center",
+        vertical: 'top',
+        horizontal: 'center',
       }}
       open={Boolean(open)}
       anchorEl={open}
@@ -25,10 +25,10 @@ export default function FilterPopover(props) {
     >
       <List dense>
         <ListItemButton onClick={handleSubmit(false)}>
-          <ListItemText primary={"Mensual"} />
+          <ListItemText primary={'Mensual'} />
         </ListItemButton>
         <ListItemButton onClick={handleSubmit(true)}>
-          <ListItemText primary={"Diario"} />
+          <ListItemText primary={'Diario'} />
         </ListItemButton>
       </List>
     </Popover>
