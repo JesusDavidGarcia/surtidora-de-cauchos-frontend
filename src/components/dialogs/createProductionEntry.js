@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import CircularProgress from '@mui/material/CircularProgress';
 import DialogActions from '@mui/material/DialogActions';
@@ -23,6 +23,7 @@ import { DatePicker } from '@mui/x-date-pickers';
 
 //import SelectAvailableSharpeners from "../input/selectSharpener";
 import SelectOperator from '../input/selectOperator';
+import { FormHelperText } from '@mui/material';
 
 const emptyModel = {
   rubberReferenceId: '',
@@ -30,14 +31,15 @@ const emptyModel = {
   operatorId: '',
   produced: 0,
   wasted: 0,
-  maxQuantity: 0,
+
   productionDate: Date.now(),
 };
 
 export default function CreateProviderDialog(props) {
   //const [selectedSharpener, setSelectedSharpener] = useState(null);
   const [selectedReference, setSelectedReference] = useState(null);
-  const [isFormComplete, setFormComplete] = useState(false);
+  //const [isFormComplete, setFormComplete] = useState(false);
+  const [maxQuantity, setMaxQuantity] = useState(0);
   const [isLoading, setLoading] = useState(false);
   const [model, setModel] = useState(emptyModel);
   const { refresh } = props;
@@ -79,9 +81,9 @@ export default function CreateProviderDialog(props) {
       [name]: value,
     });
 
-    if (model.produced > 0 || name === 'produced') {
+    /* if (model.produced > 0 || name === 'produced') {
       setFormComplete(true);
-    }
+    } */
   };
 
   const handleDateChange = (event) => {
@@ -121,6 +123,32 @@ export default function CreateProviderDialog(props) {
     }
   }; */
 
+  useEffect(() => {
+    const token = JSON.parse(localStorage.getItem('userInfo')).token;
+    let isSubscribed = true;
+    if (model.rubberReferenceId !== '' && model.sharpenerId !== '') {
+      $.ajax({
+        method: 'GET',
+        url: `${mainURL}operator-sharpening/${model.rubberReferenceId}/${model.sharpenerId}/validate`,
+        contentType: 'application/json',
+        headers: {
+          Authorization: 'Bearer ' + token,
+        },
+      })
+        .done((res) => {
+          if (isSubscribed) {
+            console.log(res);
+            if (res) setMaxQuantity(res.quantity + 1);
+            else setMaxQuantity(0);
+          }
+        })
+        .fail((res) => {
+          if (res.status === 404) setMaxQuantity(0);
+        });
+    }
+    return () => (isSubscribed = false);
+  }, [model.rubberReferenceId, model.sharpenerId]);
+
   const handleSubmit = (event) => {
     event.preventDefault();
     setLoading(true);
@@ -159,7 +187,7 @@ export default function CreateProviderDialog(props) {
   const handleClear = () => {
     props.handleClose();
     setModel(emptyModel);
-    setFormComplete(false);
+    //setFormComplete(false);
     setSelectedReference(null);
     //setSelectedSharpener(null);
     props.setRefresh(!refresh);
@@ -210,7 +238,7 @@ export default function CreateProviderDialog(props) {
               />
             </Grid>
 
-            <Grid item xs={12} md={6}>
+            <Grid item xs={12} md={4}>
               <SelectOperator
                 handleChange={handleChange}
                 value={model.operatorId}
@@ -218,7 +246,7 @@ export default function CreateProviderDialog(props) {
                 area="manufactura"
               />
             </Grid>
-            <Grid item xs={12} md={3}>
+            <Grid item xs={12} md={4}>
               <FormControl fullWidth required>
                 <TextField
                   label={'Producido'}
@@ -228,13 +256,14 @@ export default function CreateProviderDialog(props) {
                   name="produced"
                   margin="dense"
                   type="number"
-                  inputProps={{ step: '0.25' /* , max: model.maxQuantity */ }}
+                  inputProps={{ step: '0.25', max: maxQuantity }}
                   fullWidth
                   required
                 />
+                <FormHelperText>{`La cantidad máxima permitida es ${maxQuantity}`}</FormHelperText>
               </FormControl>
             </Grid>
-            <Grid item xs={12} md={3}>
+            <Grid item xs={12} md={4}>
               <FormControl fullWidth required>
                 <TextField
                   label={'Desechado'}
@@ -246,7 +275,6 @@ export default function CreateProviderDialog(props) {
                   type="number"
                   inputProps={{
                     step: '0.25',
-                    //max: model.maxQuantity - model.produced,
                   }}
                   fullWidth
                   required
@@ -266,7 +294,11 @@ export default function CreateProviderDialog(props) {
             <Button type="submit" onClick={handleClear}>
               Cerrar
             </Button>
-            <Button type="submit" disabled={!isFormComplete} onClick={handleSubmit}>
+            <Button
+              type="submit"
+              disabled={model.produced > maxQuantity || model.produced === 0}
+              onClick={handleSubmit}
+            >
               Agregar
             </Button>
           </Grid>
