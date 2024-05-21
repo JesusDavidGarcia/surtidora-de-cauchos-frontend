@@ -120,7 +120,7 @@ export default function UpdateSharpeningEntry(props) {
                     value={model.packagingDate}
                     onChange={handleDateChange}
                     format="dd/MM/yyyy"
-                    renderInput={(params) => <TextField variant="standard" />}
+                    textField={(params) => <TextField variant="standard" />}
                   />
                 </LocalizationProvider>
               </FormControl>

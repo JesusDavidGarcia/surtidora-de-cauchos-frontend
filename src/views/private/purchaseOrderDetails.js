@@ -1,46 +1,45 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 
-import CardContent from "@mui/material/CardContent";
-import Typography from "@mui/material/Typography";
-import CardHeader from "@mui/material/CardHeader";
-import IconButton from "@mui/material/IconButton";
-import Grid from "@mui/material/Grid";
-import Card from "@mui/material/Card";
-import Box from "@mui/material/Box";
+import CardContent from '@mui/material/CardContent';
+import Typography from '@mui/material/Typography';
+import CardHeader from '@mui/material/CardHeader';
+import IconButton from '@mui/material/IconButton';
+import Grid from '@mui/material/Grid';
+import Card from '@mui/material/Card';
+import Box from '@mui/material/Box';
 
-import $ from "jquery";
-import mainURL from "../../config/environment";
+import $ from 'jquery';
+import mainURL from '../../config/environment';
 
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from 'react-router-dom';
 
-import { DataGrid } from "@mui/x-data-grid";
-import {
-  Download,
-  Edit,
-  BrowserUpdated,
-  PlaylistAdd,
-} from "@mui/icons-material";
+import { DataGrid } from '@mui/x-data-grid';
+import { Download, Edit, BrowserUpdated, PlaylistAdd } from '@mui/icons-material';
 
-import { PDFDownloadLink } from "@react-pdf/renderer";
-import PurchaseOrderDocument from "../../components/docs/purchaseOrder";
-import { useWidth } from "../../utils/withSelector";
-import ClientPurchaseOrderDocument from "../../components/docs/clientPurchaseOrder";
-import { Tooltip } from "@mui/material";
-import AddReferenceToPurchaseOrder from "../../components/dialogs/addReferencesToPurchaseOrder";
+import { PDFDownloadLink } from '@react-pdf/renderer';
+import PurchaseOrderDocument from '../../components/docs/purchaseOrder';
+import { useWidth } from '../../utils/withSelector';
+import ClientPurchaseOrderDocument from '../../components/docs/clientPurchaseOrder';
+import { Tooltip } from '@mui/material';
+import AddReferenceToPurchaseOrder from '../../components/dialogs/addReferencesToPurchaseOrder';
 
 const emptyModel = {
-  id: "",
-  clientId: "",
-  clientName: "",
-  createdOn: "",
+  id: '',
+  clientId: '',
+  clientName: '',
+  createdOn: '',
   shipmentWeight: 0,
   invoicePrice: 0,
+  invoiceNumber: '',
+  invoiceDate: '',
+  invoiceDiscount: '',
+  invoiceStamp: '',
   numberOfBoxes: 0,
   missingMaterial: 0,
   orderNumber: 0,
   usePackaging: true,
-  packagingId: "",
-  packagingName: "",
+  packagingId: '',
+  packagingName: '',
   references: [],
 };
 
@@ -54,34 +53,34 @@ export default function PurchaseOrderDetails(props) {
 
   const columns: GridColDef[] = [
     {
-      headerName: "Referencia",
-      field: "referenceName",
+      headerName: 'Referencia',
+      field: 'referenceName',
       flex: 1,
-      breakpoints: ["xs", "sm", "md", "lg", "xl"],
+      breakpoints: ['xs', 'sm', 'md', 'lg', 'xl'],
     },
     {
-      headerName: "Cantidad",
-      field: "quantity",
-      headerAlign: "center",
-      align: "center",
+      headerName: 'Cantidad',
+      field: 'quantity',
+      headerAlign: 'center',
+      align: 'center',
       flex: 1,
-      breakpoints: ["xs", "sm", "md", "lg", "xl"],
+      breakpoints: ['xs', 'sm', 'md', 'lg', 'xl'],
     },
     {
-      headerName: "Por producir",
-      field: "missingQuantity",
-      headerAlign: "center",
-      align: "center",
+      headerName: 'Por producir',
+      field: 'missingQuantity',
+      headerAlign: 'center',
+      align: 'center',
       flex: 1,
-      breakpoints: ["md", "lg", "xl"],
+      breakpoints: ['md', 'lg', 'xl'],
     },
     {
-      headerName: "Por empacar",
-      field: "missingPackagingQuantity",
-      headerAlign: "center",
-      align: "center",
+      headerName: 'Por empacar',
+      field: 'missingPackagingQuantity',
+      headerAlign: 'center',
+      align: 'center',
       flex: 1,
-      breakpoints: ["md", "lg", "xl"],
+      breakpoints: ['md', 'lg', 'xl'],
     },
   ];
 
@@ -93,16 +92,20 @@ export default function PurchaseOrderDetails(props) {
     setDialog(false);
   };
 
+  const numberWithCommas = (number) => {
+    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+  };
+
   useEffect(() => {
-    const token = JSON.parse(localStorage.getItem("userInfo")).token;
+    const token = JSON.parse(localStorage.getItem('userInfo')).token;
     let isSubscribed = true;
     //handleShowNotification("info", "Cargando ordenes de compra");
     $.ajax({
-      method: "GET",
+      method: 'GET',
       url: `${mainURL}purchase-order/${orderId}`,
-      contentType: "application/json",
+      contentType: 'application/json',
       headers: {
-        Authorization: "Bearer " + token,
+        Authorization: 'Bearer ' + token,
       },
     })
       .done((res) => {
@@ -110,9 +113,7 @@ export default function PurchaseOrderDetails(props) {
           ...ref,
           id: idx,
           missingQuantity:
-            ref.missingQuantity % 1 === 0
-              ? ref.missingQuantity
-              : ref.missingQuantity.toFixed(2),
+            ref.missingQuantity % 1 === 0 ? ref.missingQuantity : ref.missingQuantity.toFixed(2),
         }));
 
         if (isSubscribed) {
@@ -136,16 +137,16 @@ export default function PurchaseOrderDetails(props) {
   };
 
   return (
-    <Box sx={{ height: "85vh", p: 2 }}>
+    <Box sx={{ height: '85vh', p: 2 }}>
       <AddReferenceToPurchaseOrder
         id={data.id}
         open={dialog}
         handleClose={handleClose}
         orderNumber={data.orderNumber}
       />
-      <Grid container spacing={2} height={"100%"}>
+      <Grid container spacing={2} height={'100%'}>
         <Grid item container xs={12}>
-          <Card sx={{ width: "100%" }}>
+          <Card sx={{ width: '100%' }}>
             <CardHeader
               title={
                 <Typography sx={{ fontWeight: 600, fontSize: 25 }}>
@@ -161,9 +162,7 @@ export default function PurchaseOrderDetails(props) {
                     {new Date(data.createdOn).toLocaleDateString()}
                   </Typography>
                   {data.usePackaging ? (
-                    <Typography variant="body1">
-                      {`Empaque ${data.packagingName}`}
-                    </Typography>
+                    <Typography variant="body1">{`Empaque ${data.packagingName}`}</Typography>
                   ) : null}
                 </React.Fragment>
               }
@@ -207,13 +206,11 @@ export default function PurchaseOrderDetails(props) {
                 Referencias adquiridas
               </Typography>
 
-              <Box sx={{ height: "50vh", width: "100%", p: "16px 0" }}>
+              <Box sx={{ height: '40vh', width: '100%', p: '16px 0' }}>
                 <DataGrid
                   autoPageSize
                   rows={rows}
-                  columns={columns.filter((m) =>
-                    m.breakpoints.includes(breakpoint)
-                  )}
+                  columns={columns.filter((m) => m.breakpoints.includes(breakpoint))}
                   disableColumnMenu
                 />
               </Box>
@@ -221,13 +218,46 @@ export default function PurchaseOrderDetails(props) {
               {/* <Divider /> */}
 
               <Grid container sx={{ pt: 2 }}>
-                <Grid container alignItems={"center"}>
+                {data.invoiceNumber !== '' ? (
+                  <Grid container item sm={6} spacing={2}>
+                    <Grid item xs={12}>
+                      <Typography>{'Datos de facturación'}</Typography>
+                    </Grid>
+                    <Grid item xs={6}>
+                      <Typography variant="body1">{'Número de factura'}</Typography>
+                      <Typography variant="body2" color={'textSecondary'}>
+                        {data.invoiceNumber}
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={6}>
+                      <Typography>{'Fecha'}</Typography>
+                      <Typography variant="body2" color={'textSecondary'}>
+                        {new Date(data.invoiceDate).toLocaleDateString()}
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={6}>
+                      <Typography>{'Valor'}</Typography>
+                      <Typography variant="body2" color={'textSecondary'}>
+                        {`$ ${numberWithCommas(parseFloat(data.invoicePrice))}`}
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={6}>
+                      <Typography>{'Descuento'}</Typography>
+                      <Typography variant="body2" color={'textSecondary'}>
+                        {`$ ${numberWithCommas(parseFloat(data.invoiceDiscount))}`}
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={6}>
+                      <Typography>{'Sello'}</Typography>
+                      <Typography variant="body2" color={'textSecondary'}>
+                        {data.invoiceStamp}
+                      </Typography>
+                    </Grid>
+                  </Grid>
+                ) : null}
+                <Grid container direction={'column'} item sm={6}>
                   <Typography variant="body1">{`Peso total: ${data.shipmentWeight} Kg`}</Typography>
-                </Grid>
-                <Grid container alignItems={"center"}>
                   <Typography variant="body1">{`Número de cajas: ${data.numberOfBoxes}`}</Typography>
-                </Grid>
-                <Grid container alignItems={"center"}>
                   <Typography variant="body1">{`Material faltante: ${data.missingMaterial} Kg`}</Typography>
                 </Grid>
               </Grid>

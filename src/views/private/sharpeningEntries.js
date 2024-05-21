@@ -156,7 +156,7 @@ export default function SharpeningEntries(props) {
   const [page, setPage] = useState(1);
 
   const handlePageChange = (event) => {
-    setPage(event.page);
+    setPage(event.page + 1);
     setPageSize(event.pageSize);
   };
 
@@ -383,7 +383,7 @@ export default function SharpeningEntries(props) {
                       })
                     }
                     format="dd/MM/yyyy"
-                    renderInput={(params) => <TextField variant="standard" />}
+                    textField={(params) => <TextField variant="standard" />}
                   />
                 </LocalizationProvider>
               </FormControl>
@@ -401,7 +401,7 @@ export default function SharpeningEntries(props) {
                       })
                     }
                     format="dd/MM/yyyy"
-                    renderInput={(params) => <TextField variant="standard" />}
+                    textField={(params) => <TextField variant="standard" />}
                   />
                 </LocalizationProvider>
               </FormControl>
@@ -441,7 +441,7 @@ export default function SharpeningEntries(props) {
         <DataGrid
           columns={columns.filter((m) => m.breakpoints.includes(breakpoint))}
           selectionModel={selectedData.id === '' ? [] : selectedData.id}
-          paginationModel={{ page: page, pageSize: pageSize }}
+          paginationModel={{ page: page - 1, pageSize: pageSize }}
           paginationMeta={{ hasNextPage: hasNextPage }}
           onPaginationModelChange={handlePageChange}
           onRowClick={handleSelect}

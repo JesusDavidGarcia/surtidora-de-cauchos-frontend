@@ -151,7 +151,7 @@ export default function CreateRawMaterialEntryDialog(props) {
                     onChange={handleDateChange}
                     disablePast
                     format="dd/MM/yyyy"
-                    renderInput={(params) => <TextField variant="filled" {...params} />}
+                    textField={(params) => <TextField variant="filled" {...params} />}
                   />
                 </LocalizationProvider>
               </FormControl>

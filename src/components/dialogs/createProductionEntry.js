@@ -179,7 +179,7 @@ export default function CreateProviderDialog(props) {
                     value={model.productionDate}
                     onChange={handleDateChange}
                     format="dd/MM/yyyy"
-                    renderInput={(params) => <TextField variant="standard" />}
+                    textField={(params) => <TextField variant="standard" />}
                   />
                 </LocalizationProvider>
               </FormControl>

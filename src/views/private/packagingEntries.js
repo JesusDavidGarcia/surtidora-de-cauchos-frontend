@@ -1,32 +1,32 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 
 //MUI
 //import CircularProgress from "@mui/material/CircularProgress";
-import Typography from "@mui/material/Typography";
-import IconButton from "@mui/material/IconButton";
+import Typography from '@mui/material/Typography';
+import IconButton from '@mui/material/IconButton';
 //import Button from "@mui/material/Button";
-import Alert from "@mui/material/Alert";
-import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
+import Alert from '@mui/material/Alert';
+import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
 
-import { DataGrid } from "@mui/x-data-grid";
+import { DataGrid } from '@mui/x-data-grid';
 
 // import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 // import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 // import { DatePicker } from "@mui/x-date-pickers";
 
 //Icons
-import MoreVertIcon from "@mui/icons-material/MoreVert";
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 
-import UpdateEntryDialog from "../../components/dialogs/updatePackagingEntry";
-import CreateEntryDialog from "../../components/dialogs/createPackagingEntry";
-import DeleteEntryDialog from "../../components/dialogs/deleteGeneric";
-import SearchAndCreate from "../../components/input/searchAndCreate";
-import ProductionPopover from "../../components/popovers/generic";
+import UpdateEntryDialog from '../../components/dialogs/updatePackagingEntry';
+import CreateEntryDialog from '../../components/dialogs/createPackagingEntry';
+import DeleteEntryDialog from '../../components/dialogs/deleteGeneric';
+import SearchAndCreate from '../../components/input/searchAndCreate';
+import ProductionPopover from '../../components/popovers/generic';
 
-import mainURL from "../../config/environment";
-import $ from "jquery";
-import { useWidth } from "../../utils/withSelector";
+import mainURL from '../../config/environment';
+import $ from 'jquery';
+import { useWidth } from '../../utils/withSelector';
 //import { PDFDownloadLink } from "@react-pdf/renderer";
 //import SharpeningEntriesDocument from "../../components/docs/sharpeningEntries";
 //import {  CircularProgress } from "@mui/material";
@@ -34,18 +34,17 @@ import { useWidth } from "../../utils/withSelector";
 // import SelectOperator from "../../components/input/selectOperator";
 
 const emptyData = {
-  id: "",
-  rubberReferenceId: "",
-  referenceName: "",
-  packagingId: "",
-  packagingName: "",
+  id: '',
+  rubberReferenceId: '',
+  referenceName: '',
+  packagingId: '',
+  packagingName: '',
   quantity: 0,
-  packagingDate: "",
-  createdOn: "",
+  packagingDate: '',
+  createdOn: '',
 };
 
-const errorMessage =
-  "No se puede borrar este cliente porque hay obras registradas a su nombre";
+const errorMessage = 'No se puede borrar este cliente porque hay obras registradas a su nombre';
 
 // const emptyRange = {
 //   start: new Date(Date.now()).setDate(1),
@@ -70,48 +69,48 @@ export default function PackagingEntries(props) {
   //const navigate = useNavigate();
   const columns: GridColDef[] = [
     {
-      headerName: "Referencia",
-      field: "referenceName",
+      headerName: 'Referencia',
+      field: 'referenceName',
       flex: 1,
-      breakpoints: ["xs", "sm", "md", "lg", "xl"],
+      breakpoints: ['xs', 'sm', 'md', 'lg', 'xl'],
     },
     {
-      headerName: "Empaque",
-      field: "packagingName",
+      headerName: 'Empaque',
+      field: 'packagingName',
       flex: 1,
-      breakpoints: ["xs", "sm", "md", "lg", "xl"],
+      breakpoints: ['xs', 'sm', 'md', 'lg', 'xl'],
     },
     {
-      headerName: "Cantidad",
-      field: "quantity",
+      headerName: 'Cantidad',
+      field: 'quantity',
       flex: 1,
-      breakpoints: ["xs", "sm", "md", "lg", "xl"],
+      breakpoints: ['xs', 'sm', 'md', 'lg', 'xl'],
     },
     {
-      headerName: "Fecha de empacado",
-      field: "packagingDate",
+      headerName: 'Fecha de empacado',
+      field: 'packagingDate',
       flex: 1,
       renderCell: (params: GridRenderCellParams) => (
         <Typography key={params.row.id} variant="body2">
           {new Date(params.row.packagingDate).toLocaleDateString()}
         </Typography>
       ),
-      breakpoints: ["sm", "md", "lg", "xl"],
+      breakpoints: ['sm', 'md', 'lg', 'xl'],
     },
     {
-      headerName: "Opciones",
-      field: "id",
+      headerName: 'Opciones',
+      field: 'id',
       renderCell: (params: GridRenderCellParams) => (
         <IconButton onClick={handlePopoverOpen(params.row)}>
           <MoreVertIcon />
         </IconButton>
       ),
       //flex: 1,
-      align: "center",
-      headerAlign: "center",
+      align: 'center',
+      headerAlign: 'center',
       sortable: false,
       editable: false,
-      breakpoints: ["xs", "sm", "md", "lg", "xl"],
+      breakpoints: ['xs', 'sm', 'md', 'lg', 'xl'],
     },
   ];
 
@@ -127,20 +126,20 @@ export default function PackagingEntries(props) {
 
   const handleOpenDialog = (dialog) => (event) => {
     switch (dialog) {
-      case "create":
+      case 'create':
         setCreateDialog(true);
         break;
 
-      case "delete":
+      case 'delete':
         setDeleteDialog(true);
         break;
 
-      case "update":
+      case 'update':
         setUpdateDialog(true);
         break;
 
       default:
-        console.log("None");
+        console.log('None');
         break;
     }
   };
@@ -148,8 +147,8 @@ export default function PackagingEntries(props) {
   //Notification management
   const [showNotification, setShowNotification] = useState(false);
   const [notificationMessage, setNotificationMessage] = useState({
-    severity: "",
-    message: "",
+    severity: '',
+    message: '',
   });
 
   const handleShowNotification = (severity, message) => {
@@ -169,7 +168,7 @@ export default function PackagingEntries(props) {
   };
 
   //Search management
-  const [searchText, setSearchText] = useState("");
+  const [searchText, setSearchText] = useState('');
   const handleSearch = (event) => {
     const target = event.target;
     const value = target.value;
@@ -186,21 +185,19 @@ export default function PackagingEntries(props) {
   };
 
   useEffect(() => {
-    const token = JSON.parse(localStorage.getItem("userInfo")).token;
+    const token = JSON.parse(localStorage.getItem('userInfo')).token;
     let isSubscribed = true;
     //handleShowNotification("info", "Cargando clientes");
     $.ajax({
-      method: "GET",
-      url: mainURL + "packaging-entry/get-all",
-      contentType: "application/json",
+      method: 'GET',
+      url: mainURL + 'packaging-entry/get-all',
+      contentType: 'application/json',
       headers: {
-        Authorization: "Bearer " + token,
+        Authorization: 'Bearer ' + token,
       },
     })
       .done((res) => {
-        const aux: GridRowsProp = res.sort(
-          (a, b) => new Date(b.createdOn) - new Date(a.createdOn)
-        );
+        const aux: GridRowsProp = res.sort((a, b) => new Date(b.createdOn) - new Date(a.createdOn));
 
         if (isSubscribed) {
           setData(aux);
@@ -209,7 +206,7 @@ export default function PackagingEntries(props) {
         }
       })
       .fail((res) => {
-        handleShowNotification("error", res.responseText);
+        handleShowNotification('error', res.responseText);
       });
     return () => (isSubscribed = false);
   }, [refresh]);
@@ -243,15 +240,13 @@ export default function PackagingEntries(props) {
   }, [refresh]); */
 
   useEffect(() => {
-    const myReg = new RegExp("^.*" + searchText.toLowerCase() + ".*");
-    const newArray = data.filter((f) =>
-      f.referenceName.toLowerCase().match(myReg)
-    );
+    const myReg = new RegExp('^.*' + searchText.toLowerCase() + '.*');
+    const newArray = data.filter((f) => f.referenceName.toLowerCase().match(myReg));
     setFilteredData(newArray);
   }, [data, searchText]);
 
   return (
-    <Box sx={{ height: "85vh", p: 2 }}>
+    <Box sx={{ height: '85vh', p: 2 }}>
       <ProductionPopover
         open={anchor}
         showDeleteOption
@@ -264,12 +259,12 @@ export default function PackagingEntries(props) {
         refresh={refresh}
         open={deleteDialog}
         setRefresh={setRefresh}
-        title={"Eliminar registro"}
+        title={'Eliminar registro'}
         errorMessage={errorMessage}
         name={`${selectedData.referenceName}`}
         handleClose={handleCloseDialogs}
         deleteURL={`packaging-entry/${selectedData.id}`}
-        successMessage={"Registro eliminado con éxito"}
+        successMessage={'Registro eliminado con éxito'}
         handleShowNotification={handleShowNotification}
       />
       <UpdateEntryDialog
@@ -288,15 +283,15 @@ export default function PackagingEntries(props) {
         handleShowNotification={handleShowNotification}
       />
       <Grid
-        justifyContent={"space-between"}
-        alignItems={"center"}
-        sx={{ p: "1rem 0" }}
+        justifyContent={'space-between'}
+        alignItems={'center'}
+        sx={{ p: '1rem 0' }}
         spacing={2}
         container
       >
         <Grid item xs={12} container>
           <Grid item xs={12} md={8}>
-            <Typography variant={"h4"}>{"Ingresos a empacado"}</Typography>
+            <Typography variant={'h4'}>{'Ingresos a empacado'}</Typography>
           </Grid>
 
           {showNotification ? (
@@ -332,7 +327,7 @@ export default function PackagingEntries(props) {
                       })
                     }
                     format="dd/MM/yyyy"
-                    renderInput={(params) => <TextField variant="standard" />}
+                    textField={(params) => <TextField variant="standard" />}
                   />
                 </LocalizationProvider>
               </FormControl>
@@ -350,7 +345,7 @@ export default function PackagingEntries(props) {
                       })
                     }
                     format="dd/MM/yyyy"
-                    renderInput={(params) => <TextField variant="standard" />}
+                    textField={(params) => <TextField variant="standard" />}
                   />
                 </LocalizationProvider>
               </FormControl>
@@ -395,9 +390,9 @@ export default function PackagingEntries(props) {
         ) : null} */}
       </Grid>
 
-      <Box sx={{ height: "70vh", width: "100%", p: "16px 0", pb:8 }}>
+      <Box sx={{ height: '70vh', width: '100%', p: '16px 0', pb: 8 }}>
         <DataGrid
-          selectionModel={selectedData.id === "" ? [] : selectedData.id}
+          selectionModel={selectedData.id === '' ? [] : selectedData.id}
           onRowClick={handleSelect}
           rows={filteredData}
           columns={columns.filter((m) => m.breakpoints.includes(breakpoint))}

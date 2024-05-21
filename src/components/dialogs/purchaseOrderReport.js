@@ -140,7 +140,7 @@ export default function PurchaseOrderReportDialog(props) {
                     value={model.from}
                     onChange={(e) => setModel({ ...model, from: e })}
                     format="dd/MM/yyyy"
-                    renderInput={(params) => <TextField variant="standard" />}
+                    textField={(params) => <TextField variant="standard" />}
                   />
                 </LocalizationProvider>
               </FormControl>
@@ -153,7 +153,7 @@ export default function PurchaseOrderReportDialog(props) {
                     value={model.to}
                     onChange={(e) => setModel({ ...model, to: e })}
                     format="dd/MM/yyyy"
-                    renderInput={(params) => <TextField variant="standard" />}
+                    textField={(params) => <TextField variant="standard" />}
                   />
                 </LocalizationProvider>
               </FormControl>

@@ -23,6 +23,9 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 20,
   },
+  subTitle: {
+    fontSize: 16,
+  },
   client: {
     fontSize: 14,
   },
@@ -110,10 +113,19 @@ const styles = StyleSheet.create({
     margin: 'auto',
     fontSize: 14,
   },
+  footer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingTop: '20px',
+  },
 });
 
 export default function PurchaseOrderDocument(props) {
   const { data } = props;
+
+  const numberWithCommas = (number) => {
+    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+  };
 
   return (
     <Document>
@@ -189,6 +201,26 @@ export default function PurchaseOrderDocument(props) {
         <Text style={styles.diagnostic}>{`Peso total: ${data.shipmentWeight} Kg`}</Text>
         <Text style={styles.diagnostic}>{`Número de cajas: ${data.numberOfBoxes}`}</Text>
         <Text style={styles.diagnostic}>{`Material faltante: ${data.missingMaterial} Kg`}</Text>
+
+        <React.Fragment>
+          <View style={styles.footer}>
+            <View style={styles.titleContainer}>
+              <Text style={styles.subTitle}>{`Factura de venta: ${data.invoiceNumber}`}</Text>
+            </View>
+            <Text style={styles.date}>
+              {data.invoiceNumber !== '' ? new Date(data.invoiceDate).toLocaleDateString() : null}
+            </Text>
+          </View>
+          <View>
+            <Text style={styles.diagnostic}>{`Valor: $ ${
+              data.invoiceNumber !== '' ? numberWithCommas(parseFloat(data.invoicePrice)) : ''
+            }`}</Text>
+            <Text style={styles.diagnostic}>{`Descuento: ${
+              data.invoiceNumber !== '' ? data.invoiceDiscount : ''
+            }`}</Text>
+            <Text style={styles.diagnostic}>{`Sello: ${data.invoiceNumber}`}</Text>
+          </View>
+        </React.Fragment>
       </Page>
     </Document>
   );
