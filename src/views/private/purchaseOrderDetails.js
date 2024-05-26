@@ -14,14 +14,15 @@ import mainURL from '../../config/environment';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { DataGrid } from '@mui/x-data-grid';
-import { Download, Edit, BrowserUpdated, PlaylistAdd } from '@mui/icons-material';
+import { Download, Edit, BrowserUpdated, PlaylistAdd, Receipt } from '@mui/icons-material';
 
 import { PDFDownloadLink } from '@react-pdf/renderer';
 import PurchaseOrderDocument from '../../components/docs/purchaseOrder';
 import { useWidth } from '../../utils/withSelector';
 import ClientPurchaseOrderDocument from '../../components/docs/clientPurchaseOrder';
-import { Tooltip } from '@mui/material';
+import { Divider, Tooltip } from '@mui/material';
 import AddReferenceToPurchaseOrder from '../../components/dialogs/addReferencesToPurchaseOrder';
+import UpdateInvoiceDetailsDialog from '../../components/dialogs/updateInvoiceDetails';
 
 const emptyModel = {
   id: '',
@@ -84,12 +85,14 @@ export default function PurchaseOrderDetails(props) {
     },
   ];
 
-  const [dialog, setDialog] = useState(false);
+  const [invoiceDialog, setInvoiceDialog] = useState(false);
   const [refresh, setRefresh] = useState(false);
+  const [addDialog, setAddDialog] = useState(false);
 
   const handleClose = () => {
+    setInvoiceDialog(false);
     setRefresh(false);
-    setDialog(false);
+    setAddDialog(false);
   };
 
   const numberWithCommas = (number) => {
@@ -132,21 +135,42 @@ export default function PurchaseOrderDetails(props) {
     navigate(`/ordenes-compra/${orderId}/editar`);
   };
 
-  const handleToggleDialog = () => {
-    setDialog(true);
+  const handleToggleDialog = (dialog) => (event) => {
+    switch (dialog) {
+      case 'add':
+        setAddDialog(true);
+        break;
+
+      case 'invoice':
+        setInvoiceDialog(true);
+        break;
+
+      default:
+        console.log('nothing');
+        break;
+    }
   };
 
   return (
     <Box sx={{ height: '85vh', p: 2 }}>
       <AddReferenceToPurchaseOrder
         id={data.id}
-        open={dialog}
+        open={addDialog}
         handleClose={handleClose}
         orderNumber={data.orderNumber}
       />
+
+      <UpdateInvoiceDetailsDialog
+        handleClose={handleClose}
+        setRefresh={setRefresh}
+        open={invoiceDialog}
+        orderId={orderId}
+        data={data}
+      />
+
       <Grid container spacing={2} height={'100%'}>
         <Grid item container xs={12}>
-          <Card sx={{ width: '100%' }}>
+          <Card sx={{ width: '100%', mb: '5rem' }}>
             <CardHeader
               title={
                 <Typography sx={{ fontWeight: 600, fontSize: 25 }}>
@@ -168,7 +192,11 @@ export default function PurchaseOrderDetails(props) {
               }
               action={
                 <Grid container>
-                  <IconButton onClick={handleToggleDialog}>
+                  <IconButton onClick={handleToggleDialog('invoice')}>
+                    <Receipt color="primary" />
+                  </IconButton>
+
+                  <IconButton onClick={handleToggleDialog('add')}>
                     <PlaylistAdd color="primary" />
                   </IconButton>
 
@@ -215,39 +243,46 @@ export default function PurchaseOrderDetails(props) {
                 />
               </Box>
 
-              {/* <Divider /> */}
-
               <Grid container sx={{ pt: 2 }}>
+                <Grid container direction={'column'} item sm={12}>
+                  <Typography variant="body1">{`Peso total: ${data.shipmentWeight} Kg`}</Typography>
+                  <Typography variant="body1">{`Número de cajas: ${data.numberOfBoxes}`}</Typography>
+                  <Typography variant="body1">{`Material faltante: ${data.missingMaterial} Kg`}</Typography>
+                </Grid>
                 {data.invoiceNumber !== '' ? (
-                  <Grid container item sm={6} spacing={2}>
+                  <Grid container item sm={12} spacing={2} mt={2}>
                     <Grid item xs={12}>
-                      <Typography>{'Datos de facturación'}</Typography>
+                      <Divider />
                     </Grid>
-                    <Grid item xs={6}>
+                    <Grid item xs={12}>
+                      <Typography variant="h6">{'Datos de facturación'}</Typography>
+                    </Grid>
+
+                    <Grid item xs={12} md={6} lg={2}>
                       <Typography variant="body1">{'Número de factura'}</Typography>
                       <Typography variant="body2" color={'textSecondary'}>
                         {data.invoiceNumber}
                       </Typography>
                     </Grid>
-                    <Grid item xs={6}>
+                    <Grid item xs={6} md={6} lg={2}>
                       <Typography>{'Fecha'}</Typography>
                       <Typography variant="body2" color={'textSecondary'}>
                         {new Date(data.invoiceDate).toLocaleDateString()}
                       </Typography>
                     </Grid>
-                    <Grid item xs={6}>
+                    <Grid item xs={6} md={6} lg={2}>
                       <Typography>{'Valor'}</Typography>
                       <Typography variant="body2" color={'textSecondary'}>
                         {`$ ${numberWithCommas(parseFloat(data.invoicePrice))}`}
                       </Typography>
                     </Grid>
-                    <Grid item xs={6}>
+                    <Grid item xs={6} md={6} lg={2}>
                       <Typography>{'Descuento'}</Typography>
                       <Typography variant="body2" color={'textSecondary'}>
-                        {`$ ${numberWithCommas(parseFloat(data.invoiceDiscount))}`}
+                        {`${data.invoiceDiscount}%`}
                       </Typography>
                     </Grid>
-                    <Grid item xs={6}>
+                    <Grid item xs={6} md={6} lg={2}>
                       <Typography>{'Sello'}</Typography>
                       <Typography variant="body2" color={'textSecondary'}>
                         {data.invoiceStamp}
@@ -255,11 +290,6 @@ export default function PurchaseOrderDetails(props) {
                     </Grid>
                   </Grid>
                 ) : null}
-                <Grid container direction={'column'} item sm={6}>
-                  <Typography variant="body1">{`Peso total: ${data.shipmentWeight} Kg`}</Typography>
-                  <Typography variant="body1">{`Número de cajas: ${data.numberOfBoxes}`}</Typography>
-                  <Typography variant="body1">{`Material faltante: ${data.missingMaterial} Kg`}</Typography>
-                </Grid>
               </Grid>
             </CardContent>
           </Card>

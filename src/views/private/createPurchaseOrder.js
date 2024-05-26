@@ -4,12 +4,12 @@ import CircularProgress from '@mui/material/CircularProgress';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import FormControl from '@mui/material/FormControl';
+//import FormControl from '@mui/material/FormControl';
 import CardContent from '@mui/material/CardContent';
 import CardActions from '@mui/material/CardActions';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
-import TextField from '@mui/material/TextField';
+//import TextField from '@mui/material/TextField';
 import Checkbox from '@mui/material/Checkbox';
 import ListItem from '@mui/material/ListItem';
 import Divider from '@mui/material/Divider';
@@ -31,21 +31,11 @@ import SelectPackaging from '../../components/input/selectPackaging';
 import SelectClient from '../../components/input/selectClient';
 import { useNavigate } from 'react-router-dom';
 
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
-import { DatePicker } from '@mui/x-date-pickers';
-import SelectStamp from '../../components/input/selectStamp';
-
 const emptyModel = {
   clientId: '',
   references: [],
   usePackaging: false,
   packagingId: '',
-  invoicePrice: 0,
-  invoiceNumber: '',
-  invoiceDiscount: 0,
-  invoiceStamp: '',
-  invoiceDate: new Date(),
 };
 
 const emptyResponse = {
@@ -195,12 +185,7 @@ export default function CreatePurchaseOrder(props) {
       });
   };
 
-  const handleDateChange = (event) => {
-    setModel({
-      ...model,
-      invoiceDate: event,
-    });
-  };
+  /*  */
 
   const numberWithCommas = (number) => {
     return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
@@ -307,72 +292,6 @@ export default function CreatePurchaseOrder(props) {
                     handleAdd={handleAdd}
                     usedReferences={model.references.map((m) => m.rubberReferenceId)}
                     includeSecondary
-                  />
-                </Grid>
-
-                <Grid item xs={12} sx={{ mt: 2 }}>
-                  <Typography variant="h6">Datos de facturación</Typography>
-                  <Divider />
-                </Grid>
-
-                <Grid item xs={12} md={6}>
-                  <FormControl fullWidth>
-                    <LocalizationProvider dateAdapter={AdapterDateFns}>
-                      <DatePicker
-                        label={'Fecha'}
-                        value={model.invoiceDate}
-                        onChange={handleDateChange}
-                        format="dd/MM/yyyy"
-                        textField={(params) => <TextField variant="standard" />}
-                      />
-                    </LocalizationProvider>
-                  </FormControl>
-                </Grid>
-
-                <Grid item xs={12} md={6}>
-                  <FormControl fullWidth>
-                    <TextField
-                      label={'Número de factura'}
-                      onChange={handleChange}
-                      value={model.invoiceNumber}
-                      variant="standard"
-                      name="invoiceNumber"
-                      margin="dense"
-                      type="text"
-                    />
-                  </FormControl>
-                </Grid>
-                <Grid item xs={12} md={6}>
-                  <FormControl fullWidth>
-                    <TextField
-                      label={'Valor'}
-                      onChange={handleChange}
-                      value={model.invoicePrice}
-                      variant="standard"
-                      name="invoicePrice"
-                      margin="dense"
-                      type="number"
-                    />
-                  </FormControl>
-                </Grid>
-                <Grid item xs={12} md={6}>
-                  <FormControl fullWidth>
-                    <TextField
-                      label={'Descuento'}
-                      onChange={handleChange}
-                      value={model.invoiceDiscount}
-                      variant="standard"
-                      name="invoiceDiscount"
-                      margin="dense"
-                      type="number"
-                    />
-                  </FormControl>
-                </Grid>
-                <Grid item xs={12} md={6}>
-                  <SelectStamp
-                    handleChange={handleChange}
-                    name={'invoiceStamp'}
-                    value={model.invoiceStamp}
                   />
                 </Grid>
               </Grid>
