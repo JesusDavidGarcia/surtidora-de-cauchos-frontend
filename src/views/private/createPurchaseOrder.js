@@ -12,7 +12,7 @@ import Typography from '@mui/material/Typography';
 //import TextField from '@mui/material/TextField';
 import Checkbox from '@mui/material/Checkbox';
 import ListItem from '@mui/material/ListItem';
-import Divider from '@mui/material/Divider';
+//import Divider from '@mui/material/Divider';
 import Button from '@mui/material/Button';
 import Alert from '@mui/material/Alert';
 import Grid from '@mui/material/Grid';
@@ -185,11 +185,9 @@ export default function CreatePurchaseOrder(props) {
       });
   };
 
-  /*  */
-
-  const numberWithCommas = (number) => {
+  /*  const numberWithCommas = (number) => {
     return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-  };
+  }; */
 
   //Notification management
   const [showNotification, setShowNotification] = useState(false);
@@ -363,7 +361,7 @@ export default function CreatePurchaseOrder(props) {
                     </ListItem>
                   ))}
                 </List>
-                <Grid container spacing={2}>
+                {/* <Grid container spacing={2}>
                   <Grid item xs={12}>
                     <Typography>{'Datos de facturación'}</Typography>
                     <Divider />
@@ -377,19 +375,19 @@ export default function CreatePurchaseOrder(props) {
                   <Grid item xs={6}>
                     <Typography>{'Fecha'}</Typography>
                     <Typography variant="body2" color={'textSecondary'}>
-                      {model.invoiceDate.toLocaleDateString()}
+                      {new Date(model.invoiceDate).toLocaleDateString()}
                     </Typography>
                   </Grid>
                   <Grid item xs={6}>
                     <Typography>{'Valor'}</Typography>
                     <Typography variant="body2" color={'textSecondary'}>
-                      {`$ ${numberWithCommas(model.invoicePrice)}`}
+                      {`$ ${numberWithCommas(parseFloat(model.invoicePrice))}`}
                     </Typography>
                   </Grid>
                   <Grid item xs={6}>
                     <Typography>{'Descuento'}</Typography>
                     <Typography variant="body2" color={'textSecondary'}>
-                      {`$ ${numberWithCommas(model.invoiceDiscount)}`}
+                      {`${model.invoiceDiscount} %`}
                     </Typography>
                   </Grid>
                   <Grid item xs={6}>
@@ -398,7 +396,7 @@ export default function CreatePurchaseOrder(props) {
                       {model.invoiceStamp}
                     </Typography>
                   </Grid>
-                </Grid>
+                </Grid> */}
                 {showResponse ? (
                   <Grid container>
                     <Grid container alignItems={'center'}>
