@@ -126,7 +126,6 @@ export default function CreatePurchaseOrder(props) {
     const newModel = {
       ...model,
       packagingId: model.usePackaging ? model.packagingId : null,
-      invoiceDate: model.invoiceDate.toISOString(),
     };
     console.log(newModel);
     $.ajax({
