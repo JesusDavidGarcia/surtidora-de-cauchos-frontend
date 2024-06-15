@@ -11,10 +11,10 @@ import Box from '@mui/material/Box';
 import $ from 'jquery';
 import mainURL from '../../config/environment';
 
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 import { DataGrid } from '@mui/x-data-grid';
-import { Download, Edit, BrowserUpdated, PlaylistAdd, Receipt } from '@mui/icons-material';
+import { Download, BrowserUpdated, PlaylistAdd, Receipt, Delete } from '@mui/icons-material';
 
 import { PDFDownloadLink } from '@react-pdf/renderer';
 import PurchaseOrderDocument from '../../components/docs/purchaseOrder';
@@ -23,6 +23,7 @@ import ClientPurchaseOrderDocument from '../../components/docs/clientPurchaseOrd
 import { Divider, Tooltip } from '@mui/material';
 import AddReferenceToPurchaseOrder from '../../components/dialogs/addReferencesToPurchaseOrder';
 import UpdateInvoiceDetailsDialog from '../../components/dialogs/updateInvoiceDetails';
+import DeleteGenericDialog from '../../components/dialogs/deleteGeneric';
 
 const emptyModel = {
   id: '',
@@ -44,12 +45,24 @@ const emptyModel = {
   references: [],
 };
 
+const emptyData = {
+  id: '',
+  rubberReferenceId: '',
+  purchaseOrderId: '',
+  referenceName: '',
+  quantity: 0,
+  totalWeight: 0,
+  missingQuantity: 0,
+  missingPackagingQuantity: 0,
+};
+
 export default function PurchaseOrderDetails(props) {
+  const [selectedData, setSelectedData] = useState(emptyData);
   const [data, setData] = useState(emptyModel);
   const [rows, setRows] = useState([]);
   const { orderId } = useParams();
 
-  const navigate = useNavigate();
+  //const navigate = useNavigate();
   const breakpoint = useWidth();
 
   const columns: GridColDef[] = [
@@ -83,16 +96,39 @@ export default function PurchaseOrderDetails(props) {
       flex: 1,
       breakpoints: ['md', 'lg', 'xl'],
     },
+    {
+      headerName: 'Opciones',
+      field: 'id',
+      renderCell: (params: GridRenderCellParams) => (
+        <IconButton onClick={handlePopoverOpen(params.row)}>
+          <Delete />
+        </IconButton>
+      ),
+      //flex: 1,
+      align: 'center',
+      headerAlign: 'center',
+      sortable: false,
+      editable: false,
+      breakpoints: ['xs', 'sm', 'md', 'lg', 'xl'],
+    },
   ];
 
+  const handlePopoverOpen = (selected) => (event) => {
+    event.stopPropagation();
+    setDeleteDialog(true);
+    setSelectedData(selected);
+  };
+
   const [invoiceDialog, setInvoiceDialog] = useState(false);
-  const [refresh, setRefresh] = useState(false);
+  const [deleteDialog, setDeleteDialog] = useState(false);
   const [addDialog, setAddDialog] = useState(false);
+  const [refresh, setRefresh] = useState(false);
 
   const handleClose = () => {
     setInvoiceDialog(false);
-    setRefresh(false);
+    setDeleteDialog(false);
     setAddDialog(false);
+    setRefresh(!refresh);
   };
 
   const numberWithCommas = (number) => {
@@ -110,30 +146,24 @@ export default function PurchaseOrderDetails(props) {
       headers: {
         Authorization: 'Bearer ' + token,
       },
-    })
-      .done((res) => {
-        const aux: GridRowsProp = res.references.map((ref, idx) => ({
-          ...ref,
-          id: idx,
-          missingQuantity:
-            ref.missingQuantity % 1 === 0 ? ref.missingQuantity : ref.missingQuantity.toFixed(2),
-        }));
+    }).done((res) => {
+      const aux: GridRowsProp = res.references.map((ref, idx) => ({
+        ...ref,
+        missingQuantity:
+          ref.missingQuantity % 1 === 0 ? ref.missingQuantity : ref.missingQuantity.toFixed(2),
+      }));
 
-        if (isSubscribed) {
-          setData(res);
-          setRows(aux);
-          //handleShowNotification("success", "Ordenes cargadas con éxito");
-        }
-      })
-      .fail((res) => {
-        //handleShowNotification("error", res.responseText);
-      });
+      if (isSubscribed) {
+        setData(res);
+        setRows(aux);
+        //handleShowNotification("success", "Ordenes cargadas con éxito");
+      }
+    });
+
     return () => (isSubscribed = false);
   }, [orderId, refresh]);
 
-  const handleToggleView = () => {
-    navigate(`/ordenes-compra/${orderId}/editar`);
-  };
+  const handleShowNotification = (severity, message) => {};
 
   const handleToggleDialog = (dialog) => (event) => {
     switch (dialog) {
@@ -143,6 +173,10 @@ export default function PurchaseOrderDetails(props) {
 
       case 'invoice':
         setInvoiceDialog(true);
+        break;
+
+      case 'delete':
+        setDeleteDialog(true);
         break;
 
       default:
@@ -158,8 +192,19 @@ export default function PurchaseOrderDetails(props) {
         open={addDialog}
         handleClose={handleClose}
         orderNumber={data.orderNumber}
+        usedReferences={data.references.map((x) => x.rubberReferenceId)}
       />
-
+      <DeleteGenericDialog
+        refresh={refresh}
+        open={deleteDialog}
+        setRefresh={setRefresh}
+        title={'Eliminar referencia'}
+        errorMessage={'errorMessage'}
+        name={selectedData.referenceName}
+        handleClose={handleClose}
+        deleteURL={`purchase-order/${selectedData.id}/delete-reference`}
+        handleShowNotification={handleShowNotification}
+      />
       <UpdateInvoiceDetailsDialog
         handleClose={handleClose}
         setRefresh={setRefresh}
@@ -192,17 +237,23 @@ export default function PurchaseOrderDetails(props) {
               }
               action={
                 <Grid container>
-                  <IconButton onClick={handleToggleDialog('invoice')}>
-                    <Receipt color="primary" />
-                  </IconButton>
+                  <Tooltip title="Factura">
+                    <IconButton onClick={handleToggleDialog('invoice')}>
+                      <Receipt color="primary" />
+                    </IconButton>
+                  </Tooltip>
 
-                  <IconButton onClick={handleToggleDialog('add')}>
-                    <PlaylistAdd color="primary" />
-                  </IconButton>
+                  <Tooltip title="Añadir referencia">
+                    <IconButton onClick={handleToggleDialog('add')}>
+                      <PlaylistAdd color="primary" />
+                    </IconButton>
+                  </Tooltip>
 
-                  <IconButton onClick={handleToggleView}>
-                    <Edit color="primary" />
-                  </IconButton>
+                  {/*  <Tooltip title="Añadir referencia">
+                    <IconButton onClick={handleToggleView}>
+                      <Edit color="primary" />
+                    </IconButton>
+                  </Tooltip> */}
 
                   <PDFDownloadLink
                     document={<PurchaseOrderDocument data={data} />}
@@ -249,7 +300,7 @@ export default function PurchaseOrderDetails(props) {
                   <Typography variant="body1">{`Número de cajas: ${data.numberOfBoxes}`}</Typography>
                   <Typography variant="body1">{`Material faltante: ${data.missingMaterial} Kg`}</Typography>
                 </Grid>
-                {data.invoiceNumber !== '' ? (
+                {data.invoiceNumber !== null ? (
                   <Grid container item sm={12} spacing={2} mt={2}>
                     <Grid item xs={12}>
                       <Divider />

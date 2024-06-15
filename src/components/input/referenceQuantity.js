@@ -43,7 +43,7 @@ const useReferences = (refresh, includeSecondary) => {
 };
 
 export default function ReferenceQuantityInput(props) {
-  const { refresh, usedReferences, includeSecondary } = props;
+  const { refresh, usedReferences, includeSecondary, autoSelect } = props;
 
   const references = useReferences(refresh, includeSecondary);
 
@@ -69,6 +69,11 @@ export default function ReferenceQuantityInput(props) {
         ...model,
         [name]: value,
       });
+      if (autoSelect)
+        props.handleAdd({
+          ...model,
+          [name]: value,
+        });
     }
   };
 
@@ -81,6 +86,11 @@ export default function ReferenceQuantityInput(props) {
         referenceName: `${newReference.reference} ${newReference.application}`,
         packedWeight: newReference.packedWeight,
       });
+      if (autoSelect)
+        props.handleAdd({
+          ...model,
+          rubberReferenceId: newReference.id,
+        });
     } else {
       setModel(emptyModel);
       setSelectedReference(null);
@@ -95,7 +105,7 @@ export default function ReferenceQuantityInput(props) {
 
   return (
     <Grid container alignItems={'center'} spacing={2}>
-      <Grid item xs={12} md={8}>
+      <Grid item xs={12} md={autoSelect ? 10 : 8}>
         <FormControl required fullWidth>
           <Autocomplete
             id="tags-standard"
@@ -127,13 +137,15 @@ export default function ReferenceQuantityInput(props) {
           />
         </FormControl>
       </Grid>
-      <Grid item xs={4} md={2} container justifyContent={'flex-end'}>
-        <IconButton onClick={handleSubmit} disabled={model.quantity === 0}>
-          <Tooltip title="Agregar referencia">
-            <CheckCircle color={model === emptyModel ? 'action' : 'primary'} />
-          </Tooltip>
-        </IconButton>
-      </Grid>
+      {autoSelect ? null : (
+        <Grid item xs={4} md={2} container justifyContent={'flex-end'}>
+          <IconButton onClick={handleSubmit} disabled={model.quantity === 0}>
+            <Tooltip title="Agregar referencia">
+              <CheckCircle color={model === emptyModel ? 'action' : 'primary'} />
+            </Tooltip>
+          </IconButton>
+        </Grid>
+      )}
     </Grid>
   );
 }

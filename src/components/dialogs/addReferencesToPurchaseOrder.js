@@ -4,22 +4,22 @@ import DialogContentText from '@mui/material/DialogContentText';
 import CircularProgress from '@mui/material/CircularProgress';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
-import ListItemIcon from '@mui/material/ListItemIcon';
+/* import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import DialogTitle from '@mui/material/DialogTitle';
-import IconButton from '@mui/material/IconButton';
+ */ import DialogTitle from '@mui/material/DialogTitle';
+/* import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import ListItem from '@mui/material/ListItem';
-import Divider from '@mui/material/Divider';
+import Divider from '@mui/material/Divider'; */
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 
-import List from '@mui/material/List';
+/* import List from '@mui/material/List';
 
 import CancelIcon from '@mui/icons-material/Cancel';
-import InboxIcon from '@mui/icons-material/Inbox';
+import InboxIcon from '@mui/icons-material/Inbox'; */
 
 import ReferenceQuantityInput from '../../components/input/referenceQuantity';
 
@@ -27,28 +27,27 @@ import $ from 'jquery';
 import mainURL from '../../config/environment';
 
 const emptyModel = {
-  references: [],
+  rubberReferenceId: '',
+  quantity: 0,
 };
 
 export default function AddReferenceToPurchaseOrder(props) {
   const [isLoading, setLoading] = useState(false);
   const [model, setModel] = useState(emptyModel);
-  const { orderNumber, id } = props;
+  const { orderNumber, id, usedReferences } = props;
 
   const handleAdd = (item) => {
-    const a = [...model.references];
-
-    a.push(item);
-    setModel({ ...model, references: a });
+    console.log(item);
+    setModel(item);
   };
 
-  const handleDelete = (index) => () => {
+  /* const handleDelete = (index) => () => {
     let a = [...model.references];
     a.splice(index, 1);
 
     setModel({ ...model, references: a });
   };
-
+ */
   const handleSubmit = (event) => {
     event.preventDefault();
     setLoading(true);
@@ -56,7 +55,7 @@ export default function AddReferenceToPurchaseOrder(props) {
 
     $.ajax({
       method: 'PUT',
-      url: `${mainURL}purchase-order/${id}/add-references`,
+      url: `${mainURL}purchase-order/${id}/add-reference`,
       contentType: 'application/json',
       headers: {
         Authorization: 'Bearer ' + token,
@@ -92,13 +91,14 @@ export default function AddReferenceToPurchaseOrder(props) {
             <Grid item xs={12}>
               <ReferenceQuantityInput
                 handleAdd={handleAdd}
-                usedReferences={model.references.map((m) => m.rubberReferenceId)}
+                usedReferences={usedReferences}
+                autoSelect
                 includeSecondary
               />
             </Grid>
           </Grid>
         </Box>
-        {model.references.length > 0 ? (
+        {/*   {model.references.length > 0 ? (
           <Grid item container xs={12}>
             <List sx={{ width: '100%' }}>
               {model.references.map((reference, index) => (
@@ -127,7 +127,7 @@ export default function AddReferenceToPurchaseOrder(props) {
               <Divider />
             </List>
           </Grid>
-        ) : null}
+        ) : null} */}
       </DialogContent>
       <DialogActions>
         {isLoading ? (
@@ -139,7 +139,7 @@ export default function AddReferenceToPurchaseOrder(props) {
             <Button type="submit" onClick={handleClear}>
               Cerrar
             </Button>
-            <Button type="submit" disabled={model.references.length === 0} onClick={handleSubmit}>
+            <Button type="submit" disabled={model === emptyModel} onClick={handleSubmit}>
               Agregar
             </Button>
           </Grid>

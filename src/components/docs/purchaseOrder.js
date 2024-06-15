@@ -201,26 +201,27 @@ export default function PurchaseOrderDocument(props) {
         <Text style={styles.diagnostic}>{`Peso total: ${data.shipmentWeight} Kg`}</Text>
         <Text style={styles.diagnostic}>{`Número de cajas: ${data.numberOfBoxes}`}</Text>
         <Text style={styles.diagnostic}>{`Material faltante: ${data.missingMaterial} Kg`}</Text>
-
-        <React.Fragment>
-          <View style={styles.footer}>
-            <View style={styles.titleContainer}>
-              <Text style={styles.subTitle}>{`Factura de venta: ${data.invoiceNumber}`}</Text>
+        {data.invoiceNumber !== null ? (
+          <React.Fragment>
+            <View style={styles.footer}>
+              <View style={styles.titleContainer}>
+                <Text style={styles.subTitle}>{`Factura de venta: ${data.invoiceNumber}`}</Text>
+              </View>
+              <Text style={styles.date}>
+                {data.invoiceNumber !== '' ? new Date(data.invoiceDate).toLocaleDateString() : null}
+              </Text>
             </View>
-            <Text style={styles.date}>
-              {data.invoiceNumber !== '' ? new Date(data.invoiceDate).toLocaleDateString() : null}
-            </Text>
-          </View>
-          <View>
-            <Text style={styles.diagnostic}>{`Valor: $ ${
-              data.invoiceNumber !== '' ? numberWithCommas(parseFloat(data.invoicePrice)) : ''
-            }`}</Text>
-            <Text style={styles.diagnostic}>{`Descuento: ${
-              data.invoiceNumber !== '' ? data.invoiceDiscount : ''
-            }`}</Text>
-            <Text style={styles.diagnostic}>{`Sello: ${data.invoiceNumber}`}</Text>
-          </View>
-        </React.Fragment>
+            <View>
+              <Text style={styles.diagnostic}>{`Valor: $ ${
+                data.invoiceNumber !== '' ? numberWithCommas(parseFloat(data.invoicePrice)) : ''
+              }`}</Text>
+              <Text style={styles.diagnostic}>{`Descuento: ${
+                data.invoiceNumber !== '' ? data.invoiceDiscount : ''
+              }%`}</Text>
+              <Text style={styles.diagnostic}>{`Sello: ${data.invoiceStamp}`}</Text>
+            </View>
+          </React.Fragment>
+        ) : null}
       </Page>
     </Document>
   );
