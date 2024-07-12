@@ -189,38 +189,28 @@ export default function ProductionEntries(props) {
 
   useEffect(() => {
     const token = JSON.parse(localStorage.getItem('userInfo')).token;
-    let isSubscribed = true;
-    //handleShowNotification("info", "Cargando clientes");
-    $.ajax({
-      method: 'GET',
-      url: `${mainURL}production-entry/get-all?pageSize=${pageSize}&pageNumber=${page}`,
-      contentType: 'application/json',
-      headers: {
-        Authorization: 'Bearer ' + token,
-      },
-    })
-      .done((res) => {
-        /* : GridRowsProp */
-        const aux = res.results;
-        if (isSubscribed) {
+    const getData = setTimeout(() => {
+      $.ajax({
+        method: 'GET',
+        url: `${mainURL}production-entry/get-all?pageSize=${pageSize}&pageNumber=${page}&referenceName=${searchText}`,
+        contentType: 'application/json',
+        headers: {
+          Authorization: 'Bearer ' + token,
+        },
+      })
+        .done((res) => {
+          const aux = res.results;
           setData(aux);
           setHasNextPage(res.hasNext);
           setRowCount(res.totalItemCount);
-          //setFilteredData(aux);
-          //handleShowNotification("success", "Referencias cargados con éxito");
-        }
-      })
-      .fail((res) => {
-        handleShowNotification('error', res.responseText);
-      });
-    return () => (isSubscribed = false);
-  }, [refresh, page, pageSize]);
+        })
+        .fail((res) => {
+          handleShowNotification('error', res.responseText);
+        });
+    }, 500);
 
-  /*   useEffect(() => {
-    const myReg = new RegExp('^.*' + searchText.toLowerCase() + '.*');
-    const newArray = data.filter((f) => f.referenceName.toLowerCase().match(myReg));
-    setFilteredData(newArray);
-  }, [data, searchText]); */
+    return () => clearTimeout(getData);
+  }, [refresh, page, pageSize, searchText]);
 
   return (
     <Box sx={{ height: '85vh', p: 2 }}>

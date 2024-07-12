@@ -187,7 +187,7 @@ export default function PackagingEntries(props) {
   useEffect(() => {
     const token = JSON.parse(localStorage.getItem('userInfo')).token;
     let isSubscribed = true;
-    //handleShowNotification("info", "Cargando clientes");
+
     $.ajax({
       method: 'GET',
       url: mainURL + 'packaging-entry/get-all',
