@@ -20,7 +20,7 @@ import ProductionPopover from '../../components/popovers/generic';
 
 import mainURL from '../../config/environment';
 import $ from 'jquery';
-import { useWidth } from '../../utils/withSelector';
+import { useWidth } from '../../utils/widthSelector';
 
 const emptyData = {
   id: '',

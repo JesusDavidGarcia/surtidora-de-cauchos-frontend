@@ -26,7 +26,7 @@ import ProductionPopover from '../../components/popovers/generic';
 
 import mainURL from '../../config/environment';
 import $ from 'jquery';
-import { useWidth } from '../../utils/withSelector';
+import { useWidth } from '../../utils/widthSelector';
 import { PDFDownloadLink } from '@react-pdf/renderer';
 import SharpeningEntriesDocument from '../../components/docs/sharpeningEntries';
 import { Button, CircularProgress, Tooltip } from '@mui/material';

@@ -1,40 +1,39 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 
 //MUI
-import Typography from "@mui/material/Typography";
-import IconButton from "@mui/material/IconButton";
-import Alert from "@mui/material/Alert";
-import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
+import Typography from '@mui/material/Typography';
+import IconButton from '@mui/material/IconButton';
+import Alert from '@mui/material/Alert';
+import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
 
-import { DataGrid } from "@mui/x-data-grid";
+import { DataGrid } from '@mui/x-data-grid';
 
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
 
 //Icons
-import MoreVertIcon from "@mui/icons-material/MoreVert";
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 
-import DeleteRemissionDialog from "../../components/dialogs/deleteGeneric";
-import SearchAndCreate from "../../components/input/searchAndCreate";
-import PurchaseOrderPopover from "../../components/popovers/generic";
+import DeleteRemissionDialog from '../../components/dialogs/deleteGeneric';
+import SearchAndCreate from '../../components/input/searchAndCreate';
+import PurchaseOrderPopover from '../../components/popovers/generic';
 
-import mainURL from "../../config/environment";
-import $ from "jquery";
-import { useWidth } from "../../utils/withSelector";
+import mainURL from '../../config/environment';
+import $ from 'jquery';
+import { useWidth } from '../../utils/widthSelector';
 
 const emptyData = {
-  id: "",
-  clientId: "",
-  clientName: "",
-  createdOn: "",
+  id: '',
+  clientId: '',
+  clientName: '',
+  createdOn: '',
   shipmentWeight: 0,
   invoicePrice: 0,
   numberOfBoxes: 0,
   references: [],
 };
 
-const errorMessage =
-  "No se puede borrar esta remisión porque hay alquileres que dependen en ella";
+const errorMessage = 'No se puede borrar esta remisión porque hay alquileres que dependen en ella';
 export default function PurchaseOrders(props) {
   //Data management
   const [selectedData, setSelectedData] = useState(emptyData);
@@ -49,43 +48,43 @@ export default function PurchaseOrders(props) {
 
   const columns: GridColDef[] = [
     {
-      headerName: "Número",
-      field: "orderNumber",
+      headerName: 'Número',
+      field: 'orderNumber',
       //flex: 1,
       //align: "center",
-      breakpoints: ["xs", "sm", "md", "lg", "xl"],
+      breakpoints: ['xs', 'sm', 'md', 'lg', 'xl'],
     },
     {
-      headerName: "Cliente",
-      field: "clientName",
+      headerName: 'Cliente',
+      field: 'clientName',
       flex: 1,
-      breakpoints: ["xs", "sm", "md", "lg", "xl"],
+      breakpoints: ['xs', 'sm', 'md', 'lg', 'xl'],
     },
     {
-      headerName: "Fecha de creación",
-      field: "createdOn",
+      headerName: 'Fecha de creación',
+      field: 'createdOn',
       flex: 1,
       renderCell: (params: GridRenderCellParams) => (
         <Typography key={params.row.id} variant="body2">
           {new Date(params.row.createdOn).toLocaleDateString()}
         </Typography>
       ),
-      breakpoints: ["md", "lg", "xl"],
+      breakpoints: ['md', 'lg', 'xl'],
     },
     {
-      headerName: "Opciones",
-      field: "id",
+      headerName: 'Opciones',
+      field: 'id',
       renderCell: (params: GridRenderCellParams) => (
         <IconButton onClick={handlePopoverOpen(params.row)}>
           <MoreVertIcon />
         </IconButton>
       ),
       //flex: 1,
-      align: "center",
-      headerAlign: "center",
+      align: 'center',
+      headerAlign: 'center',
       sortable: false,
       editable: false,
-      breakpoints: ["xs", "sm", "md", "lg", "xl"],
+      breakpoints: ['xs', 'sm', 'md', 'lg', 'xl'],
     },
   ];
 
@@ -97,16 +96,16 @@ export default function PurchaseOrders(props) {
 
   const handleOpenDialog = (dialog) => (event) => {
     switch (dialog) {
-      case "create":
-        navigate("crear");
+      case 'create':
+        navigate('crear');
         break;
 
-      case "delete":
+      case 'delete':
         setDeleteDialog(true);
         break;
 
       default:
-        console.log("None");
+        console.log('None');
         break;
     }
   };
@@ -114,12 +113,12 @@ export default function PurchaseOrders(props) {
   //Notification management
   const [showNotification, setShowNotification] = useState(false);
   const [notificationMessage, setNotificationMessage] = useState({
-    severity: "",
-    message: "",
+    severity: '',
+    message: '',
   });
 
   //Search management
-  const [searchText, setSearchText] = useState("");
+  const [searchText, setSearchText] = useState('');
   const handleSearch = (event) => {
     const target = event.target;
     const value = target.value;
@@ -153,42 +152,38 @@ export default function PurchaseOrders(props) {
   };
 
   useEffect(() => {
-    const token = JSON.parse(localStorage.getItem("userInfo")).token;
+    const token = JSON.parse(localStorage.getItem('userInfo')).token;
     let isSubscribed = true;
     //handleShowNotification("info", "Cargando ordenes de compra");
     $.ajax({
-      method: "GET",
-      url: mainURL + "purchase-order/get-all",
-      contentType: "application/json",
+      method: 'GET',
+      url: mainURL + 'purchase-order/get-all',
+      contentType: 'application/json',
       headers: {
-        Authorization: "Bearer " + token,
+        Authorization: 'Bearer ' + token,
       },
     })
       .done((res) => {
-        const aux: GridRowsProp = res.sort(
-          (a, b) => b.orderNumber - a.orderNumber
-        );
+        const aux: GridRowsProp = res.sort((a, b) => b.orderNumber - a.orderNumber);
         if (isSubscribed) {
           setData(aux);
           //handleShowNotification("success", "Ordenes cargadas con éxito");
         }
       })
       .fail((res) => {
-        handleShowNotification("error", res.responseText);
+        handleShowNotification('error', res.responseText);
       });
     return () => (isSubscribed = false);
   }, [refresh]);
 
   useEffect(() => {
-    const myReg = new RegExp("^.*" + searchText.toLowerCase() + ".*");
-    const newArray = data.filter((f) =>
-      f.clientName.toLowerCase().match(myReg)
-    );
+    const myReg = new RegExp('^.*' + searchText.toLowerCase() + '.*');
+    const newArray = data.filter((f) => f.clientName.toLowerCase().match(myReg));
     setFilteredData(newArray);
   }, [data, searchText]);
 
   return (
-    <Box sx={{ height: "85vh", p: 2,  }}>
+    <Box sx={{ height: '85vh', p: 2 }}>
       <PurchaseOrderPopover
         open={anchor}
         showDeleteOption
@@ -198,7 +193,7 @@ export default function PurchaseOrders(props) {
       <DeleteRemissionDialog
         refresh={refresh}
         open={deleteDialog}
-        title={"Eliminar orden de compra"}
+        title={'Eliminar orden de compra'}
         setRefresh={setRefresh}
         name={selectedData.orderNumber}
         errorMesage={errorMessage}
@@ -207,14 +202,14 @@ export default function PurchaseOrders(props) {
         handleShowNotification={handleShowNotification}
       />
       <Grid
-        justifyContent={"space-between"}
-        alignItems={"center"}
-        sx={{ p: "1rem 0" }}
+        justifyContent={'space-between'}
+        alignItems={'center'}
+        sx={{ p: '1rem 0' }}
         spacing={2}
         container
       >
         <Grid item md={8}>
-          <Typography variant="h4">{"Ordenes de compra"}</Typography>
+          <Typography variant="h4">{'Ordenes de compra'}</Typography>
         </Grid>
 
         {showNotification ? (
@@ -226,16 +221,16 @@ export default function PurchaseOrders(props) {
         ) : (
           <SearchAndCreate
             handleOpenDialog={handleOpenDialog}
-            title={"Buscar por cliente"}
+            title={'Buscar por cliente'}
             handleSearch={handleSearch}
             searchText={searchText}
             permission={26}
           />
         )}
       </Grid>
-      <Box sx={{ height: "70vh", width: "100%", p: "16px 0", pb:8 }}>
+      <Box sx={{ height: '70vh', width: '100%', p: '16px 0', pb: 8 }}>
         <DataGrid
-          selectionModel={selectedData.id === "" ? [] : selectedData.id}
+          selectionModel={selectedData.id === '' ? [] : selectedData.id}
           onRowClick={handleSelect}
           rows={filteredData}
           columns={columns.filter((m) => m.breakpoints.includes(breakpoint))}

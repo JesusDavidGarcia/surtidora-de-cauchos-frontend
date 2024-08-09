@@ -18,7 +18,7 @@ import { Download, BrowserUpdated, PlaylistAdd, Receipt, Delete } from '@mui/ico
 
 import { PDFDownloadLink } from '@react-pdf/renderer';
 import PurchaseOrderDocument from '../../components/docs/purchaseOrder';
-import { useWidth } from '../../utils/withSelector';
+import { useWidth } from '../../utils/widthSelector';
 import ClientPurchaseOrderDocument from '../../components/docs/clientPurchaseOrder';
 import { Divider, Tooltip } from '@mui/material';
 import AddReferenceToPurchaseOrder from '../../components/dialogs/addReferencesToPurchaseOrder';

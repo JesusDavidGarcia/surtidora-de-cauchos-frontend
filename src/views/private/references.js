@@ -1,47 +1,47 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 
 //MUI
-import Typography from "@mui/material/Typography";
-import IconButton from "@mui/material/IconButton";
+import Typography from '@mui/material/Typography';
+import IconButton from '@mui/material/IconButton';
 
-import Alert from "@mui/material/Alert";
-import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
+import Alert from '@mui/material/Alert';
+import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
 
-import { DataGrid } from "@mui/x-data-grid";
+import { DataGrid } from '@mui/x-data-grid';
 
 //import { useNavigate } from "react-router-dom";
 
 //Icons
-import MoreVertIcon from "@mui/icons-material/MoreVert";
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 
-import CreateReferenceDialog from "../../components/dialogs/createReference";
-import ReferenceDetails from "../../components/dialogs/referenceDetails";
-import DeleteClientDialog from "../../components/dialogs/deleteGeneric";
-import SearchAndCreate from "../../components/input/searchAndCreate";
-import ReferencePopover from "../../components/popovers/generic";
+import CreateReferenceDialog from '../../components/dialogs/createReference';
+import ReferenceDetails from '../../components/dialogs/referenceDetails';
+import DeleteClientDialog from '../../components/dialogs/deleteGeneric';
+import SearchAndCreate from '../../components/input/searchAndCreate';
+import ReferencePopover from '../../components/popovers/generic';
 
-import mainURL from "../../config/environment";
-import $ from "jquery";
-import UpdateReferenceDialog from "../../components/dialogs/updateReference";
-import { useWidth } from "../../utils/withSelector";
-import { Switch, Tooltip } from "@mui/material";
+import mainURL from '../../config/environment';
+import $ from 'jquery';
+import UpdateReferenceDialog from '../../components/dialogs/updateReference';
+import { useWidth } from '../../utils/widthSelector';
+import { Switch, Tooltip } from '@mui/material';
 
 const emptyData = {
-  id: "",
-  reference: "",
-  application: "",
+  id: '',
+  reference: '',
+  application: '',
   rawWeight: null,
   packedWeight: null,
   currentQuantity: null,
   minimum: null,
   maximum: null,
   rawMaterialId: null,
-  rawMaterialName: "",
+  rawMaterialName: '',
 };
 
 const errorMessage =
-  "No se puede borrar esta referencia porque hay ordenes de compra asociadas a a esta referencia";
+  'No se puede borrar esta referencia porque hay ordenes de compra asociadas a a esta referencia';
 
 export default function References(props) {
   //Data management
@@ -55,28 +55,28 @@ export default function References(props) {
   const breakpoint = useWidth();
   const columns: GridColDef[] = [
     {
-      headerName: "Referencia",
-      field: "reference",
+      headerName: 'Referencia',
+      field: 'reference',
       flex: 1,
-      breakpoints: ["xs", "sm", "md", "lg", "xl"],
+      breakpoints: ['xs', 'sm', 'md', 'lg', 'xl'],
     },
     {
-      headerName: "Aplicación",
-      field: "application",
+      headerName: 'Aplicación',
+      field: 'application',
       flex: 1,
-      breakpoints: ["sm", "md", "lg", "xl"],
+      breakpoints: ['sm', 'md', 'lg', 'xl'],
     },
     {
-      headerName: "Material",
-      field: "rawMaterialName",
+      headerName: 'Material',
+      field: 'rawMaterialName',
       flex: 1,
-      breakpoints: ["sm", "md", "lg", "xl"],
+      breakpoints: ['sm', 'md', 'lg', 'xl'],
     },
     {
-      headerName: "Cantidad actual",
-      field: "currentQuantity",
+      headerName: 'Cantidad actual',
+      field: 'currentQuantity',
       flex: 1,
-      breakpoints: ["xs", "sm", "md", "lg", "xl"],
+      breakpoints: ['xs', 'sm', 'md', 'lg', 'xl'],
     },
     /* {
       headerName: "Cantidad empacada",
@@ -85,31 +85,31 @@ export default function References(props) {
       breakpoints: ["xs", "sm", "md", "lg", "xl"],
     }, */
     {
-      headerName: "Consumo de materia prima (gr)",
-      field: "rawWeight",
+      headerName: 'Consumo de materia prima (gr)',
+      field: 'rawWeight',
       flex: 1,
-      breakpoints: ["md", "lg", "xl"],
+      breakpoints: ['md', 'lg', 'xl'],
     },
     {
-      headerName: "Peso embalaje x10 (Kg)",
-      field: "packedWeight",
+      headerName: 'Peso embalaje x10 (Kg)',
+      field: 'packedWeight',
       flex: 1,
-      breakpoints: ["md", "lg", "xl"],
+      breakpoints: ['md', 'lg', 'xl'],
     },
     {
-      headerName: "Opciones",
-      field: "id",
+      headerName: 'Opciones',
+      field: 'id',
       renderCell: (params: GridRenderCellParams) => (
         <IconButton onClick={handlePopoverOpen(params.row)}>
           <MoreVertIcon />
         </IconButton>
       ),
       //flex: 1,
-      align: "center",
-      headerAlign: "center",
+      align: 'center',
+      headerAlign: 'center',
       sortable: false,
       editable: false,
-      breakpoints: ["xs", "sm", "md", "lg", "xl"],
+      breakpoints: ['xs', 'sm', 'md', 'lg', 'xl'],
     },
   ];
 
@@ -129,24 +129,24 @@ export default function References(props) {
 
   const handleOpenDialog = (dialog) => (event) => {
     switch (dialog) {
-      case "create":
+      case 'create':
         setCreateDialog(true);
         break;
 
-      case "delete":
+      case 'delete':
         setDeleteDialog(true);
         break;
 
-      case "update":
+      case 'update':
         setUpdateDialog(true);
         break;
 
-      case "details":
+      case 'details':
         setDetailsDialog(true);
         break;
 
       default:
-        console.log("None");
+        console.log('None');
         break;
     }
   };
@@ -154,8 +154,8 @@ export default function References(props) {
   //Notification management
   const [showNotification, setShowNotification] = useState(false);
   const [notificationMessage, setNotificationMessage] = useState({
-    severity: "",
-    message: "",
+    severity: '',
+    message: '',
   });
 
   const handleShowNotification = (severity, message) => {
@@ -175,7 +175,7 @@ export default function References(props) {
   };
 
   //Search management
-  const [searchText, setSearchText] = useState("");
+  const [searchText, setSearchText] = useState('');
   const handleSearch = (event) => {
     const target = event.target;
     const value = target.value;
@@ -198,15 +198,15 @@ export default function References(props) {
   }; */
 
   useEffect(() => {
-    const token = JSON.parse(localStorage.getItem("userInfo")).token;
+    const token = JSON.parse(localStorage.getItem('userInfo')).token;
     let isSubscribed = true;
     //handleShowNotification("info", "Cargando clientes");
     $.ajax({
-      method: "GET",
+      method: 'GET',
       url: `${mainURL}rubber-reference/get-all?includeSecondary=${includeSecondary}`,
-      contentType: "application/json",
+      contentType: 'application/json',
       headers: {
-        Authorization: "Bearer " + token,
+        Authorization: 'Bearer ' + token,
       },
     })
       .done((res) => {
@@ -218,21 +218,21 @@ export default function References(props) {
         }
       })
       .fail((res) => {
-        handleShowNotification("error", res.responseText);
+        handleShowNotification('error', res.responseText);
       });
     return () => (isSubscribed = false);
   }, [refresh, includeSecondary]);
 
   useEffect(() => {
-    const myReg = new RegExp("^.*" + searchText.toLowerCase() + ".*");
+    const myReg = new RegExp('^.*' + searchText.toLowerCase() + '.*');
     const newArray = data.filter((f) =>
-      `${f.reference} ${f.application}`.toLowerCase().match(myReg)
+      `${f.reference} ${f.application}`.toLowerCase().match(myReg),
     );
     setFilteredData(newArray);
   }, [data, searchText]);
 
   return (
-    <Box sx={{ height: "85vh", p: 2 }}>
+    <Box sx={{ height: '85vh', p: 2 }}>
       <ReferencePopover
         open={anchor}
         showUpdateOption
@@ -254,7 +254,7 @@ export default function References(props) {
         refresh={refresh}
         open={deleteDialog}
         setRefresh={setRefresh}
-        title={"Eliminar referencia"}
+        title={'Eliminar referencia'}
         errorMessage={errorMessage}
         name={selectedData.reference}
         handleClose={handleCloseDialogs}
@@ -277,14 +277,14 @@ export default function References(props) {
         handleShowNotification={handleShowNotification}
       />
       <Grid
-        justifyContent={"space-between"}
-        alignItems={"center"}
-        sx={{ p: "1rem 0" }}
+        justifyContent={'space-between'}
+        alignItems={'center'}
+        sx={{ p: '1rem 0' }}
         spacing={2}
         container
       >
         <Grid item md={8}>
-          <Typography variant="h4">{"Referencias"}</Typography>
+          <Typography variant="h4">{'Referencias'}</Typography>
         </Grid>
 
         {showNotification ? (
@@ -302,13 +302,7 @@ export default function References(props) {
             searchText={searchText}
             permission={10}
           >
-            <Tooltip
-              title={
-                includeSecondary
-                  ? "Mostrar solo primarios"
-                  : "Incluir secundarios"
-              }
-            >
+            <Tooltip title={includeSecondary ? 'Mostrar solo primarios' : 'Incluir secundarios'}>
               <Switch
                 checked={includeSecondary}
                 onChange={(e) => setIncludeSecondary(e.target.checked)}
@@ -318,9 +312,9 @@ export default function References(props) {
         )}
       </Grid>
 
-      <Box sx={{ height: "70vh", width: "100%", p: "16px 0", pb: 8 }}>
+      <Box sx={{ height: '70vh', width: '100%', p: '16px 0', pb: 8 }}>
         <DataGrid
-          selectionModel={selectedData.id === "" ? [] : selectedData.id}
+          selectionModel={selectedData.id === '' ? [] : selectedData.id}
           onRowClick={handleSelect}
           rows={filteredData}
           columns={columns.filter((m) => m.breakpoints.includes(breakpoint))}

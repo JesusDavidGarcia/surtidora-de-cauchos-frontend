@@ -14,7 +14,7 @@ import SearchAndCreate from '../../components/input/searchAndCreate';
 
 import mainURL from '../../config/environment';
 import $ from 'jquery';
-import { useWidth } from '../../utils/withSelector';
+import { useWidth } from '../../utils/widthSelector';
 import { PDFDownloadLink } from '@react-pdf/renderer';
 import SharpeningStateDocument from '../../components/docs/sharpeningState';
 import { Button, Tooltip } from '@mui/material';

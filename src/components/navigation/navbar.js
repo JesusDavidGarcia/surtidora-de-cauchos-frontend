@@ -14,7 +14,7 @@ import IconButton from '@mui/material/Button';
 //Icons
 import Button from '@mui/material/Button';
 import Badge from '@mui/material/Badge';
-import { useWidth } from '../../utils/withSelector';
+import { useWidth } from '../../utils/widthSelector';
 
 export default function Navbar(props) {
   const navbarName =

@@ -1,38 +1,38 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 
 //MUI
-import Typography from "@mui/material/Typography";
-import IconButton from "@mui/material/IconButton";
+import Typography from '@mui/material/Typography';
+import IconButton from '@mui/material/IconButton';
 
-import Alert from "@mui/material/Alert";
-import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
+import Alert from '@mui/material/Alert';
+import Grid from '@mui/material/Grid';
+import Box from '@mui/material/Box';
 
-import { DataGrid } from "@mui/x-data-grid";
+import { DataGrid } from '@mui/x-data-grid';
 //Icons
 
-import MoreVertIcon from "@mui/icons-material/MoreVert";
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 
-import DeleteProviderDialog from "../../components/dialogs/deleteGeneric";
-import UpdateProviderDialog from "../../components/dialogs/updateProvider";
-import CreateProviderDialog from "../../components/dialogs/createProvider";
-import SearchAndCreate from "../../components/input/searchAndCreate";
-import ProviderPopover from "../../components/popovers/generic";
+import DeleteProviderDialog from '../../components/dialogs/deleteGeneric';
+import UpdateProviderDialog from '../../components/dialogs/updateProvider';
+import CreateProviderDialog from '../../components/dialogs/createProvider';
+import SearchAndCreate from '../../components/input/searchAndCreate';
+import ProviderPopover from '../../components/popovers/generic';
 
-import mainURL from "../../config/environment";
-import $ from "jquery";
-import { useWidth } from "../../utils/withSelector";
+import mainURL from '../../config/environment';
+import $ from 'jquery';
+import { useWidth } from '../../utils/widthSelector';
 
 const emptyData = {
-  id: "",
-  name: "",
-  email: "",
-  phoneNumber: "",
-  accessToken: "",
+  id: '',
+  name: '',
+  email: '',
+  phoneNumber: '',
+  accessToken: '',
 };
 
 const errorMessage =
-  "No se puede borrar este proveedor porque hay órdenes de ingreso de materia prima asociadas a él";
+  'No se puede borrar este proveedor porque hay órdenes de ingreso de materia prima asociadas a él';
 
 export default function Providers(props) {
   //Data management
@@ -46,43 +46,43 @@ export default function Providers(props) {
 
   const columns: GridColDef[] = [
     {
-      headerName: "Nombre",
-      field: "name",
+      headerName: 'Nombre',
+      field: 'name',
       flex: 1,
-      breakpoints: ["xs", "sm", "md", "lg", "xl"],
+      breakpoints: ['xs', 'sm', 'md', 'lg', 'xl'],
     },
     {
-      headerName: "NIT",
-      field: "nit",
+      headerName: 'NIT',
+      field: 'nit',
       flex: 1,
-      breakpoints: ["sm", "md", "lg", "xl"],
+      breakpoints: ['sm', 'md', 'lg', 'xl'],
     },
     {
-      headerName: "Material",
-      field: "material",
+      headerName: 'Material',
+      field: 'material',
       flex: 1,
-      breakpoints: ["md", "lg", "xl"],
+      breakpoints: ['md', 'lg', 'xl'],
     },
     {
-      headerName: "Teléfono",
-      field: "phoneNumber",
+      headerName: 'Teléfono',
+      field: 'phoneNumber',
       flex: 1,
-      breakpoints: ["md", "lg", "xl"],
+      breakpoints: ['md', 'lg', 'xl'],
     },
     {
-      headerName: "Opciones",
-      field: "id",
+      headerName: 'Opciones',
+      field: 'id',
       renderCell: (params: GridRenderCellParams) => (
         <IconButton onClick={handlePopoverOpen(params.row)}>
           <MoreVertIcon />
         </IconButton>
       ),
       //flex: 1,
-      align: "center",
-      headerAlign: "center",
+      align: 'center',
+      headerAlign: 'center',
       sortable: false,
       editable: false,
-      breakpoints: ["xs", "sm", "md", "lg", "xl"],
+      breakpoints: ['xs', 'sm', 'md', 'lg', 'xl'],
     },
   ];
 
@@ -98,20 +98,20 @@ export default function Providers(props) {
 
   const handleOpenDialog = (dialog) => (event) => {
     switch (dialog) {
-      case "create":
+      case 'create':
         setCreateDialog(true);
         break;
 
-      case "delete":
+      case 'delete':
         setDeleteDialog(true);
         break;
 
-      case "rename":
+      case 'rename':
         setUpdateDialog(true);
         break;
 
       default:
-        console.log("None");
+        console.log('None');
         break;
     }
   };
@@ -119,8 +119,8 @@ export default function Providers(props) {
   //Notification management
   const [showNotification, setShowNotification] = useState(false);
   const [notificationMessage, setNotificationMessage] = useState({
-    severity: "",
-    message: "",
+    severity: '',
+    message: '',
   });
 
   const handleShowNotification = (severity, message) => {
@@ -140,7 +140,7 @@ export default function Providers(props) {
   };
 
   //Search management
-  const [searchText, setSearchText] = useState("");
+  const [searchText, setSearchText] = useState('');
   const handleSearch = (event) => {
     const target = event.target;
     const value = target.value;
@@ -157,15 +157,15 @@ export default function Providers(props) {
   };
 
   useEffect(() => {
-    const token = JSON.parse(localStorage.getItem("userInfo")).token;
+    const token = JSON.parse(localStorage.getItem('userInfo')).token;
     let isSubscribed = true;
     //handleShowNotification("info", "Cargando proveedores");
     $.ajax({
-      method: "GET",
-      url: mainURL + "provider/get-all",
-      contentType: "application/json",
+      method: 'GET',
+      url: mainURL + 'provider/get-all',
+      contentType: 'application/json',
       headers: {
-        Authorization: "Bearer " + token,
+        Authorization: 'Bearer ' + token,
       },
     })
       .done((res) => {
@@ -177,19 +177,19 @@ export default function Providers(props) {
         }
       })
       .fail((res) => {
-        handleShowNotification("error", res.responseText);
+        handleShowNotification('error', res.responseText);
       });
     return () => (isSubscribed = false);
   }, [refresh]);
 
   useEffect(() => {
-    const myReg = new RegExp("^.*" + searchText.toLowerCase() + ".*");
+    const myReg = new RegExp('^.*' + searchText.toLowerCase() + '.*');
     const newArray = data.filter((f) => f.name.toLowerCase().match(myReg));
     setFilteredData(newArray);
   }, [data, searchText]);
 
   return (
-    <Box sx={{ height: "85vh", p: 2 }}>
+    <Box sx={{ height: '85vh', p: 2 }}>
       <ProviderPopover
         open={anchor}
         showDeleteOption
@@ -202,7 +202,7 @@ export default function Providers(props) {
         refresh={refresh}
         open={deleteDialog}
         setRefresh={setRefresh}
-        title={"Eliminar proveedor"}
+        title={'Eliminar proveedor'}
         errorMessage={errorMessage}
         name={selectedData.name}
         handleClose={handleCloseDialogs}
@@ -225,14 +225,14 @@ export default function Providers(props) {
         handleShowNotification={handleShowNotification}
       />
       <Grid
-        justifyContent={"space-between"}
-        alignItems={"center"}
-        sx={{ p: "1rem 0" }}
+        justifyContent={'space-between'}
+        alignItems={'center'}
+        sx={{ p: '1rem 0' }}
         spacing={2}
         container
       >
         <Grid item md={8}>
-          <Typography variant="h4">{"Proveedores"}</Typography>
+          <Typography variant="h4">{'Proveedores'}</Typography>
         </Grid>
 
         {showNotification ? (
@@ -251,9 +251,9 @@ export default function Providers(props) {
         )}
       </Grid>
 
-      <Box sx={{ height: "70vh", width: "100%", p: "16px 0", pb:8 }}>
+      <Box sx={{ height: '70vh', width: '100%', p: '16px 0', pb: 8 }}>
         <DataGrid
-          selectionModel={selectedData.id === "" ? [] : selectedData.id}
+          selectionModel={selectedData.id === '' ? [] : selectedData.id}
           onRowClick={handleSelect}
           rows={filteredData}
           columns={columns.filter((m) => m.breakpoints.includes(breakpoint))}

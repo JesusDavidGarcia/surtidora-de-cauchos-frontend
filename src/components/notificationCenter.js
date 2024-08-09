@@ -18,7 +18,7 @@ import WarningIcon from '@mui/icons-material/Warning';
 import AlertReport from './docs/alerts';
 
 import { PDFDownloadLink } from '@react-pdf/renderer';
-import { useWidth } from '../utils/withSelector';
+import { useWidth } from '../utils/widthSelector';
 import { CircularProgress } from '@mui/material';
 
 export default function NotificationCenter(props) {
