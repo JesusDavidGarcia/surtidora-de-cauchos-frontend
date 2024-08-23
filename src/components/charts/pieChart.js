@@ -6,7 +6,6 @@ import ReactEcharts from 'echarts-for-react';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
 import Card from '@mui/material/Card';
-import Grid from '@mui/material/Grid';
 
 //Jquery
 import URL from '../../config/environment';
@@ -77,13 +76,11 @@ export default function PieChart(props) {
   }, [endpoint, title, format]);
 
   return (
-    <Grid item md={12} xs={12} sx={{ pb: 10 }}>
-      <Card>
-        <CardHeader title={title} titleTypographyProps={{ fontSize: '1.2rem' }} />
-        <CardContent>
-          <ReactEcharts ref={useRef('echarts_react')} option={chartSettings} />
-        </CardContent>
-      </Card>
-    </Grid>
+    <Card sx={{ height: '100%' }}>
+      <CardHeader title={title} titleTypographyProps={{ fontSize: '1.2rem' }} />
+      <CardContent>
+        <ReactEcharts ref={useRef('echarts_react')} option={chartSettings} />
+      </CardContent>
+    </Card>
   );
 }

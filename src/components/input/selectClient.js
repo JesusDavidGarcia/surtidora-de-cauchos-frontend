@@ -8,7 +8,7 @@ import $ from 'jquery';
 import mainURL from '../../config/environment';
 
 const useClients = (refresh) => {
-  const [cllients, setClients] = useState([]);
+  const [clients, setClients] = useState([]);
   useEffect(() => {
     const token = JSON.parse(localStorage.getItem('userInfo')).token;
     let isSubscribed = true;
@@ -26,7 +26,7 @@ const useClients = (refresh) => {
     });
     return () => (isSubscribed = false);
   }, []);
-  return cllients;
+  return clients;
 };
 
 export default function SelectClient(props) {

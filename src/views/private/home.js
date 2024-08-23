@@ -23,7 +23,6 @@ import Operators from './operators';
 import Providers from './providers';
 import Clients from './clients';
 import Users from './users';
-import Main from './main';
 
 import mainURL from '../../config/environment';
 import $ from 'jquery';
@@ -32,6 +31,7 @@ import SharpenersMatrix from './sharpeningCurrentState';
 import PackagingEntries from './packagingEntries';
 import PackagingMatrix from './packagingCurrentState';
 import Packaging from './packaging';
+import Dashboard from '../../components/dashboard';
 
 export default function Home(props) {
   const [openNC, setOpenNC] = React.useState(false);
@@ -162,7 +162,11 @@ export default function Home(props) {
       <Box component="main" sx={{ flexGrow: 1, height: '93vh' }}>
         <Toolbar />
         <Routes>
-          <Route path="/" element={<Main />} />
+          <Route path="/" element={<Dashboard />} />
+          <Route path="proyeccion-por-cliente" element={<Dashboard />} />
+          <Route path="proyeccion-por-referencia" element={<Dashboard />} />
+          <Route path="proyeccion-por-cliente/:clientId" element={<Dashboard />} />
+          {/* <Route path="/:clientId" element={<Dashboard />} /> */}
           <Route path="usuarios" element={<Users />} />
           <Route path="clientes" element={<Clients />} />
           <Route path="proveedores" element={<Providers />} />

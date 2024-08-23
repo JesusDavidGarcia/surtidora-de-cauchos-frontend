@@ -254,7 +254,7 @@ export default function SharpeningEntries(props) {
     setLoading(true);
     $.ajax({
       method: 'GET',
-      url: `${mainURL}report/sharpening?start=${start}&end=${end}${
+      url: `${mainURL}report/sharpening-entries?start=${start}&end=${end}${
         sharpener !== 0 ? `&sharpenerId=${sharpener}` : ''
       }`,
       contentType: 'application/json',
