@@ -290,24 +290,25 @@ export default function ProjectionTable(props) {
                 <SyncIcon color="primary" />
               </IconButton>
             </Tooltip>
-
-            <PDFDownloadLink
-              document={
-                <ProjectionDocument
-                  data={data}
-                  clientName={clientName}
-                  projectionDate={projectionDate}
-                  showClient={clientId !== undefined}
-                />
-              }
-              fileName={`Proyección ${clientName ?? 'general'}.pdf`}
-            >
-              <Tooltip title="Descargar proyección">
-                <IconButton>
-                  <BrowserUpdated color="primary" />
-                </IconButton>
-              </Tooltip>
-            </PDFDownloadLink>
+            {endpoint !== 'get-by-client' ? (
+              <PDFDownloadLink
+                document={
+                  <ProjectionDocument
+                    data={data}
+                    clientName={clientName}
+                    projectionDate={projectionDate}
+                    showClient={clientId !== undefined}
+                  />
+                }
+                fileName={`Proyección ${clientName ?? 'general'}.pdf`}
+              >
+                <Tooltip title="Descargar proyección">
+                  <IconButton>
+                    <BrowserUpdated color="primary" />
+                  </IconButton>
+                </Tooltip>
+              </PDFDownloadLink>
+            ) : null}
           </SearchAndCreate>
         )}
       </Grid>
