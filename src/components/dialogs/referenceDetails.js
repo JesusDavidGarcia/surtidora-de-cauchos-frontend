@@ -68,9 +68,9 @@ export default function ReferenceDetails(props) {
           <ListItem>
             <ListItemText primary={'Cantidad actual'} secondary={data.currentQuantity} />
           </ListItem>
-          <ListItem>
+          {/*  <ListItem>
             <ListItemText primary={'Cantidad empacada'} secondary={data.packagingQuantity} />
-          </ListItem>
+          </ListItem> */}
           <ListItem>
             <ListItemText primary={'Cantidad en refilado'} secondary={data.sharpeningQuantity} />
           </ListItem>

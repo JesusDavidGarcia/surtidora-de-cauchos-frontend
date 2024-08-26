@@ -55,18 +55,18 @@ export default function ProjectionTable(props) {
   const breakpoint = useWidth();
   const columns: GridColDef[] = [
     {
-      headerName: 'Referencia',
-      field: 'reference',
-      flex: 1,
-      endpoints: ['get-all', 'get-summarized'],
-      breakpoints: ['xs', 'sm', 'md', 'lg', 'xl'],
-    },
-    {
       headerName: 'Aplicación',
       field: 'application',
       flex: 1,
       endpoints: ['get-all', 'get-summarized'],
       breakpoints: ['sm', 'md', 'lg', 'xl'],
+    },
+    {
+      headerName: 'Referencia',
+      field: 'reference',
+      flex: 1,
+      endpoints: ['get-all', 'get-summarized'],
+      breakpoints: ['xs', 'sm', 'md', 'lg', 'xl'],
     },
     {
       headerName: 'Cliente',
@@ -235,7 +235,9 @@ export default function ProjectionTable(props) {
       },
     })
       .done((res) => {
-        const aux: GridRowsProp = res.map((x, idx) => ({ ...x, id: idx }));
+        const aux = res
+          .map((x, idx) => ({ ...x, id: idx }))
+          .sort((a, b) => a.application.localeCompare(b.application));
         if (isSubscribed) {
           setData(aux);
           setFilteredData(aux);

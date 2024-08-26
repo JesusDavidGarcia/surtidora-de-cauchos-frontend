@@ -78,14 +78,14 @@ const styles = StyleSheet.create({
     borderTopWidth: 0,
   },
   refTableCol: {
-    width: '25%',
+    width: '20%',
     borderStyle: 'solid',
     borderWidth: 1,
     borderLeftWidth: 0,
     borderTopWidth: 0,
   },
   appTableCol: {
-    width: '40%',
+    width: '35%',
     borderStyle: 'solid',
     borderWidth: 1,
     borderLeftWidth: 0,
@@ -126,22 +126,26 @@ export default function ProjectionDocument(props) {
         ) : (
           <View style={styles.headers}>
             <View style={styles.titleContainer}>
-              <Text style={styles.title}>{`Proyección realizada ${new Date(
-                projectionDate,
-              ).toLocaleDateString()}`}</Text>
+              <Text style={styles.title}>{`Proyección general`}</Text>
             </View>
+            <Text style={styles.date}>{new Date(projectionDate).toLocaleDateString()}</Text>
           </View>
         )}
 
         <View style={styles.table}>
           <View style={styles.tableRow}>
-            <View style={styles.tableCol}>
-              <Text style={styles.refTableCell}>{'Referencia'}</Text>
-            </View>
             <View style={styles.appTableCol}>
               <Text style={styles.refTableCell}>{'Aplicación'}</Text>
             </View>
-
+            {showClient ? (
+              <View style={styles.refTableCol}>
+                <Text style={styles.refTableCell}>{'Referencia'}</Text>
+              </View>
+            ) : (
+              <View style={styles.refTableCol}>
+                <Text style={styles.refTableCell}>{'Empaque'}</Text>
+              </View>
+            )}
             <View style={styles.tableCol}>
               <Text style={styles.tableCell}>{'A producir'}</Text>
             </View>
@@ -154,12 +158,20 @@ export default function ProjectionDocument(props) {
           </View>
           {data.map((reference, index) => (
             <View key={index} style={styles.tableRow}>
-              <View style={styles.tableCol}>
-                <Text style={styles.refTableCell}>{reference.reference}</Text>
-              </View>
               <View style={styles.appTableCol}>
                 <Text style={styles.refTableCell}>{reference.application}</Text>
               </View>
+              {showClient ? (
+                <View style={styles.refTableCol}>
+                  <Text style={styles.refTableCell}>{reference.reference}</Text>
+                </View>
+              ) : (
+                <View style={styles.refTableCol}>
+                  <Text style={styles.refTableCell}>
+                    {reference.packagingName ?? 'Sin empaque'}
+                  </Text>
+                </View>
+              )}
 
               <View style={styles.tableCol}>
                 <Text style={styles.tableCell}>
