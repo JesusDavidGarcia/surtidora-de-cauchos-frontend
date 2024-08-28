@@ -235,9 +235,10 @@ export default function ProjectionTable(props) {
       },
     })
       .done((res) => {
-        const aux = res
-          .map((x, idx) => ({ ...x, id: idx }))
-          .sort((a, b) => a.application.localeCompare(b.application));
+        let aux = res.map((x, idx) => ({ ...x, id: idx }));
+        if (endpoint.includes('client'))
+          aux.sort((a, b) => a.clientName.localeCompare(b.clientName));
+        else aux.sort((a, b) => a.application.localeCompare(b.application));
         if (isSubscribed) {
           setData(aux);
           setFilteredData(aux);
