@@ -109,9 +109,18 @@ const styles = StyleSheet.create({
 export default function ProjectionDocument(props) {
   const { data, clientName, projectionDate, showClient } = props;
 
-  /*  const numberWithCommas = (number) => {
-    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-  }; */
+  const calculateQuantityToPack = (reference) => {
+    if (reference.projectedQuantity - reference.currentPackedQuantity < 0) return 0;
+    else return (reference.projectedQuantity - reference.currentPackedQuantity).toFixed(2);
+  };
+
+  const calculateQuantityToProduce = (reference) => {
+    const stock =
+      (reference.currentQuantity * reference.clientReferenceContribution) /
+      reference.last30DaysPurchased;
+    if (reference.projectedQuantity - reference.currentPackedQuantity - stock < 0) return 0;
+    else return (reference.projectedQuantity - reference.currentPackedQuantity - stock).toFixed(2);
+  };
 
   return (
     <Document>
@@ -174,14 +183,10 @@ export default function ProjectionDocument(props) {
               )}
 
               <View style={styles.tableCol}>
-                <Text style={styles.tableCell}>
-                  {reference.projectedProductionQuantity.toFixed(2)}
-                </Text>
+                <Text style={styles.tableCell}>{calculateQuantityToProduce(reference)}</Text>
               </View>
               <View style={styles.tableCol}>
-                <Text style={styles.tableCell}>
-                  {reference.projectedPackagingQuantity.toFixed(2)}
-                </Text>
+                <Text style={styles.tableCell}>{calculateQuantityToPack(reference)}</Text>
               </View>
               <View style={styles.tableCol}>
                 <Text style={styles.tableCell}>{reference.projectedQuantity.toFixed(2)}</Text>

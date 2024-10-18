@@ -65,6 +65,19 @@ export default function SharpeningEntriesDocument(props) {
     return `$ ${number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}`;
   };
 
+  /* console.log(
+    sharpeners.map(
+      (sh, key) =>
+        `${sh}: ${numberWithCommas(
+          data
+            .filter((m) => m.refilador === sh)
+            .map((m) => m.precio)
+            .reduce((accumulator, currentValue) => accumulator + currentValue)
+            .toFixed(0),
+        )}`,
+    ),
+  ); */
+
   return (
     <Document>
       <Page size="A4" style={styles.body}>
@@ -78,9 +91,7 @@ export default function SharpeningEntriesDocument(props) {
             <View style={{ ...styles.tableCol, width: '15%' }}>
               <Text style={styles.leftTableCell}>Fecha</Text>
             </View>
-            {/* <View style={{ ...styles.tableCol, width: "15%" }}>
-              <Text style={styles.leftTableCell}>Referencia</Text>
-            </View> */}
+
             <View style={{ ...styles.tableCol, width: '40%' }}>
               <Text style={styles.leftTableCell}>Aplicación</Text>
             </View>
@@ -99,11 +110,7 @@ export default function SharpeningEntriesDocument(props) {
               <View style={{ ...styles.tableCol, width: '15%' }}>
                 <Text style={styles.tableCell}>{reference.fecha}</Text>
               </View>
-              {/* <View style={{ ...styles.tableCol, width: "15%" }}>
-                <Text style={styles.leftTableCell}>
-                  {reference.referencia.split(" ")[0]}
-                </Text>
-              </View> */}
+
               <View style={{ ...styles.tableCol, width: '40%' }}>
                 <Text style={styles.leftTableCell}>
                   {reference.referencia.substring(reference.referencia.indexOf(' '))}
@@ -121,10 +128,12 @@ export default function SharpeningEntriesDocument(props) {
             </View>
           ))}
         </View>
-
+      </Page>
+      <Page size="A4" style={styles.body}>
         <View style={styles.headers}>
           <Text style={styles.title}>{'Resumen por refilador'}</Text>
         </View>
+
         {sharpeners.map((sh, key) => (
           <Text key={key} style={styles.date}>
             {`${sh}: ${numberWithCommas(
