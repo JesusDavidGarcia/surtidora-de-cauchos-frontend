@@ -80,6 +80,12 @@ export default function Clients(props) {
       breakpoints: ['md', 'lg', 'xl'],
     },
     {
+      headerName: 'Empaque',
+      field: 'packagingName',
+      flex: 1,
+      breakpoints: ['md', 'lg', 'xl'],
+    },
+    {
       headerName: 'Opciones',
       field: 'id',
       renderCell: (params: GridRenderCellParams) => (

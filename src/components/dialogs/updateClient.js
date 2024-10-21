@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 
 import CircularProgress from '@mui/material/CircularProgress';
 import DialogActions from '@mui/material/DialogActions';
@@ -14,6 +14,7 @@ import Box from '@mui/material/Box';
 //Icons
 import $ from 'jquery';
 import mainURL from '../../config/environment';
+import SelectPackaging from '../input/selectPackaging';
 
 const emptyModel = {
   name: '',
@@ -22,10 +23,11 @@ const emptyModel = {
   email: '',
   phoneNumber: '',
   city: '',
+  packagingId: '',
 };
 
 export default function UpdateClientDialog(props) {
-  const [isFormComplete, setFormComplete] = useState(false);
+  //const [isFormComplete, setFormComplete] = useState(false);
   const [isEmailValid, setEmailValid] = useState(true);
   const [isLoading, setLoading] = useState(false);
   const [model, setModel] = useState(emptyModel);
@@ -37,6 +39,8 @@ export default function UpdateClientDialog(props) {
     const target = event.target;
     const name = target.name;
     let value = target.value;
+
+    console.log(name, value);
 
     switch (name) {
       case 'email':
@@ -60,16 +64,13 @@ export default function UpdateClientDialog(props) {
         });
         break;
     }
-
-    if (model.fullName !== '' && isEmailValid !== '' && model.password !== '') {
-      setFormComplete(true);
-    }
   };
 
   const handleSubmit = (event) => {
     event.preventDefault();
     setLoading(true);
     const token = JSON.parse(localStorage.getItem('userInfo')).token;
+    console.log(model);
     if (isEmailValid) {
       $.ajax({
         method: 'PUT',
@@ -123,6 +124,11 @@ export default function UpdateClientDialog(props) {
       });
     }
   }, [clientId, refresh]);
+
+  const isFormComplete = useMemo(
+    () => !model.name || !model.packagingId || !model.nit || model.address || !model.city,
+    [model],
+  );
 
   return (
     <Dialog open={props.open} onClose={props.handleClose} maxWidth="md">
@@ -219,6 +225,14 @@ export default function UpdateClientDialog(props) {
                   required
                 />
               </FormControl>
+            </Grid>
+            <Grid item xs={12} md={4}>
+              <SelectPackaging
+                required
+                name="packagingId"
+                handleChange={handleChange}
+                value={model.packagingId}
+              />
             </Grid>
           </Grid>
         </Box>

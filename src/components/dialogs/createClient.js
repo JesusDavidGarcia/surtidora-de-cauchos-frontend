@@ -13,6 +13,7 @@ import Box from '@mui/material/Box';
 
 import $ from 'jquery';
 import mainURL from '../../config/environment';
+import SelectPackaging from '../input/selectPackaging';
 
 const emptyModel = {
   name: '',
@@ -21,6 +22,7 @@ const emptyModel = {
   address: '',
   city: '',
   phoneNumber: '',
+  packagingId: '',
 };
 
 export default function CreateClientDialog(props) {
@@ -199,6 +201,15 @@ export default function CreateClientDialog(props) {
                   required
                 />
               </FormControl>
+            </Grid>
+            <Grid item xs={12} md={4}>
+              <SelectPackaging
+                required
+                name="packagingId"
+                handleChange={handleChange}
+                value={model.packagingId}
+                title="Seleccione el empaque"
+              />
             </Grid>
           </Grid>
         </Box>
