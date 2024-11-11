@@ -27,7 +27,7 @@ import $ from 'jquery';
 import mainURL from '../../config/environment';
 
 import ReferenceQuantityInput from '../../components/input/referenceQuantity';
-import SelectPackaging from '../../components/input/selectPackaging';
+// import SelectPackaging from '../../components/input/selectPackaging';
 import SelectClient from '../../components/input/selectClient';
 import { useNavigate } from 'react-router-dom';
 
@@ -83,7 +83,7 @@ export default function CreatePurchaseOrder(props) {
     }
   };
 
-  const handleChange = (event) => {
+  /*  const handleChange = (event) => {
     const target = event.target;
     const name = target.name;
     let value = target.value;
@@ -92,7 +92,7 @@ export default function CreatePurchaseOrder(props) {
       ...model,
       [name]: value,
     });
-  };
+  }; */
 
   const handleAdd = (item) => {
     const a = [...model.references];
@@ -209,11 +209,7 @@ export default function CreatePurchaseOrder(props) {
   };
 
   useEffect(() => {
-    if (
-      model.clientId === '' ||
-      model.references.length === 0 ||
-      (model.usePackaging && model.packagingId === '')
-    ) {
+    if (model.clientId === '' || model.references.length === 0) {
       setDisabled(true);
     } else {
       setDisabled(false);
@@ -240,7 +236,7 @@ export default function CreatePurchaseOrder(props) {
                 <Grid item xs={12} md={6}>
                   <SelectClient handleChange={handleClientChange} value={selectedClient} />
                 </Grid>
-                {model.usePackaging ? (
+                {/* {model.usePackaging ? (
                   <Grid container item xs={12} md={6}>
                     <Grid item xs={9}>
                       <SelectPackaging
@@ -258,31 +254,31 @@ export default function CreatePurchaseOrder(props) {
                       </IconButton>
                     </Grid>
                   </Grid>
-                ) : (
-                  <Grid
-                    item
-                    xs={12}
-                    md={6}
-                    container
-                    justifyContent={'center'}
-                    alignItems={'flex-end'}
-                  >
-                    <FormControlLabel
-                      label="Utilizar empaque"
-                      control={
-                        <Checkbox
-                          checked={model.usePackaging}
-                          onChange={(e) =>
-                            setModel({
-                              ...model,
-                              usePackaging: e.target.checked,
-                            })
-                          }
-                        />
-                      }
-                    />
-                  </Grid>
-                )}
+                ) : ( */}
+                <Grid
+                  item
+                  xs={12}
+                  md={6}
+                  container
+                  justifyContent={'center'}
+                  alignItems={'flex-end'}
+                >
+                  <FormControlLabel
+                    label="Utilizar empaque"
+                    control={
+                      <Checkbox
+                        checked={model.usePackaging}
+                        onChange={(e) =>
+                          setModel({
+                            ...model,
+                            usePackaging: e.target.checked,
+                          })
+                        }
+                      />
+                    }
+                  />
+                </Grid>
+                {/*    )} */}
 
                 <Grid item xs={12} md={12}>
                   <ReferenceQuantityInput

@@ -34,6 +34,15 @@ const returnColor = (category) => {
     case 'ROJA':
       return '#de120c';
 
+    case 'ROSENTHAL':
+      return '#f5a7ea';
+
+    case 'ROJA KETOZ':
+      return '#f54e00';
+
+    case 'TRANSPARENTE':
+      return '#d5d4d4';
+
     default:
       return '#0c52de';
   }
